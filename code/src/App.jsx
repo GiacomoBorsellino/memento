@@ -17,7 +17,7 @@ export default function App() {
 
   // Load story JSON
   useEffect(() => {
-    fetch("../public/story.json", {
+    fetch("/story.json", {
       method: "GET",
     })
       .then((r) => r.json())
