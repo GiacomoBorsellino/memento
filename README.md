@@ -8,7 +8,7 @@
 
 ## Panoramica
 
-**Memento** è un motore per librogame narrativi costruito in React, pensato per il browser e ottimizzato per essere distribuito come **PWA** o app mobile tramite Capacitor. La storia si articola come un **grafo di nodi**: ogni nodo presenta testi, carte selezionabili o lanci di dado che determinano il percorso narrativo.
+**Memento** è un motore per librogame narrativi costruito in React, pensato per il browser e ottimizzato per essere distribuito come **PWA** o app mobile tramite Capacitor. La storia si articola come un **grafo di nodi**: ogni nodo presenta testi, carte selezionabili o lanci di dado che determinano il percorso narrativo. Link al gioco: [Memento](https://mementotest.netlify.app/)
 
 ---
 
