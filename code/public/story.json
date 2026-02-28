@@ -59,7 +59,7 @@
     "cardsSelected": [
       {
         "indexCard": 0,
-        "cardPath": "./assets/cards/card_libraio.png",
+        "cardPath": "./assets/cards/card_inventore.png",
         "nextNode": 4,
         "textCard": "Sigillo dell'Ingegno",
         "effectCard": "La conoscenza è potere"
