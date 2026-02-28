@@ -1,0 +1,125 @@
+[
+  {
+    "indexNode": 0,
+    "theme": "forest",
+    "texts": [
+      "Ti svegli in una stanza che non riconosci.",
+      "L'aria sa di inchiostro vecchio e legno bagnato.",
+      "Tre figure attendono nell'ombra — ognuna porta qualcosa che non rammenti di aver dimenticato."
+    ],
+    "cardsSelected": [
+      {
+        "indexCard": 0,
+        "cardPath": "./assets/cards/card_inventore.png",
+        "nextNode": 1,
+        "textCard": "L'Inventore",
+        "effectCard": "La mente che crea ricorda tutto"
+      },
+      {
+        "indexCard": 1,
+        "cardPath": "./assets/cards/card_caput_mundi.png",
+        "nextNode": 2,
+        "textCard": "Caput Mundi",
+        "effectCard": "Il potere ha una memoria corta"
+      },
+      {
+        "indexCard": 2,
+        "cardPath": "./assets/cards/card_libraio.png",
+        "nextNode": 3,
+        "textCard": "Il Libraio",
+        "effectCard": "Le parole sopravvivono agli uomini"
+      }
+    ],
+    "dice": false
+  },
+  {
+    "indexNode": 1,
+    "theme": "forge",
+    "texts": [
+      "L'inventore ti conduce nel suo laboratorio sotterraneo.",
+      "Macchinari ronzanti riempiono ogni angolo.",
+      "«Tutto può essere ricostruito», dice. «Anche una memoria.»",
+      "Lancia il dado del fato — il caso decide cosa troverai."
+    ],
+    "cardsSelected": false,
+    "dice": [
+      { "range": [1, 2], "nextNode": 4 },
+      { "range": [3, 4], "nextNode": 5 },
+      { "range": [5, 6], "nextNode": 6 }
+    ]
+  },
+  {
+    "indexNode": 2,
+    "theme": "throne",
+    "texts": [
+      "La sala del trono è vuota.",
+      "Eppure la tua presenza viene attesa da tempo.",
+      "Sul cuscino reale, tre sigilli in cera attendono il tuo tocco."
+    ],
+    "cardsSelected": [
+      {
+        "indexCard": 0,
+        "cardPath": "./assets/cards/card_libraio.png",
+        "nextNode": 4,
+        "textCard": "Sigillo dell'Ingegno",
+        "effectCard": "La conoscenza è potere"
+      },
+      {
+        "indexCard": 1,
+        "cardPath": "./assets/cards/card_libraio.png",
+        "nextNode": 5,
+        "textCard": "Sigillo della Parola",
+        "effectCard": "La storia è scritta dai sopravvissuti"
+      }
+    ],
+    "dice": false
+  },
+  {
+    "indexNode": 3,
+    "theme": "library",
+    "texts": [
+      "Il libraio apre un tomo immenso.",
+      "Le pagine profumano di lavanda e cenere.",
+      "«Il tuo nome è scritto qui», sussurra. «Vuoi leggerlo?»"
+    ],
+    "cardsSelected": false,
+    "dice": false,
+    "nextNode": 6
+  },
+  {
+    "indexNode": 4,
+    "theme": "mist",
+    "texts": [
+      "Tra gli ingranaggi trovi uno specchio annerito.",
+      "Nel riflesso, un volto che non è il tuo — eppure lo riconosci.",
+      "La memoria comincia a tornare, lenta come la marea."
+    ],
+    "cardsSelected": false,
+    "dice": false,
+    "isEnd": true
+  },
+  {
+    "indexNode": 5,
+    "theme": "dusk",
+    "texts": [
+      "Il sentiero si apre su una pianura coperta di nebbia.",
+      "In lontananza, luci di un villaggio — il tuo villaggio.",
+      "Forse non tutto è perduto."
+    ],
+    "cardsSelected": false,
+    "dice": false,
+    "isEnd": true
+  },
+  {
+    "indexNode": 6,
+    "theme": "dawn",
+    "texts": [
+      "Il tuo nome nel libro è cancellato.",
+      "Eppure la storia continua.",
+      "Forse sei tu a doverla scrivere."
+    ],
+    "cardsSelected": false,
+    "dice": false,
+    "isEnd": true
+  }
+]
