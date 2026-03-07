@@ -1,0 +1,110 @@
+/* TitleScreen.css */
+
+.title-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.title-screen__header {
+  text-align: center;
+  margin-bottom: 14px;
+  transition: opacity 1.6s ease, transform 1.6s ease;
+}
+
+.title-screen__header--hidden {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.title-screen__header--visible {
+  opacity: 1;
+  transform: none;
+}
+
+.title-screen__line {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(200, 175, 120, 0.5), transparent);
+  margin: 0 auto 22px;
+}
+
+.title-screen__line--below {
+  margin: 18px auto 0;
+}
+
+.title-screen__h1 {
+  font-size: clamp(52px, 10vw, 108px);
+  font-family: Georgia, 'Palatino Linotype', serif;
+  color: #e8dfc8;
+  letter-spacing: 20px;
+  margin: 0;
+  font-weight: normal;
+  text-shadow: 0 2px 40px rgba(168, 152, 112, 0.45), 0 0 80px rgba(168, 152, 112, 0.15);
+}
+
+.title-screen__subtitle {
+  color: rgba(168, 152, 112, 0.55);
+  letter-spacing: 7px;
+  font-size: 10px;
+  margin-top: 14px;
+  font-family: monospace;
+  transition: opacity 1s ease;
+}
+
+.title-screen__subtitle--hidden { opacity: 0; }
+.title-screen__subtitle--visible { opacity: 1; }
+
+.title-screen__menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin-top: 52px;
+}
+
+.title-screen__btn {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(200, 175, 120, 0.18);
+  color: #a89870;
+  padding: 14px 0;
+  font-size: 12px;
+  letter-spacing: 6px;
+  cursor: pointer;
+  font-family: Georgia, 'Palatino Linotype', serif;
+  text-transform: uppercase;
+  width: 240px;
+  text-align: center;
+  transition: all 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.title-screen__btn:hover {
+  border-bottom-color: rgba(200, 175, 120, 0.6);
+  color: #e8dfc8;
+}
+
+.title-screen__btn--hidden {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.title-screen__btn--visible {
+  opacity: 1;
+  transform: none;
+}
+
+.title-screen__version {
+  position: fixed;
+  bottom: 18px;
+  color: rgba(100, 90, 70, 0.5);
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-family: monospace;
+  margin: 0;
+}

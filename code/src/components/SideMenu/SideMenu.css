@@ -1,0 +1,82 @@
+/* SideMenu.css */
+
+.side-menu__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 38;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(1px);
+}
+
+.side-menu__panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 260px;
+  height: 100%;
+  z-index: 39;
+  background: rgba(12, 10, 8, 0.97);
+  border-left: 1px solid rgba(180, 160, 110, 0.15);
+  display: flex;
+  flex-direction: column;
+  padding-top: 88px;
+  transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: -12px 0 60px rgba(0, 0, 0, 0.7);
+}
+
+.side-menu__panel--closed {
+  transform: translateX(100%);
+  box-shadow: none;
+}
+
+.side-menu__divider {
+  position: absolute;
+  top: 72px;
+  left: 24px;
+  right: 24px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(180, 160, 110, 0.3), transparent);
+}
+
+.side-menu__item {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(180, 160, 110, 0.08);
+  color: #a89870;
+  text-align: left;
+  padding: 18px 28px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: Georgia, serif;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.22s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.side-menu__item:hover,
+.side-menu__item:active {
+  color: #e8dfc8;
+  background: rgba(180, 160, 110, 0.06);
+  padding-left: 34px;
+}
+
+.side-menu__item-icon {
+  opacity: 0.65;
+  font-size: 16px;
+}
+
+.side-menu__version {
+  position: absolute;
+  bottom: 24px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: rgba(180, 160, 110, 0.2);
+  font-size: 10px;
+  font-family: monospace;
+  letter-spacing: 3px;
+  margin: 0;
+}

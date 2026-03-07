@@ -1,23 +1,19 @@
-// Background.jsx
-// Atmospheric canvas background that transitions between node themes.
-// Each theme has a color palette matching the card aesthetic.
+// Background/Background.jsx — Atmospheric canvas, unchanged logic, CSS extracted
 
 import { useEffect, useRef } from "react";
+import "./Background.css";
 
-// ── Theme definitions ─────────────────────────────────────────
-// Each theme mirrors the palette of one of the game cards.
 export const THEMES = {
-  forest:  { sky: [28, 52, 40],   fog: [40, 68, 52],   mist: [20, 38, 30] },   // L'Inventore (sage)
-  forge:   { sky: [38, 28, 18],   fog: [58, 42, 22],   mist: [24, 18, 10] },   // warm amber
-  throne:  { sky: [44, 38, 18],   fog: [62, 52, 24],   mist: [26, 22, 10] },   // Caput Mundi (olive)
-  library: { sky: [22, 30, 44],   fog: [30, 40, 58],   mist: [14, 20, 32] },   // Il Libraio (slate)
-  mist:    { sky: [32, 28, 42],   fog: [44, 38, 56],   mist: [20, 18, 30] },   // cool purple
-  dusk:    { sky: [42, 28, 22],   fog: [58, 38, 28],   mist: [28, 18, 14] },   // sunset ochre
-  dawn:    { sky: [24, 36, 46],   fog: [34, 50, 62],   mist: [16, 26, 36] },   // blue dawn
-  title:   { sky: [14, 12, 22],   fog: [22, 18, 36],   mist: [10, 8,  18] },   // near-black indigo
+  forest:  { sky: [28, 52, 40],   fog: [40, 68, 52],   mist: [20, 38, 30] },
+  forge:   { sky: [38, 28, 18],   fog: [58, 42, 22],   mist: [24, 18, 10] },
+  throne:  { sky: [44, 38, 18],   fog: [62, 52, 24],   mist: [26, 22, 10] },
+  library: { sky: [22, 30, 44],   fog: [30, 40, 58],   mist: [14, 20, 32] },
+  mist:    { sky: [32, 28, 42],   fog: [44, 38, 56],   mist: [20, 18, 30] },
+  dusk:    { sky: [42, 28, 22],   fog: [58, 38, 28],   mist: [28, 18, 14] },
+  dawn:    { sky: [24, 36, 46],   fog: [34, 50, 62],   mist: [16, 26, 36] },
+  title:   { sky: [14, 12, 22],   fog: [22, 18, 36],   mist: [10, 8,  18] },
 };
 
-// Lerp between two RGB arrays
 const lerpColor = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
 const rgb = (c) => `rgb(${c[0]},${c[1]},${c[2]})`;
 
@@ -29,27 +25,25 @@ export default function Background({ theme = "title" }) {
   const rafRef      = useRef();
   const timeRef     = useRef(0);
 
-  // Trigger smooth transition whenever theme prop changes
   useEffect(() => {
-    themeRef.current  = { ...themeRef.current };  // keep current as "from"
-    targetRef.current = THEMES[theme] || THEMES.title;
+    themeRef.current    = { ...themeRef.current };
+    targetRef.current   = THEMES[theme] || THEMES.title;
     progressRef.current = 0;
   }, [theme]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx    = canvas.getContext("2d");
-
-    // Particle system — slow-drifting dust/fog motes
     let particles = [];
+
     const initParticles = (W, H) => {
       particles = Array.from({ length: 60 }, () => ({
-        x:    Math.random() * W,
-        y:    Math.random() * H,
-        r:    Math.random() * 120 + 40,
-        vx:   (Math.random() - 0.5) * 0.12,
-        vy:  -(Math.random() * 0.08 + 0.02),
-        a:    Math.random() * 0.06 + 0.01,
+        x:  Math.random() * W,
+        y:  Math.random() * H,
+        r:  Math.random() * 120 + 40,
+        vx: (Math.random() - 0.5) * 0.12,
+        vy: -(Math.random() * 0.08 + 0.02),
+        a:  Math.random() * 0.06 + 0.01,
       }));
     };
 
@@ -65,23 +59,18 @@ export default function Background({ theme = "title" }) {
       const { width: W, height: H } = canvas;
       const t = timeRef.current;
 
-      // Ease-in-out transition progress
-      if (progressRef.current < 1) {
-        progressRef.current = Math.min(1, progressRef.current + 0.008);
-      }
+      if (progressRef.current < 1) progressRef.current = Math.min(1, progressRef.current + 0.008);
       const p    = progressRef.current;
       const ease = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p;
 
-      const cur = themeRef.current;
-      const tgt = targetRef.current;
+      const cur  = themeRef.current;
+      const tgt  = targetRef.current;
       const sky  = lerpColor(cur.sky,  tgt.sky,  ease);
       const fog  = lerpColor(cur.fog,  tgt.fog,  ease);
       const mist = lerpColor(cur.mist, tgt.mist, ease);
 
-      // If fully transitioned, update current
       if (p >= 1) themeRef.current = { ...tgt };
 
-      // ── Sky gradient ───────────────────────────────────────────
       const grad = ctx.createLinearGradient(0, 0, 0, H);
       grad.addColorStop(0,    rgb(sky));
       grad.addColorStop(0.55, rgb(fog));
@@ -89,20 +78,18 @@ export default function Background({ theme = "title" }) {
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, W, H);
 
-      // ── Vignette ───────────────────────────────────────────────
       const vig = ctx.createRadialGradient(W/2, H/2, H*0.15, W/2, H/2, H*0.85);
       vig.addColorStop(0, "rgba(0,0,0,0)");
       vig.addColorStop(1, "rgba(0,0,0,0.55)");
       ctx.fillStyle = vig;
       ctx.fillRect(0, 0, W, H);
 
-      // ── Floating fog particles ─────────────────────────────────
       particles.forEach(pt => {
         pt.x += pt.vx;
         pt.y += pt.vy;
-        if (pt.y + pt.r < 0) { pt.y = H + pt.r; pt.x = Math.random() * W; }
-        if (pt.x < -pt.r)    { pt.x = W + pt.r; }
-        if (pt.x > W + pt.r) { pt.x = -pt.r;    }
+        if (pt.y + pt.r < 0)  { pt.y = H + pt.r; pt.x = Math.random() * W; }
+        if (pt.x < -pt.r)     { pt.x = W + pt.r; }
+        if (pt.x > W + pt.r)  { pt.x = -pt.r; }
 
         const breathe = 0.6 + 0.4 * Math.sin(t * 0.4 + pt.x * 0.01);
         const g2 = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, pt.r);
@@ -112,7 +99,6 @@ export default function Background({ theme = "title" }) {
         ctx.fillRect(pt.x - pt.r, pt.y - pt.r, pt.r * 2, pt.r * 2);
       });
 
-      // ── Horizontal fog band near bottom ───────────────────────
       const band = ctx.createLinearGradient(0, H * 0.65, 0, H);
       const intensity = 0.12 + 0.05 * Math.sin(t * 0.25);
       band.addColorStop(0, "rgba(0,0,0,0)");
@@ -131,10 +117,5 @@ export default function Background({ theme = "title" }) {
     };
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}
-    />
-  );
+  return <canvas ref={canvasRef} className="background-canvas" />;
 }

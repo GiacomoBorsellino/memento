@@ -1,28 +1,43 @@
-// App.jsx — Root component
+// App.jsx — Root component with autosave/continue support
 
 import { useState, useCallback, useEffect } from "react";
-import Background from "./components/Background.jsx";
-import TitleScreen from "./components/TitleScreen.jsx";
-import SettingsScreen from "./components/SettingsScreen.jsx";
-import CreditsScreen from "./components/CreditsScreen.jsx";
-import GameScreen from "./components/GameScreen.jsx";
+import Background from "./components/Background/Background.jsx";
+import TitleScreen from "./components/TitleScreen/TitleScreen.jsx";
+import SettingsScreen from "./components/SettingsScreen/SettingsScreen.jsx";
+import CreditsScreen from "./components/CreditsScreen/CreditsScreen.jsx";
+import GameScreen from "./components/GameScreen/GameScreen.jsx";
+import { loadGame, clearAllSaves } from "./db.js";
 
 const DEFAULT_SETTINGS = { volume: 70, sfx: true, textSpeed: 1 };
 
 export default function App() {
-  const [screen, setScreen] = useState("menu");
+  const [screen,   setScreen]   = useState("menu");
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
-  const [story, setStory] = useState(null);
-  const [bgTheme, setBgTheme] = useState("title");
+  const [story,    setStory]    = useState(null);
+  const [bgTheme,  setBgTheme]  = useState("title");
+
+  // Saved state to resume from
+  const [savedNodeIdx,   setSavedNodeIdx]   = useState(0);
+  const [savedInventory, setSavedInventory] = useState([]);
+  const [hasSave,        setHasSave]        = useState(false);
 
   // Load story JSON
   useEffect(() => {
-    fetch("/story.json", {
-      method: "GET",
-    })
+    fetch("/story.json")
       .then((r) => r.json())
       .then(setStory)
       .catch((e) => console.error("Failed to load story.json:", e));
+  }, []);
+
+  // Check for autosave on mount
+  useEffect(() => {
+    loadGame("autosave").then((save) => {
+      if (save && save.nodeIdx > 0) {
+        setSavedNodeIdx(save.nodeIdx);
+        setSavedInventory(save.inventory ?? []);
+        setHasSave(true);
+      }
+    }).catch(() => {});
   }, []);
 
   const handleThemeChange = useCallback((theme) => setBgTheme(theme), []);
@@ -32,9 +47,21 @@ export default function App() {
     setScreen("menu");
   }, []);
 
+  const startNewGame = () => {
+    clearAllSaves().catch(() => {});
+    setSavedNodeIdx(0);
+    setSavedInventory([]);
+    setBgTheme("mist");
+    setScreen("game");
+  };
+
+  const continueGame = () => {
+    setBgTheme("mist");
+    setScreen("game-continue");
+  };
+
   return (
     <div style={{ position: "fixed", inset: 0, overflow: "hidden" }}>
-      {/* Global styles */}
       <style>{`
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #080604; font-family: Georgia, serif; color: #e8dfc8; }
@@ -51,16 +78,13 @@ export default function App() {
         }
       `}</style>
 
-      {/* Atmospheric background — persists across all screens */}
       <Background theme={bgTheme} />
 
-      {/* Screens */}
       {screen === "menu" && (
         <TitleScreen
-          onStart={() => {
-            setBgTheme("forest");
-            setScreen("game");
-          }}
+          hasSave={hasSave}
+          onStart={startNewGame}
+          onContinue={continueGame}
           onSettings={() => setScreen("settings")}
           onCredits={() => setScreen("credits")}
         />
@@ -78,30 +102,25 @@ export default function App() {
         <CreditsScreen onBack={() => setScreen("menu")} />
       )}
 
-      {screen === "game" && story && (
+      {(screen === "game" || screen === "game-continue") && story && (
         <GameScreen
+          key={screen} // remount on new game vs continue
           story={story}
           settings={settings}
           onMenu={goToMenu}
           onThemeChange={handleThemeChange}
+          initialNodeIdx={screen === "game-continue" ? savedNodeIdx : 0}
+          initialInventory={screen === "game-continue" ? savedInventory : []}
         />
       )}
 
-      {screen === "game" && !story && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 10,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#5a5040",
-            fontFamily: "Georgia, serif",
-            letterSpacing: "4px",
-            fontSize: 12,
-          }}
-        >
+      {(screen === "game" || screen === "game-continue") && !story && (
+        <div style={{
+          position: "fixed", inset: 0, zIndex: 10,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          color: "#5a5040", fontFamily: "Georgia, serif",
+          letterSpacing: "4px", fontSize: 12,
+        }}>
           Caricamento...
         </div>
       )}

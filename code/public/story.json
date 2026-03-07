@@ -1,125 +1,157 @@
 [
   {
     "indexNode": 0,
-    "theme": "forest",
+    "theme": "mist",
     "texts": [
-      "Ti svegli in una stanza che non riconosci.",
-      "L'aria sa di inchiostro vecchio e legno bagnato.",
-      "Tre figure attendono nell'ombra — ognuna porta qualcosa che non rammenti di aver dimenticato."
+      "Un laboratorio abbandonato. Pavimento di linoleum, luci al neon che sfarfallano.",
+      "Sul bancone metallico, una provetta sigillata con un liquido scuro attira la tua attenzione.",
+      "Potresti averla con te — o ignorarla."
     ],
     "cardsSelected": [
       {
         "indexCard": 0,
         "cardPath": "./assets/cards/card_inventore.png",
         "nextNode": 1,
-        "textCard": "L'Inventore",
-        "effectCard": "La mente che crea ricorda tutto"
+        "textCard": "Raccogli il Campione",
+        "effectCard": "Metti la provetta in tasca",
+        "addToInventory": {
+          "id": "blood",
+          "name": "Campione di Sangue",
+          "description": "Una provetta sigillata. Il liquido scuro potrebbe rivelare la verità.",
+          "imagePath": "./assets/inventory/blood.png"
+        }
       },
       {
         "indexCard": 1,
         "cardPath": "./assets/cards/card_caput_mundi.png",
-        "nextNode": 2,
-        "textCard": "Caput Mundi",
-        "effectCard": "Il potere ha una memoria corta"
-      },
-      {
-        "indexCard": 2,
-        "cardPath": "./assets/cards/card_libraio.png",
-        "nextNode": 3,
-        "textCard": "Il Libraio",
-        "effectCard": "Le parole sopravvivono agli uomini"
+        "nextNode": 1,
+        "textCard": "Lascia Stare",
+        "effectCard": "Non è affare tuo — almeno per ora"
       }
-    ],
-    "dice": false
+    ]
   },
   {
     "indexNode": 1,
     "theme": "forge",
     "texts": [
-      "L'inventore ti conduce nel suo laboratorio sotterraneo.",
-      "Macchinari ronzanti riempiono ogni angolo.",
-      "«Tutto può essere ricostruito», dice. «Anche una memoria.»",
-      "Lancia il dado del fato — il caso decide cosa troverai."
+      "Entri nel laboratorio principale. Il generatore ronza nell'oscurità.",
+      "Attrezzature coperte di polvere, monitor spenti. Qualcuno ha abbandonato questo posto in fretta.",
+      "Il caso decide il tuo prossimo passo — lancia il dado."
     ],
-    "cardsSelected": false,
     "dice": [
-      { "range": [1, 2], "nextNode": 4 },
-      { "range": [3, 4], "nextNode": 5 },
-      { "range": [5, 6], "nextNode": 6 }
+      { "range": [1, 2], "nextNode": 2 },
+      { "range": [3, 4], "nextNode": 3 },
+      { "range": [5, 6], "nextNode": 4 }
     ]
   },
   {
     "indexNode": 2,
     "theme": "throne",
     "texts": [
-      "La sala del trono è vuota.",
-      "Eppure la tua presenza viene attesa da tempo.",
-      "Sul cuscino reale, tre sigilli in cera attendono il tuo tocco."
+      "Una stanza con tre porte. L'odore di disinfettante non riesce a mascherare qualcosa di più antico.",
+      "Da qualche parte si sente il ticchettio di un orologio."
     ],
     "cardsSelected": [
       {
         "indexCard": 0,
-        "cardPath": "./assets/cards/card_inventore.png",
-        "nextNode": 4,
-        "textCard": "Sigillo dell'Ingegno",
-        "effectCard": "La conoscenza è potere"
+        "cardPath": "./assets/cards/card_caput_mundi.png",
+        "nextNode": 6,
+        "textCard": "Porta di Uscita",
+        "effectCard": "Meglio non sapere"
       },
       {
         "indexCard": 1,
-        "cardPath": "./assets/cards/card_libraio.png",
+        "cardPath": "./assets/cards/card_inventore.png",
         "nextNode": 5,
-        "textCard": "Sigillo della Parola",
-        "effectCard": "La storia è scritta dai sopravvissuti"
+        "textCard": "Laboratorio Segreto",
+        "effectCard": "Il campione è la chiave",
+        "requiresItem": "blood"
+      },
+      {
+        "indexCard": 2,
+        "cardPath": "./assets/cards/card_libraio.png",
+        "nextNode": 6,
+        "textCard": "Prendi la Sedia",
+        "effectCard": "Una sedia da laboratorio in buono stato",
+        "addToInventory": {
+          "id": "chair",
+          "name": "Sedia da Laboratorio",
+          "description": "Una comoda sedia su ruote. Non chiedere perché l'hai presa.",
+          "imagePath": "./assets/inventory/rolling-chair.png"
+        }
       }
-    ],
-    "dice": false
+    ]
   },
   {
     "indexNode": 3,
     "theme": "library",
     "texts": [
-      "Il libraio apre un tomo immenso.",
-      "Le pagine profumano di lavanda e cenere.",
-      "«Il tuo nome è scritto qui», sussurra. «Vuoi leggerlo?»"
+      "L'archivio è pieno di fascicoli polverosi.",
+      "Nomi, date, diagnosi — tutto catalogato con cura ossessiva.",
+      "Un fascicolo aperto sul tavolo porta il tuo nome."
     ],
-    "cardsSelected": false,
-    "dice": false,
-    "nextNode": 6
+    "cardsSelected": [
+      {
+        "indexCard": 0,
+        "cardPath": "./assets/cards/card_libraio.png",
+        "nextNode": 5,
+        "textCard": "Analizza il Campione",
+        "effectCard": "La verità è nel sangue",
+        "requiresItem": "blood",
+        "removeFromInventory": "blood"
+      },
+      {
+        "indexCard": 1,
+        "cardPath": "./assets/cards/card_caput_mundi.png",
+        "nextNode": 6,
+        "textCard": "Brucia i Documenti",
+        "effectCard": "Alcune storie non devono essere raccontate"
+      }
+    ]
   },
   {
     "indexNode": 4,
-    "theme": "mist",
+    "theme": "forest",
     "texts": [
-      "Tra gli ingranaggi trovi uno specchio annerito.",
-      "Nel riflesso, un volto che non è il tuo — eppure lo riconosci.",
-      "La memoria comincia a tornare, lenta come la marea."
+      "Una stanza nascosta oltre una parete scorrevole.",
+      "Registrazioni video, documenti cifrati, fotografie.",
+      "Hai trovato l'intero dossier — ma qualcuno ti sta seguendo."
     ],
-    "cardsSelected": false,
-    "dice": false,
-    "isEnd": true
+    "cardsSelected": [
+      {
+        "indexCard": 0,
+        "cardPath": "./assets/cards/card_inventore.png",
+        "nextNode": 5,
+        "textCard": "Prendi Tutto",
+        "effectCard": "Le prove valgono il rischio"
+      },
+      {
+        "indexCard": 1,
+        "cardPath": "./assets/cards/card_libraio.png",
+        "nextNode": 6,
+        "textCard": "Fuggi Subito",
+        "effectCard": "La sopravvivenza prima di tutto"
+      }
+    ]
   },
   {
     "indexNode": 5,
-    "theme": "dusk",
+    "theme": "dawn",
     "texts": [
-      "Il sentiero si apre su una pianura coperta di nebbia.",
-      "In lontananza, luci di un villaggio — il tuo villaggio.",
-      "Forse non tutto è perduto."
+      "La verità emerge dai dati, fredda e inconfutabile.",
+      "Il laboratorio era un fronte. Le sperimentazioni, illegali.",
+      "Con le prove in mano, il silenzio non è più un'opzione."
     ],
-    "cardsSelected": false,
-    "dice": false,
     "isEnd": true
   },
   {
     "indexNode": 6,
-    "theme": "dawn",
+    "theme": "dusk",
     "texts": [
-      "Il tuo nome nel libro è cancellato.",
-      "Eppure la storia continua.",
-      "Forse sei tu a doverla scrivere."
+      "Il corridoio si svuota. I passi si allontanano.",
+      "Forse alcune risposte non vale la pena cercare.",
+      "Il laboratorio tornerà al silenzio — almeno per stanotte."
     ],
-    "cardsSelected": false,
-    "dice": false,
     "isEnd": true
   }
 ]

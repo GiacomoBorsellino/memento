@@ -1,0 +1,168 @@
+/* CardFan.css */
+
+.card-fan {
+  position: relative;
+  height: 310px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  max-width: 580px;
+  margin: 20px auto 90px;
+}
+
+/* Invisible backdrop — tapping it closes the mobile preview */
+.card-fan__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  background: transparent;
+}
+
+/* Individual card wrapper */
+.card-fan__card {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.38s cubic-bezier(0.34, 1.45, 0.64, 1);
+  cursor: pointer;
+  z-index: 10;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.card-fan__card--locked {
+  cursor: default;
+  pointer-events: none;
+}
+
+.card-fan__card--active {
+  z-index: 100 !important;
+}
+
+/* Card image wrapper */
+.card-fan__image-wrapper {
+  width: 130px;
+  height: 200px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65);
+  transition: box-shadow 0.35s ease;
+}
+
+.card-fan__card--active .card-fan__image-wrapper {
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.card-fan__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.88);
+  transition: filter 0.3s ease;
+}
+
+.card-fan__card--active .card-fan__image {
+  filter: brightness(1.08);
+}
+
+.card-fan__card--locked .card-fan__image {
+  filter: brightness(0.45);
+}
+
+/* Hover sheen overlay */
+.card-fan__sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+/* Label ribbon — appears on hover (desktop) or tap-preview (mobile) */
+.card-fan__label {
+  margin-top: 8px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.28s ease, transform 0.28s ease;
+  text-align: center;
+  position: absolute;
+  bottom: -82px;
+  width: 170px;
+  pointer-events: none;
+}
+
+.card-fan__label--visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.card-fan__label-title {
+  margin: 0 0 3px;
+  color: #e8dfc8;
+  font-family: 'Georgia', 'Palatino Linotype', serif;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+}
+
+.card-fan__label-effect {
+  margin: 0 0 8px;
+  color: #a89870;
+  font-family: 'Georgia', serif;
+  font-size: 10px;
+  font-style: italic;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+/* Confirm button — shown only on touch devices in preview state */
+.card-fan__confirm-btn {
+  display: none;
+  background: rgba(168, 152, 112, 0.15);
+  border: 1px solid rgba(180, 160, 110, 0.5);
+  color: #e8dfc8;
+  padding: 8px 22px;
+  font-family: 'Georgia', serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card-fan__confirm-btn:active {
+  background: rgba(168, 152, 112, 0.3);
+}
+
+/* Show confirm button only on touch devices */
+.card-fan--touch .card-fan__confirm-btn {
+  display: inline-block;
+}
+
+/* Responsive — smaller cards on narrow screens */
+@media (max-width: 480px) {
+  .card-fan {
+    height: 260px;
+    margin-bottom: 100px;
+  }
+
+  .card-fan__image-wrapper {
+    width: 105px;
+    height: 165px;
+  }
+
+  .card-fan__label {
+    width: 145px;
+    bottom: -88px;
+  }
+
+  .card-fan__label-title {
+    font-size: 12px;
+  }
+}

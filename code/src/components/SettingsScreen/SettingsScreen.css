@@ -1,0 +1,154 @@
+/* SettingsScreen.css */
+
+.settings-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-screen__panel {
+  background: rgba(8, 6, 4, 0.95);
+  border: 1px solid rgba(180, 160, 110, 0.2);
+  padding: 44px 52px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.8);
+  position: relative;
+}
+
+.settings-screen__corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: rgba(180, 160, 110, 0.35);
+  border-style: solid;
+}
+
+.settings-screen__title {
+  color: #e8dfc8;
+  letter-spacing: 8px;
+  font-family: Georgia, serif;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 36px;
+  font-weight: normal;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+.settings-screen__label {
+  color: #7a6a50;
+  font-size: 10px;
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  font-family: monospace;
+  display: block;
+}
+
+.settings-screen__range-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.settings-screen__range-row input {
+  flex: 1;
+  accent-color: #a89870;
+  cursor: pointer;
+}
+
+.settings-screen__range-val {
+  color: #a89870;
+  font-family: monospace;
+  font-size: 12px;
+  min-width: 32px;
+}
+
+.settings-screen__toggle {
+  padding: 10px 28px;
+  cursor: pointer;
+  font-family: Georgia, serif;
+  letter-spacing: 2px;
+  font-size: 12px;
+  margin-bottom: 28px;
+  transition: all 0.25s;
+  display: block;
+}
+
+.settings-screen__toggle--on {
+  background: rgba(168, 152, 112, 0.12);
+  border: 1px solid rgba(180, 160, 110, 0.5);
+  color: #e8dfc8;
+}
+
+.settings-screen__toggle--off {
+  background: transparent;
+  border: 1px solid rgba(180, 160, 110, 0.18);
+  color: #5a5040;
+}
+
+.settings-screen__speeds {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+
+.settings-screen__speed-btn {
+  flex: 1;
+  padding: 10px 0;
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 1px;
+  font-family: Georgia, serif;
+  transition: all 0.2s;
+}
+
+.settings-screen__speed-btn--active {
+  background: rgba(168, 152, 112, 0.15);
+  border: 1px solid rgba(180, 160, 110, 0.5);
+  color: #e8dfc8;
+}
+
+.settings-screen__speed-btn--inactive {
+  background: transparent;
+  border: 1px solid rgba(180, 160, 110, 0.14);
+  color: #5a5040;
+}
+
+.settings-screen__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.settings-screen__btn {
+  flex: 1;
+  padding: 12px 0;
+  cursor: pointer;
+  font-family: Georgia, serif;
+  letter-spacing: 3px;
+  font-size: 11px;
+  text-transform: uppercase;
+  transition: all 0.22s;
+}
+
+.settings-screen__btn--primary {
+  background: rgba(168, 152, 112, 0.12);
+  border: 1px solid rgba(180, 160, 110, 0.4);
+  color: #e8dfc8;
+}
+
+.settings-screen__btn--ghost {
+  background: transparent;
+  border: 1px solid rgba(180, 160, 110, 0.14);
+  color: #6a5a40;
+}
+
+.settings-screen__btn:hover {
+  border-color: rgba(180, 160, 110, 0.6);
+  color: #e8dfc8;
+}
