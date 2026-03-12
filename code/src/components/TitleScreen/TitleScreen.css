@@ -13,7 +13,9 @@
 .title-screen__header {
   text-align: center;
   margin-bottom: 14px;
-  transition: opacity 1.6s ease, transform 1.6s ease;
+  transition:
+    opacity 1.6s ease,
+    transform 1.6s ease;
 }
 
 .title-screen__header--hidden {
@@ -29,7 +31,12 @@
 .title-screen__line {
   width: 80px;
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(200, 175, 120, 0.5), transparent);
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(200, 175, 120, 0.5),
+    transparent
+  );
   margin: 0 auto 22px;
 }
 
@@ -39,12 +46,15 @@
 
 .title-screen__h1 {
   font-size: clamp(52px, 10vw, 108px);
-  font-family: Georgia, 'Palatino Linotype', serif;
+  font-family: Georgia, "Palatino Linotype", serif;
   color: #e8dfc8;
   letter-spacing: 20px;
+  padding-left: 20px;
   margin: 0;
   font-weight: normal;
-  text-shadow: 0 2px 40px rgba(168, 152, 112, 0.45), 0 0 80px rgba(168, 152, 112, 0.15);
+  text-shadow:
+    0 2px 40px rgba(168, 152, 112, 0.45),
+    0 0 80px rgba(168, 152, 112, 0.15);
 }
 
 .title-screen__subtitle {
@@ -56,8 +66,12 @@
   transition: opacity 1s ease;
 }
 
-.title-screen__subtitle--hidden { opacity: 0; }
-.title-screen__subtitle--visible { opacity: 1; }
+.title-screen__subtitle--hidden {
+  opacity: 0;
+}
+.title-screen__subtitle--visible {
+  opacity: 1;
+}
 
 .title-screen__menu {
   display: flex;
@@ -76,7 +90,7 @@
   font-size: 12px;
   letter-spacing: 6px;
   cursor: pointer;
-  font-family: Georgia, 'Palatino Linotype', serif;
+  font-family: Georgia, "Palatino Linotype", serif;
   text-transform: uppercase;
   width: 240px;
   text-align: center;
