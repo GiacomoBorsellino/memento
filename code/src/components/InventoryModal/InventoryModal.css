@@ -63,8 +63,12 @@
 }
 
 @keyframes imFadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Header */
@@ -79,7 +83,7 @@
 
 .inventory-modal__title {
   color: #e8dfc8;
-  font-family: 'Georgia', serif;
+  font-family: "Georgia", serif;
   font-size: 13px;
   letter-spacing: 6px;
   text-transform: uppercase;
@@ -141,6 +145,8 @@
 .inventory-modal__item-img {
   width: 140px;
   height: 140px;
+  border-radius: 5px;
+  border: 1px solid #a89870;
   object-fit: contain;
   filter: invert(1) sepia(0.3) brightness(0.85);
   opacity: 0.85;
@@ -148,8 +154,14 @@
 }
 
 @keyframes imItemIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 0.85; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 0.85;
+    transform: none;
+  }
 }
 
 .inventory-modal__item-info {
@@ -158,7 +170,7 @@
 
 .inventory-modal__item-name {
   color: #e8dfc8;
-  font-family: 'Georgia', serif;
+  font-family: "Georgia", serif;
   font-size: 16px;
   letter-spacing: 2px;
   margin: 0 0 8px;
@@ -166,7 +178,7 @@
 
 .inventory-modal__item-desc {
   color: #7a6a50;
-  font-family: 'Georgia', serif;
+  font-family: "Georgia", serif;
   font-size: 12px;
   font-style: italic;
   line-height: 1.6;
@@ -199,7 +211,7 @@
 /* Empty state */
 .inventory-modal__empty {
   color: #4a4030;
-  font-family: 'Georgia', serif;
+  font-family: "Georgia", serif;
   font-size: 14px;
   font-style: italic;
   letter-spacing: 1px;
@@ -211,6 +223,11 @@
 .inventory-modal__divider {
   width: 60px;
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(180, 160, 110, 0.3), transparent);
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(180, 160, 110, 0.3),
+    transparent
+  );
   margin: 0 auto 24px;
 }
