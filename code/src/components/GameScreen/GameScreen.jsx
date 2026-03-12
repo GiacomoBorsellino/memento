@@ -5,7 +5,12 @@ import CardFan from "../CardFan/CardFan.jsx";
 import Dice from "../Dice/Dice.jsx";
 import SideMenu from "../SideMenu/SideMenu.jsx";
 import InventoryModal from "../InventoryModal/InventoryModal.jsx";
-import { sfxTextReveal, sfxTransition, sfxMenuOpen } from "../audio.js";
+import {
+  sfxTextReveal,
+  sfxTransition,
+  sfxMenuOpen,
+  startAmbientMusic,
+} from "../audio.js";
 import { saveGame, loadGame } from "../../db.js";
 import "./GameScreen.css";
 
@@ -19,17 +24,17 @@ export default function GameScreen({
   initialNodeIdx = 0,
   initialInventory = [],
 }) {
-  const [nodeIdx, setNodeIdx]       = useState(initialNodeIdx);
-  const [inventory, setInventory]   = useState(initialInventory);
+  const [nodeIdx, setNodeIdx] = useState(initialNodeIdx);
+  const [inventory, setInventory] = useState(initialInventory);
   const [shownTexts, setShownTexts] = useState([]);
   const [textCursor, setTextCursor] = useState(0);
   const [showChoices, setShowChoices] = useState(false);
   const [cardLocked, setCardLocked] = useState(false);
-  const [menuOpen, setMenuOpen]     = useState(false);
-  const [fadeOut, setFadeOut]       = useState(false);
-  const [key, setKey]               = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
+  const [key, setKey] = useState(0);
 
-  const node  = story[nodeIdx];
+  const node = story[nodeIdx];
   const delay = TEXT_DELAYS[settings.textSpeed ?? 1];
 
   // Notify parent of theme change
@@ -43,6 +48,7 @@ export default function GameScreen({
     setTextCursor(0);
     setShowChoices(false);
     setCardLocked(false);
+    startAmbientMusic();
   }, [nodeIdx, key]);
 
   // Sequential text reveal
@@ -50,7 +56,12 @@ export default function GameScreen({
     if (!node) return;
     if (textCursor >= node.texts.length) {
       // Auto-advance nodes with no choices
-      if (node.nextNode != null && !node.isEnd && !node.cardsSelected && !node.dice) {
+      if (
+        node.nextNode != null &&
+        !node.isEnd &&
+        !node.cardsSelected &&
+        !node.dice
+      ) {
         const t = setTimeout(() => goTo(node.nextNode), 500);
         return () => clearTimeout(t);
       }
@@ -68,21 +79,26 @@ export default function GameScreen({
       textCursor === 0 ? 700 : delay,
     );
     return () => clearTimeout(t);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [textCursor, node, delay]);
 
-  const goTo = useCallback((idx, newInventory) => {
-    sfxTransition();
-    setFadeOut(true);
-    setTimeout(() => {
-      setFadeOut(false);
-      setNodeIdx(idx);
-      // Autosave whenever we advance
-      const inv = newInventory ?? inventory;
-      saveGame("autosave", { nodeIdx: idx, inventory: inv }).catch(console.error);
-    }, 700);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inventory]);
+  const goTo = useCallback(
+    (idx, newInventory) => {
+      sfxTransition();
+      setFadeOut(true);
+      setTimeout(() => {
+        setFadeOut(false);
+        setNodeIdx(idx);
+        // Autosave whenever we advance
+        const inv = newInventory ?? inventory;
+        saveGame("autosave", { nodeIdx: idx, inventory: inv }).catch(
+          console.error,
+        );
+      }, 700);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [inventory],
+  );
 
   // ── Inventory helpers ──────────────────────────────────────
   const applyInventoryChanges = (card, currentInventory) => {
@@ -111,7 +127,9 @@ export default function GameScreen({
 
   const handleDiceResult = (result) => {
     if (!node.dice) return;
-    const rule = node.dice.find((r) => result >= r.range[0] && result <= r.range[1]);
+    const rule = node.dice.find(
+      (r) => result >= r.range[0] && result <= r.range[1],
+    );
     if (rule) goTo(rule.nextNode);
   };
 
@@ -127,11 +145,13 @@ export default function GameScreen({
 
   return (
     <div className={`game-screen${fadeOut ? " game-screen--fade" : ""}`}>
-
       {/* ── Hamburger button ──────────────────────────────── */}
       <button
         className="game-screen__menu-btn"
-        onClick={() => { sfxMenuOpen(); setMenuOpen((p) => !p); }}
+        onClick={() => {
+          sfxMenuOpen();
+          setMenuOpen((p) => !p);
+        }}
         aria-label="Menu"
       >
         {[0, 1, 2].map((i) => (
@@ -142,7 +162,9 @@ export default function GameScreen({
               menuOpen && i === 0 ? "game-screen__menu-bar--top-open" : "",
               menuOpen && i === 1 ? "game-screen__menu-bar--mid-open" : "",
               menuOpen && i === 2 ? "game-screen__menu-bar--bot-open" : "",
-            ].filter(Boolean).join(" ")}
+            ]
+              .filter(Boolean)
+              .join(" ")}
           />
         ))}
       </button>
@@ -151,7 +173,10 @@ export default function GameScreen({
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
         onRestart={restart}
-        onMainMenu={() => { setMenuOpen(false); onMenu(); }}
+        onMainMenu={() => {
+          setMenuOpen(false);
+          onMenu();
+        }}
       />
 
       {/* ── Inventory button + modal ───────────────────────── */}
@@ -166,7 +191,9 @@ export default function GameScreen({
               key={i}
               className={[
                 "game-screen__text",
-                i === 0 ? "game-screen__text--first" : "game-screen__text--body",
+                i === 0
+                  ? "game-screen__text--first"
+                  : "game-screen__text--body",
                 i === shownTexts.length - 1
                   ? "game-screen__text--current"
                   : "game-screen__text--past",
