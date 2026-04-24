@@ -1,5 +1,7 @@
 # MEMENTO
 
+![findyourway](./_material/findyourway.png "findyourway")
+
 ### Un racconto interattivo — Gamebook engine in React
 
 > _"Non tutto ciò che è dimenticato è perduto."_
