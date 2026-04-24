@@ -1,7 +1,7 @@
 # MEMENTO
 
 <p align="center">
-  <img src="./_material/findyourway.png" width="350">
+  <img src="./_material/findyourway.png" width="360">
 </p>
 
 ### Un racconto interattivo — Gamebook engine in React
