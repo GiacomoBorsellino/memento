@@ -1,6 +1,6 @@
 # MEMENTO
 
-![findyourway](./_material/findyourway.png "findyourway")
+<img src="./_material/findyourway.png" alt="findyourway" height="200">
 
 ### Un racconto interattivo — Gamebook engine in React
 
