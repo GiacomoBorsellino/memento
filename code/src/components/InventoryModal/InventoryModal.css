@@ -83,10 +83,9 @@
 
 .inventory-modal__title {
   color: #e8dfc8;
-  font-family: "Georgia", serif;
-  font-size: 13px;
-  letter-spacing: 6px;
-  text-transform: uppercase;
+  font-family: var(--font-title);
+  font-size: 26px;
+  letter-spacing: 2px;
   font-weight: normal;
   margin: 0;
 }

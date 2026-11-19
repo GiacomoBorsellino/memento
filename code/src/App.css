@@ -6,6 +6,19 @@
   overflow: hidden;
 }
 
+/* Paper grain over the whole game, menus included. A static SVG noise tile
+   (feTurbulence) coloured warm sepia: no image file, no animation, no blend
+   mode — so it costs nothing per frame, even on phones. */
+.app::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0.09;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.86 0 0 0 0 0.78 0 0 0 0 0.6 0 0 0 1.9 -0.75'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+
 .app__loading {
   position: fixed;
   inset: 0;

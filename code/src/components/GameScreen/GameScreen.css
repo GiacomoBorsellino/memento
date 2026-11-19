@@ -111,6 +111,20 @@
   color: #7a6a50;
 }
 
+/* Drop cap: the first letter of each scene in the gothic hand, like the
+   rubricated initials of old books. ::first-letter also catches a leading
+   «, so an opening quote is enlarged together with its letter. */
+.game-screen__text--first::first-letter {
+  font-family: var(--font-title);
+  font-size: 1.9em;
+  line-height: 1;
+  color: #c8a84b;
+}
+
+.game-screen__text--first.game-screen__text--past::first-letter {
+  color: #8a7448;
+}
+
 /* Choices area */
 .game-screen__choices {
   animation: mFadeUp 0.7s ease both;
@@ -145,11 +159,10 @@
 }
 
 .end-card__label {
-  color: #5a5040;
-  letter-spacing: 6px;
-  font-size: 10px;
-  font-family: monospace;
-  text-transform: uppercase;
+  color: #c8a84b;
+  letter-spacing: 2px;
+  font-size: 28px;
+  font-family: var(--font-title);
   margin: 0;
 }
 

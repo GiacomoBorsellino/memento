@@ -7,6 +7,20 @@ import "./Background.css";
 const lerpColor = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
 const rgb = (c) => `rgb(${c[0]},${c[1]},${c[2]})`;
 
+// Touch devices get half the raindrops (same check as music.js LITE mode).
+const RAIN_DROPS =
+  typeof window !== "undefined" && window.matchMedia?.("(hover: none)").matches
+    ? 70
+    : 140;
+const RAIN_SLANT = 0.18; // horizontal drift per pixel of fall (wind from the sea)
+
+const newDrop = (W, H, anywhere) => ({
+  x: Math.random() * (W + H * RAIN_SLANT),
+  y: anywhere ? Math.random() * H : -Math.random() * 40,
+  len: Math.random() * 14 + 10,
+  speed: Math.random() * 6 + 9,
+});
+
 export default function Background({ theme = "title" }) {
   const canvasRef = useRef();
   const fromRef = useRef(THEMES[theme] || THEMES.title); // transition start
@@ -28,6 +42,7 @@ export default function Background({ theme = "title" }) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     let particles = [];
+    let drops = [];
 
     const initParticles = (W, H) => {
       particles = Array.from({ length: 60 }, () => ({
@@ -38,6 +53,7 @@ export default function Background({ theme = "title" }) {
         vy: -(Math.random() * 0.08 + 0.02),
         a: Math.random() * 0.06 + 0.01,
       }));
+      drops = Array.from({ length: RAIN_DROPS }, () => newDrop(W, H, true));
     };
 
     const resize = () => {
@@ -62,7 +78,9 @@ export default function Background({ theme = "title" }) {
       const sky = lerpColor(from.sky, tgt.sky, ease);
       const fog = lerpColor(from.fog, tgt.fog, ease);
       const mist = lerpColor(from.mist, tgt.mist, ease);
-      shownRef.current = { sky, fog, mist };
+      const fromRain = from.rain ?? 0;
+      const rain = fromRain + ((tgt.rain ?? 0) - fromRain) * ease;
+      shownRef.current = { sky, fog, mist, rain };
 
       const grad = ctx.createLinearGradient(0, 0, 0, H);
       grad.addColorStop(0, rgb(sky));
@@ -115,6 +133,26 @@ export default function Background({ theme = "title" }) {
       band.addColorStop(1, `rgba(${fog[0]},${fog[1]},${fog[2]},${intensity})`);
       ctx.fillStyle = band;
       ctx.fillRect(0, 0, W, H);
+
+      // Rain: thin slanted streaks, all in one path and one stroke() so a
+      // hundred drops cost about as much as a single line. Skipped entirely
+      // when no rain is showing; while it fades in/out, fewer drops are drawn.
+      if (rain > 0.01) {
+        const visible = Math.round(drops.length * rain);
+        ctx.beginPath();
+        for (let i = 0; i < drops.length; i++) {
+          const d = drops[i];
+          d.y += d.speed;
+          d.x -= d.speed * RAIN_SLANT;
+          if (d.y - d.len > H) Object.assign(d, newDrop(W, H, false));
+          if (i >= visible) continue;
+          ctx.moveTo(d.x, d.y);
+          ctx.lineTo(d.x + d.len * RAIN_SLANT, d.y - d.len);
+        }
+        ctx.strokeStyle = `rgba(190,205,218,${0.22 * rain})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
 
       timeRef.current += 0.016;
       rafRef.current = requestAnimationFrame(draw);

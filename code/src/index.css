@@ -1,6 +1,17 @@
 /* index.css — global reset and base styles (moved here from App.jsx) */
 
+/* Elementary Gothic Bookhand (Bill Roach, SIL OFL 1.1 — licence next to the
+   file). Imported from src/ so Vite fingerprints it and the URL follows
+   `base`. font-display: swap → titles show in Georgia until it loads. */
+@font-face {
+  font-family: "Elementary Gothic Bookhand";
+  src: url("./assets/fonts/Elementary_Gothic_Bookhand.ttf") format("truetype");
+  font-display: swap;
+}
+
 :root {
+  /* Titles and drop caps only: the gothic hand is hard to read in paragraphs. */
+  --font-title: "Elementary Gothic Bookhand", Georgia, serif;
   color-scheme: dark;
   font-synthesis: none;
   text-rendering: optimizeLegibility;

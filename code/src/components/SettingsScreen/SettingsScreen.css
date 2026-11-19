@@ -29,14 +29,13 @@
 
 .settings-screen__title {
   color: #e8dfc8;
-  letter-spacing: 8px;
-  font-family: Georgia, serif;
+  letter-spacing: 3px;
+  font-family: var(--font-title);
   text-align: center;
   margin-top: 0;
   margin-bottom: 36px;
   font-weight: normal;
-  font-size: 18px;
-  text-transform: uppercase;
+  font-size: 30px;
 }
 
 .settings-screen__label {

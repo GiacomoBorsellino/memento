@@ -8,6 +8,7 @@ const CREDITS = [
   ["Arte delle Carte",     "Giacomo Borsellino"],
   ["Sviluppo",             "JavaScript · React"],
   ["Musica & Suono",       "Web Audio API"],
+  ["Font dei titoli · Bill Roach", "Elementary Gothic Bookhand"],
 ];
 
 export default function CreditsScreen({ onBack }) {

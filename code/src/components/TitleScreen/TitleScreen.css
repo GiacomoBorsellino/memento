@@ -45,11 +45,15 @@
 }
 
 .title-screen__h1 {
-  font-size: clamp(52px, 10vw, 108px);
-  font-family: Georgia, "Palatino Linotype", serif;
+  /* The gothic capitals are wide (MEMENTO ≈ 8em): 10.5vw keeps it inside a
+     phone screen, the spacing scales with the size. Line-height 1.3 because
+     the glyphs rise above a tighter line box and touch the rule above. */
+  font-size: clamp(34px, 10.5vw, 120px);
+  line-height: 1.3;
+  font-family: var(--font-title);
   color: #e8dfc8;
-  letter-spacing: 20px;
-  padding-left: 20px;
+  letter-spacing: 0.06em;
+  padding-left: 0.06em;
   margin: 0;
   font-weight: normal;
   text-shadow:
@@ -58,11 +62,12 @@
 }
 
 .title-screen__subtitle {
-  color: rgba(168, 152, 112, 0.55);
+  color: rgba(200, 168, 75, 0.7);
   letter-spacing: 7px;
-  font-size: 10px;
+  padding-left: 7px;
+  font-size: 12px;
   margin-top: 14px;
-  font-family: monospace;
+  font-family: Georgia, "Palatino Linotype", serif;
   transition: opacity 1s ease;
 }
 
