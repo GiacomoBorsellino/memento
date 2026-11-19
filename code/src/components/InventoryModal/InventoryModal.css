@@ -232,3 +232,24 @@
   );
   margin: 0 auto 24px;
 }
+
+/* Placeholder when an item has no image: emoji icon toned to the palette */
+.inventory-modal__item-icon {
+  width: 140px;
+  height: 140px;
+  border-radius: 5px;
+  border: 1px solid rgba(168, 152, 112, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+  filter: grayscale(1) sepia(0.6) brightness(0.9);
+  opacity: 0.85;
+  animation: imItemIn 0.4s ease both;
+}
+
+.inventory-modal__item-qty {
+  color: #a89870;
+  font-size: 13px;
+  letter-spacing: 1px;
+}

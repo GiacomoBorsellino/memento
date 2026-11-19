@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "validate": "node scripts/validate-story.js",
     "preview": "vite preview"
   },
   "dependencies": {

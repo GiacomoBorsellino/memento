@@ -1,6 +1,7 @@
 // InventoryModal/InventoryModal.jsx
 // Floating bag button → full-screen modal with CSS scroll-snap carousel.
-// Each slide shows: item image, name, description.
+// Each slide shows: item image (or an emoji `icon` placeholder), name ×quantity,
+// description.
 
 import { useState, useRef, useEffect } from "react";
 import "./InventoryModal.css";
@@ -92,13 +93,24 @@ export default function InventoryModal({ inventory = [] }) {
               >
                 {inventory.map((item) => (
                   <div key={item.id} className="inventory-modal__slide">
-                    <img
-                      src={item.imagePath}
-                      alt={item.name}
-                      className="inventory-modal__item-img"
-                    />
+                    {item.imagePath ? (
+                      <img
+                        src={item.imagePath}
+                        alt={item.name}
+                        className="inventory-modal__item-img"
+                      />
+                    ) : (
+                      <div className="inventory-modal__item-icon" aria-hidden="true">
+                        {item.icon ?? item.name?.[0] ?? "?"}
+                      </div>
+                    )}
                     <div className="inventory-modal__item-info">
-                      <p className="inventory-modal__item-name">{item.name}</p>
+                      <p className="inventory-modal__item-name">
+                        {item.name}
+                        {item.quantity > 1 && (
+                          <span className="inventory-modal__item-qty"> ×{item.quantity}</span>
+                        )}
+                      </p>
                       <p className="inventory-modal__item-desc">
                         {item.description}
                       </p>

@@ -1,33 +1,27 @@
 // CardFan/CardFan.jsx
-// Displays a fan of card images with:
+// Displays a fan of cards with:
 //   Desktop: hover → preview label, click → select
 //   Mobile:  first tap → preview label + confirm button, "Scegli" → select
 //            backdrop tap → dismiss preview
-// Inventory: cards with requiresItem are hidden unless item is in inventory
+// A card with `cardPath` shows that image; without it, a minimal text card
+// (title on a framed face) is drawn in CSS.
+// The parent passes only the cards whose conditions are met (engine.js).
 
 import { useState } from "react";
 import { sfxCardHover, sfxCardSelect } from "../audio.js";
 import "./CardFan.css";
 
 // Devices whose primary input can't hover (phones, tablets) get the
-// tap-to-preview + confirm flow. Evaluated once: it doesn't change at runtime
-// in practice, and it's known before the first touch (unlike touchstart).
+// tap-to-preview + confirm flow. Known before the first touch.
 const isTouchDevice =
   typeof window !== "undefined" &&
   typeof window.matchMedia === "function" &&
   window.matchMedia("(hover: none)").matches;
 
-export default function CardFan({ cards, onSelect, locked, inventory = [] }) {
+export default function CardFan({ cards, onSelect, locked }) {
   const [activeIdx, setActiveIdx] = useState(null); // hovered/previewed card
 
-  // Filter cards based on inventory requirements
-  const visibleCards = cards.filter(
-    (card) =>
-      !card.requiresItem ||
-      inventory.some((item) => item.id === card.requiresItem),
-  );
-
-  const n = visibleCards.length;
+  const n = cards.length;
   const spread = n <= 2 ? 18 : n === 3 ? 22 : 26;
 
   // ── Desktop: hover handlers ────────────────────────────────
@@ -45,14 +39,13 @@ export default function CardFan({ cards, onSelect, locked, inventory = [] }) {
   const handleClick = (card, i) => {
     if (locked) return;
     if (isTouchDevice) {
-      // First tap: open preview
+      // First tap: open preview; tapping the same card again closes it
       if (activeIdx !== i) {
         setActiveIdx(i);
         sfxCardHover();
-        return;
+      } else {
+        setActiveIdx(null);
       }
-      // Second tap directly on card (not confirm btn) — close preview
-      setActiveIdx(null);
       return;
     }
     // Desktop click
@@ -70,17 +63,15 @@ export default function CardFan({ cards, onSelect, locked, inventory = [] }) {
     onSelect(card);
   };
 
-  const handleBackdrop = () => setActiveIdx(null);
-
   return (
     <>
       {/* Backdrop for dismissing mobile preview */}
       {isTouchDevice && activeIdx !== null && (
-        <div className="card-fan__backdrop" onClick={handleBackdrop} />
+        <div className="card-fan__backdrop" onClick={() => setActiveIdx(null)} />
       )}
 
       <div className={`card-fan${isTouchDevice ? " card-fan--touch" : ""}`}>
-        {visibleCards.map((card, i) => {
+        {cards.map((card, i) => {
           const angle = (i - (n - 1) / 2) * spread;
           const isActive = activeIdx === i;
           const yBase =
@@ -90,7 +81,7 @@ export default function CardFan({ cards, onSelect, locked, inventory = [] }) {
 
           return (
             <div
-              key={card.indexCard}
+              key={`${i}-${card.textCard}`}
               className={[
                 "card-fan__card",
                 isActive ? "card-fan__card--active" : "",
@@ -107,14 +98,22 @@ export default function CardFan({ cards, onSelect, locked, inventory = [] }) {
               onMouseLeave={handleMouseLeave}
               onClick={() => handleClick(card, i)}
             >
-              {/* Card image */}
+              {/* Card face */}
               <div className="card-fan__image-wrapper">
-                <img
-                  src={card.cardPath}
-                  alt={card.textCard}
-                  className="card-fan__image"
-                  draggable={false}
-                />
+                {card.cardPath ? (
+                  <img
+                    src={card.cardPath}
+                    alt={card.textCard}
+                    className="card-fan__image"
+                    draggable={false}
+                  />
+                ) : (
+                  <div className="card-fan__text-card">
+                    <span className="card-fan__text-card-ornament" aria-hidden="true">✦</span>
+                    <p className="card-fan__text-card-title">{card.textCard}</p>
+                    <span className="card-fan__text-card-ornament" aria-hidden="true">✦</span>
+                  </div>
+                )}
                 {isActive && <div className="card-fan__sheen" />}
               </div>
 

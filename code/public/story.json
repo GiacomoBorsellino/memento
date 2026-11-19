@@ -1,157 +1,385 @@
-[
-  {
-    "indexNode": 0,
-    "theme": "mist",
-    "texts": [
-      "Un laboratorio abbandonato. Pavimento di linoleum, luci al neon che sfarfallano.",
-      "Sul bancone metallico, una provetta sigillata con un liquido scuro attira la tua attenzione.",
-      "Potresti averla con te — o ignorarla."
-    ],
-    "cardsSelected": [
-      {
-        "indexCard": 0,
-        "cardPath": "./assets/cards/card_inventore.png",
-        "nextNode": 1,
-        "textCard": "Raccogli il Campione",
-        "effectCard": "Metti la provetta in tasca",
+{
+  "title": "Memento — Capitolo 1",
+  "start": "S01",
+  "nodes": [
+    {
+      "id": "S01",
+      "title": "Il risveglio",
+      "theme": "hotel",
+      "texts": [
+        "Senti il tessuto ruvido stropicciarti la faccia. L'odore di lana umida, polvere e sigaretta ti risale le narici e si mescola alla tua coscienza.",
+        "Apri gli occhi impastati, come se non volessero lasciarti svegliare. La vista si snebbia a poco a poco, come una pesante tenda di velluto che si scosta.",
+        "Sulla parete, un orologio a cucù segna le 9:06. Le lancette sembrano lente, come se ogni tic-tac costasse uno sforzo disumano a ingranaggi più vecchi di te.",
+        "Una fitta alla tempia. La tocchi: sangue ormai rappreso. Ti tasti per assicurarti di essere intero, che ogni pezzo sia al suo posto.",
+        "Chi sono? Come mi chiamo? E come sono finito qui?"
+      ],
+      "dice": [
+        {
+          "range": [1, 2],
+          "text": "Una vertigine ti sale dallo stomaco e ti fa sbandare. Ti aggrappi alla testiera del letto finché la stanza smette di girare.",
+          "nextNode": "S02"
+        },
+        {
+          "range": [3, 6],
+          "text": "Reggi l'urto e metti a fuoco la stanza. Sei ancora vestito, scarpe comprese: su questo letto ci sei crollato, non ti ci sei messo.",
+          "nextNode": "S02"
+        }
+      ],
+      "continueLabel": "Alzati"
+    },
+    {
+      "id": "S02",
+      "title": "La stanza di quart'ordine",
+      "theme": "hotel",
+      "onEnter": {
+        "addToInventory": [
+          {
+            "id": "fiammiferi",
+            "name": "Fiammiferi",
+            "description": "Una scatoletta del pub Maisie Kelly, Bridge Street 13. Risorsa scarsa: usali con giudizio.",
+            "icon": "🔥",
+            "quantity": 2
+          },
+          {
+            "id": "ritaglio",
+            "name": "Ritaglio di giornale",
+            "description": "La vittoria dell'Arklow e l'anniversario della squadra, fondata nel 1948.",
+            "icon": "📰"
+          },
+          {
+            "id": "tessera_dunn",
+            "name": "Tessera di Patrick Dunn",
+            "description": "Tessera della biblioteca comunale. Non è tua.",
+            "icon": "🪪"
+          },
+          {
+            "id": "cellulare",
+            "name": "Cellulare",
+            "description": "Niente linea, niente app. Sullo schermo, una notifica di Ellyn.",
+            "icon": "📱"
+          }
+        ]
+      },
+      "texts": [
+        "Ti alzi, ancora vestito, da un letto dalle coperte pesanti che sanno di muffa.",
+        "Intorno, una stanza d'albergo di quart'ordine: carta da parati sbeccata, mobili vetusti con orli e merletti di sessant'anni fa, mai stati raffinati nemmeno da nuovi.",
+        "Frughi nella giacca. Una scatoletta di fiammiferi con il nome di un pub: dentro ne restano due. Un ritaglio di giornale sull'Arklow. Una tessera della biblioteca intestata a un certo Patrick Dunn. E il tuo cellulare.",
+        "Il telefono è un guscio morto: niente linea, bloccato da un PIN. Sullo schermo resta solo l'anteprima di una notifica.",
+        "Ellyn: «Non credo di poterci essere, vai tu, Collin St…»"
+      ],
+      "cards": [
+        {
+          "textCard": "Esamina la giacca",
+          "effectCard": "Fiammiferi e ritaglio, con calma",
+          "nextNode": "S03"
+        },
+        {
+          "textCard": "Scendi nella hall",
+          "effectCard": "Qualcuno saprà come ci sei arrivato",
+          "nextNode": "S04"
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "title": "Dettagli nella giacca",
+      "theme": "hotel",
+      "texts": [
+        "Stringi tra le dita la scatoletta: due fiammiferi soltanto. Risorsa scarsa, ma utile se servirà luce o fuoco.",
+        "Sul ritaglio spicca la squadra di calcio di Arklow. «Fondata nel 1948», ricorda l'articolo, che ne celebra la vittoria e l'anniversario.",
+        "Il cellulare resta bloccato sul PIN. La tempia ti pulsa ancora, di adrenalina e dolore."
+      ],
+      "nextNode": "S04",
+      "continueLabel": "Scendi nella hall"
+    },
+    {
+      "id": "S04",
+      "title": "La hall",
+      "theme": "hotel",
+      "texts": [
+        "Un albergo polveroso a due stelle, con poche stanze. Dietro il banco, il proprietario, Cillian, ti guarda storto.",
+        "«Ti sei presentato verso le quattro del mattino, battendo i pugni sull'uscio. Alticcio, puzzavi d'alcol.»",
+        "Ad aprirti era stata sua moglie. Vedendoti in quello stato aveva chiamato lui, e stavano per avvertire la polizia; poi hai promesso il doppio in contanti e ti hanno dato una stanza.",
+        "«Stamattina è uscita presto», borbotta Cillian. «Diceva che ridursi così era un cattivo presagio. È andata da una cartomante, Lady Trish D.»",
+        "«Cose che non mi convincono... A volte sembra che certe persone si tirino addosso i guai, o spariscano proprio quando serve.»",
+        "Gli mostri la scatoletta di fiammiferi. «Il Maisie Kelly? Bridge Street 13, a due passi da qui», e ti indica la strada verso il centro."
+      ],
+      "dice": [
+        {
+          "range": [1, 3],
+          "text": "Prendi le parole di Cillian per quello che sembrano: lo sfogo di un marito brontolone.",
+          "nextNode": "S05"
+        },
+        {
+          "range": [4, 6],
+          "text": "Cogli qualcosa di più: sua moglie non era inquieta solo per la tua notte. Era come se avesse sentito odore di guai.",
+          "nextNode": "S05"
+        }
+      ],
+      "continueLabel": "Vai al Maisie Kelly"
+    },
+    {
+      "id": "S05",
+      "title": "Bridge Street 13: il Maisie Kelly",
+      "theme": "pub",
+      "texts": [
+        "Una bettola stretta e sporca, ficcata in un vicolo poco distante dall'hotel.",
+        "Un tavolo da biliardo, aria pesante, odore di alcol e fumo. In un angolo, un vecchio ti fissa da sopra il bordo del bicchiere.",
+        "Dietro il bancone c'è Liam: abiti stinti, occhi puntuti, gote rubiconde. Ti squadra di cattivo occhio, come un conto rimasto aperto dalla notte prima."
+      ],
+      "cards": [
+        {
+          "textCard": "Parla con Liam",
+          "effectCard": "Cosa è successo ieri sera?",
+          "nextNode": "S06"
+        },
+        {
+          "textCard": "Avvicinati al vecchio",
+          "effectCard": "Sembra conoscerti",
+          "nextNode": "S07B"
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "title": "La rissa",
+      "theme": "pub",
+      "texts": [
+        "Liam ti guarda torvo. Ieri sera hai attaccato rissa, ubriaco, insieme a un tizio di cui nessuno ricorda il nome. Il motivo? Il tuo tifo per l'Arklow contro i Wicklow Rovers.",
+        "Non ha chiamato la polizia perché gli sbirri non gli piacciono, e perché stavi simpatico a Ellyn, la cameriera, che oggi è a riposo.",
+        "Gli chiedi l'indirizzo di Ellyn e si incavola, mandandoti a quel paese.",
+        "«E già che ci sei», sbotta, «sei andato in bagno e ci hai vomitato dentro. Non ho ancora pulito.»",
+        "Si sporge sul bancone. «Se ci tieni ai tuoi pollici, adesso vai di là e pulisci il cesso.»"
+      ],
+      "dice": [
+        {
+          "range": [1, 3],
+          "text": "Ti liquida senza aggiungere altro e torna ad asciugare bicchieri.",
+          "nextNode": "S07"
+        },
+        {
+          "range": [4, 6],
+          "text": "Mantieni il sangue freddo e cogli un dettaglio: quando hai lasciato il pub, il tuo compagno di rissa ti teneva un braccio sulle spalle. E rideva.",
+          "nextNode": "S07"
+        }
+      ],
+      "continueLabel": "Vai a pulire il bagno"
+    },
+    {
+      "id": "S07",
+      "title": "Il bagno",
+      "theme": "pub",
+      "onEnter": {
         "addToInventory": {
-          "id": "blood",
-          "name": "Campione di Sangue",
-          "description": "Una provetta sigillata. Il liquido scuro potrebbe rivelare la verità.",
-          "imagePath": "./assets/inventory/blood.png"
+          "id": "tessera_g",
+          "name": "Tessera con l'iniziale G",
+          "description": "Tessera di cartone della biblioteca comunale. La foto sembra la tua; del nome resta solo una G.",
+          "icon": "🪪"
         }
       },
-      {
-        "indexCard": 1,
-        "cardPath": "./assets/cards/card_caput_mundi.png",
-        "nextNode": 1,
-        "textCard": "Lascia Stare",
-        "effectCard": "Non è affare tuo — almeno per ora"
-      }
-    ]
-  },
-  {
-    "indexNode": 1,
-    "theme": "forge",
-    "texts": [
-      "Entri nel laboratorio principale. Il generatore ronza nell'oscurità.",
-      "Attrezzature coperte di polvere, monitor spenti. Qualcuno ha abbandonato questo posto in fretta.",
-      "Il caso decide il tuo prossimo passo — lancia il dado."
-    ],
-    "dice": [
-      { "range": [1, 2], "nextNode": 2 },
-      { "range": [3, 4], "nextNode": 3 },
-      { "range": [5, 6], "nextNode": 4 }
-    ]
-  },
-  {
-    "indexNode": 2,
-    "theme": "throne",
-    "texts": [
-      "Una stanza con tre porte. L'odore di disinfettante non riesce a mascherare qualcosa di più antico.",
-      "Da qualche parte si sente il ticchettio di un orologio."
-    ],
-    "cardsSelected": [
-      {
-        "indexCard": 0,
-        "cardPath": "./assets/cards/card_caput_mundi.png",
-        "nextNode": 6,
-        "textCard": "Porta di Uscita",
-        "effectCard": "Meglio non sapere"
-      },
-      {
-        "indexCard": 1,
-        "cardPath": "./assets/cards/card_inventore.png",
-        "nextNode": 5,
-        "textCard": "Laboratorio Segreto",
-        "effectCard": "Il campione è la chiave",
-        "requiresItem": "blood"
-      },
-      {
-        "indexCard": 2,
-        "cardPath": "./assets/cards/card_libraio.png",
-        "nextNode": 6,
-        "textCard": "Prendi la Sedia",
-        "effectCard": "Una sedia da laboratorio in buono stato",
-        "addToInventory": {
-          "id": "chair",
-          "name": "Sedia da Laboratorio",
-          "description": "Una comoda sedia su ruote. Non chiedere perché l'hai presa.",
-          "imagePath": "./assets/inventory/rolling-chair.png"
+      "texts": [
+        "Il bagno è uno schifo, e lo schifo è opera tua. Ti rimbocchi le maniche e pulisci, trattenendo il respiro.",
+        "Poggiata sulla tazza c'è una tessera di cartone della biblioteca comunale. La foto sembra la tua.",
+        "Del nome si legge solo l'iniziale: una G. Il resto l'ha grattato via l'umidità. La metti in tasca."
+      ],
+      "cards": [
+        {
+          "textCard": "Avvicinati al vecchio",
+          "effectCard": "Ti fissa dall'angolo",
+          "hideIfFlag": "tadhg",
+          "nextNode": "S07B"
+        },
+        {
+          "textCard": "Sblocca il cellulare",
+          "effectCard": "Forse il ritaglio c'entra",
+          "nextNode": "S08"
         }
+      ]
+    },
+    {
+      "id": "S07B",
+      "title": "Tadhg McSeagull",
+      "theme": "pub",
+      "onEnter": { "setFlags": "tadhg" },
+      "texts": [
+        "Nell'angolo siede il vecchio Tadhg McSeagull, lo svitato del villaggio. Ti fa cenno di sederti.",
+        "Ti racconta di Glen Bootleg: pizzetto, capelli rossi, un sorriso sempre smagliante. Una leggenda: forse il diavolo, forse un folletto.",
+        "«Fa patti agli incroci», sussurra, «ma dà sempre qualcosa di diverso da ciò che la gente vuole.»",
+        "«Ieri sera ti ho visto con un tizio che me lo ricordava. Affabile, brillante, faceva ridere tutti...» Beve un sorso. «Strano che nessuno si ricordi di lui.»"
+      ],
+      "cards": [
+        {
+          "textCard": "Vai al bancone da Liam",
+          "effectCard": "Ti sta fulminando con lo sguardo",
+          "hideIfItem": "tessera_g",
+          "nextNode": "S06"
+        },
+        {
+          "textCard": "Sblocca il cellulare",
+          "effectCard": "Forse il ritaglio c'entra",
+          "requiresItem": "tessera_g",
+          "nextNode": "S08"
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "title": "Il PIN del telefono",
+      "theme": "pub",
+      "texts": [
+        "Ti siedi in disparte e tiri fuori il cellulare. Lo schermo chiede un PIN di quattro cifre.",
+        "Tra le mani hai il ritaglio sull'Arklow. Se tifavi così tanto per quella squadra, forse il codice viene da lì."
+      ],
+      "pin": {
+        "code": "1948",
+        "prompt": "Inserisci il PIN",
+        "errorText": "Non si sblocca. Ricontrolla le date sul ritaglio dell'Arklow.",
+        "hint": "L'anniversario si conta da un anno preciso: quello in cui la squadra è nata.",
+        "hintAfter": 3,
+        "successText": "Sbloccato",
+        "nextNode": "S09"
       }
-    ]
-  },
-  {
-    "indexNode": 3,
-    "theme": "library",
-    "texts": [
-      "L'archivio è pieno di fascicoli polverosi.",
-      "Nomi, date, diagnosi — tutto catalogato con cura ossessiva.",
-      "Un fascicolo aperto sul tavolo porta il tuo nome."
-    ],
-    "cardsSelected": [
-      {
-        "indexCard": 0,
-        "cardPath": "./assets/cards/card_libraio.png",
-        "nextNode": 5,
-        "textCard": "Analizza il Campione",
-        "effectCard": "La verità è nel sangue",
-        "requiresItem": "blood",
-        "removeFromInventory": "blood"
-      },
-      {
-        "indexCard": 1,
-        "cardPath": "./assets/cards/card_caput_mundi.png",
-        "nextNode": 6,
-        "textCard": "Brucia i Documenti",
-        "effectCard": "Alcune storie non devono essere raccontate"
-      }
-    ]
-  },
-  {
-    "indexNode": 4,
-    "theme": "forest",
-    "texts": [
-      "Una stanza nascosta oltre una parete scorrevole.",
-      "Registrazioni video, documenti cifrati, fotografie.",
-      "Hai trovato l'intero dossier — ma qualcuno ti sta seguendo."
-    ],
-    "cardsSelected": [
-      {
-        "indexCard": 0,
-        "cardPath": "./assets/cards/card_inventore.png",
-        "nextNode": 5,
-        "textCard": "Prendi Tutto",
-        "effectCard": "Le prove valgono il rischio"
-      },
-      {
-        "indexCard": 1,
-        "cardPath": "./assets/cards/card_libraio.png",
-        "nextNode": 6,
-        "textCard": "Fuggi Subito",
-        "effectCard": "La sopravvivenza prima di tutto"
-      }
-    ]
-  },
-  {
-    "indexNode": 5,
-    "theme": "dawn",
-    "texts": [
-      "La verità emerge dai dati, fredda e inconfutabile.",
-      "Il laboratorio era un fronte. Le sperimentazioni, illegali.",
-      "Con le prove in mano, il silenzio non è più un'opzione."
-    ],
-    "isEnd": true
-  },
-  {
-    "indexNode": 6,
-    "theme": "dusk",
-    "texts": [
-      "Il corridoio si svuota. I passi si allontanano.",
-      "Forse alcune risposte non vale la pena cercare.",
-      "Il laboratorio tornerà al silenzio — almeno per stanotte."
-    ],
-    "isEnd": true
-  }
-]
+    },
+    {
+      "id": "S09",
+      "title": "Gli SMS di Ellyn",
+      "theme": "pub",
+      "texts": [
+        "Il telefono si sblocca. Ma per capire chi sei resta inutile: niente linea, impossibile inviare messaggi, nessuna app con un nome o un dato tuo.",
+        "Restano solo gli SMS di Ellyn. Ora puoi leggere l'ultimo per intero.",
+        "«Non credo di poterci essere, vai tu, Collin St 6. Denise ti saprà dare una mano, lei ha il libro che cerchi.»"
+      ],
+      "nextNode": "S10",
+      "continueLabel": "Vai in Collin Street 6"
+    },
+    {
+      "id": "S10",
+      "title": "Collin Street 6",
+      "theme": "street",
+      "texts": [
+        "Collin Street 6. Suoni, ma non risponde nessuno.",
+        "Controlli sotto lo zerbino, provi la maniglia. Da dentro un cane abbaia furioso e ti costringe a restare fuori.",
+        "Poi le noti: tracce di sangue sulla porta. Denise non sembra semplicemente uscita.",
+        "Ti verrebbe da andare alla polizia, ma ti fermi. Non hai documenti, ieri sera hai fatto a pugni, e da queste parti certe cose con gli sbirri non sono viste di buon occhio."
+      ],
+      "dice": [
+        {
+          "range": [1, 2],
+          "text": "Pensi soprattutto al rischio di farti notare. Ti guardi alle spalle: la strada è vuota, per ora.",
+          "nextNode": "S11"
+        },
+        {
+          "range": [3, 6],
+          "text": "Guardi meglio: il sangue è fresco, e le gocce vanno verso la strada. Qualcuno ha avuto fretta di andarsene.",
+          "nextNode": "S11"
+        }
+      ],
+      "continueLabel": "Controlla la cassetta delle lettere"
+    },
+    {
+      "id": "S11",
+      "title": "La cassetta delle lettere",
+      "theme": "street",
+      "texts": [
+        "Nella cassetta delle lettere trovi dei documenti e una rivista di cucina, spediti dalla Arklow Library, 7 Main Street.",
+        "La rivista è aperta sulla ricetta della meringata al limone, cerchiata a penna più volte.",
+        "Di Denise, nessuna traccia. E quel sangue sulla porta continua a pesarti sullo stomaco."
+      ],
+      "nextNode": "S12",
+      "continueLabel": "Vai alla Arklow Library"
+    },
+    {
+      "id": "S12",
+      "title": "Arklow Library",
+      "theme": "library",
+      "texts": [
+        "La biblioteca odora di carta umida e cera per pavimenti. Denise non c'è.",
+        "Al banco trovi una ragazza, Tina. «Se ti serve un libro, mi serve una tessera.»",
+        "Frughi nelle tasche: la tessera di Patrick Dunn e quella con la tua foto e l'iniziale G."
+      ],
+      "cards": [
+        {
+          "textCard": "Dai la tessera di Patrick Dunn",
+          "effectCard": "Vediamo cosa leggeva",
+          "requiresItem": "tessera_dunn",
+          "nextNode": "S13"
+        },
+        {
+          "textCard": "Dai la tessera con la G",
+          "effectCard": "Quella con la tua foto",
+          "requiresItem": "tessera_g",
+          "nextNode": "S14"
+        },
+        {
+          "textCard": "Chiedi una ristampa",
+          "effectCard": "Per leggere il tuo nome",
+          "nextNode": "S15"
+        }
+      ]
+    },
+    {
+      "id": "S13",
+      "title": "La meringata al limone",
+      "theme": "library",
+      "onEnter": { "setFlags": "meringata" },
+      "texts": [
+        "A nome di Patrick Dunn risulta in prestito un libro di ricette.",
+        "Una pagina è piegata: la meringata al limone. La stessa ricetta cerchiata sulla rivista di Denise.",
+        "Dunn e Denise: un legame, forse. Potrà tornarti utile più avanti, ma non ti dice dov'è finita lei."
+      ],
+      "cards": [
+        {
+          "textCard": "Dai la tessera con la G",
+          "effectCard": "Quella con la tua foto",
+          "requiresItem": "tessera_g",
+          "nextNode": "S14"
+        },
+        {
+          "textCard": "Chiedi una ristampa",
+          "effectCard": "Per leggere il tuo nome",
+          "hideIfFlag": "ristampa",
+          "nextNode": "S15"
+        }
+      ]
+    },
+    {
+      "id": "S15",
+      "title": "La ristampa",
+      "theme": "library",
+      "onEnter": { "setFlags": "ristampa" },
+      "texts": [
+        "Chiedi a Tina di ristampare la tessera, per leggere il tuo nome.",
+        "Lei scuote la testa. «Può farlo solo Denise. E per adesso Denise non c'è.»"
+      ],
+      "cards": [
+        {
+          "textCard": "Dai la tessera con la G",
+          "effectCard": "Quella con la tua foto",
+          "requiresItem": "tessera_g",
+          "nextNode": "S14"
+        },
+        {
+          "textCard": "Dai la tessera di Patrick Dunn",
+          "effectCard": "Vediamo cosa leggeva",
+          "requiresItem": "tessera_dunn",
+          "hideIfFlag": "meringata",
+          "nextNode": "S13"
+        }
+      ]
+    },
+    {
+      "id": "S14",
+      "title": "Il libro del 1798",
+      "theme": "mist",
+      "texts": [
+        "Tina digita e aggrotta la fronte. A tuo nome risulta un libro esoterico sui patti stretti durante la Rivolta irlandese del 1798.",
+        "Le pagine rimandano alla St. Saviour's Church e alla tomba di un certo Montgomery.",
+        "Sfogli, e ti trovi davanti un'illustrazione. Sotto, una didascalia: Glen. Il respiro ti si ferma.",
+        "Quel viso, quel pizzetto, quello sguardo. Qualcosa in fondo alla tua memoria si contrae: era con te ieri sera, al pub. Ne sei certo, anche se non ricordi altro.",
+        "Un brivido ti corre lungo la schiena. Cosa significa quel volto... e chi eri tu, accanto a lui?"
+      ],
+      "isEnd": true,
+      "endLabel": "Fine Capitolo 1"
+    }
+  ]
+}

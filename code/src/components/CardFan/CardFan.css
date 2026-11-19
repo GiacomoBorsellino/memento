@@ -166,3 +166,52 @@
     font-size: 12px;
   }
 }
+
+/* Text-only card (no cardPath): minimal framed face, tarot-like */
+.card-fan__text-card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 12px;
+  background: linear-gradient(160deg, #221b13 0%, #14100b 100%);
+  border: 1px solid rgba(180, 160, 110, 0.35);
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 5px #14100b, inset 0 0 0 6px rgba(180, 160, 110, 0.22);
+  filter: brightness(0.9);
+  transition: filter 0.3s ease;
+}
+
+.card-fan__card--active .card-fan__text-card {
+  filter: brightness(1.15);
+}
+
+.card-fan__card--locked .card-fan__text-card {
+  filter: brightness(0.5);
+}
+
+.card-fan__text-card-ornament {
+  color: rgba(180, 160, 110, 0.55);
+  font-size: 11px;
+}
+
+.card-fan__text-card-title {
+  color: #e8dfc8;
+  font-family: Georgia, 'Palatino Linotype', serif;
+  font-size: 13px;
+  line-height: 1.45;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .card-fan__text-card {
+    padding: 12px 8px;
+  }
+
+  .card-fan__text-card-title {
+    font-size: 11px;
+  }
+}

@@ -2,74 +2,117 @@
 //
 // WHY IndexedDB over localStorage?
 //   • Async: non-blocking, won't freeze the UI
-//   • No size limit (~50MB+ vs ~5MB for localStorage)
+//   • Much larger quota than localStorage (~5MB)
 //   • Transactional: atomic writes, no corruption on crash
-//   • Supports complex types natively (arrays, objects, blobs)
+//   • Stores structured data natively (arrays, objects, blobs)
 //   • Industry-standard for PWA offline storage
 //
-// DB: "memento-db" v1
+// DB: "memento-db"
 // Store: "saves" — keyPath: "slot"
-// Record shape: { slot: string, nodeIdx: number, inventory: Item[], timestamp: number }
+//
+// Schema history (DB_VERSION):
+//   v1  { slot, nodeIdx: number, inventory, timestamp }
+//       nodeIdx was the node's position in the story array.
+//   v2  { slot, nodeId: string, inventory, flags: string[], timestamp }
+//       nodes are addressed by id ("S01"); flags added.
 
 const DB_NAME    = "memento-db";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const STORE      = "saves";
 
-// Opens (or creates) the database. Returns a Promise<IDBDatabase>.
+// One shared connection, opened lazily. Reusing it avoids opening a new
+// connection per call (the v1 code never closed them, and open connections
+// block future version upgrades).
+let dbPromise = null;
+
 function openDB() {
-  return new Promise((resolve, reject) => {
+  if (dbPromise) return dbPromise;
+
+  dbPromise = new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, DB_VERSION);
 
+    // Runs only when the stored DB is older than DB_VERSION (or missing).
+    // It's the ONLY place where the schema may change, and it runs inside a
+    // special "versionchange" transaction: req.transaction.
     req.onupgradeneeded = (e) => {
-      const db = e.target.result;
-      if (!db.objectStoreNames.contains(STORE)) {
+      const db = req.result;
+      const oldVersion = e.oldVersion; // 0 = brand-new database
+
+      // v0 → v1: create the store
+      if (oldVersion < 1) {
         db.createObjectStore(STORE, { keyPath: "slot" });
+      }
+
+      // v1 → v2: saves switch from array index to node id.
+      // v1 saves point into the old demo story (laboratory), which no longer
+      // exists, so there's nothing sensible to map them to: delete them.
+      // (If the story were the same, here we'd rewrite each record instead,
+      //  e.g. record.nodeId = oldIds[record.nodeIdx]; cursor.update(record).)
+      if (oldVersion >= 1 && oldVersion < 2) {
+        const store = req.transaction.objectStore(STORE);
+        store.openCursor().onsuccess = (ev) => {
+          const cursor = ev.target.result;
+          if (!cursor) return; // done
+          if (typeof cursor.value.nodeIdx === "number") cursor.delete();
+          cursor.continue();
+        };
       }
     };
 
-    req.onsuccess = (e) => resolve(e.target.result);
-    req.onerror   = (e) => reject(e.target.error);
+    req.onsuccess = () => {
+      const db = req.result;
+      // Another tab wants a newer version: close so we don't block it,
+      // the next call will reopen.
+      db.onversionchange = () => {
+        db.close();
+        dbPromise = null;
+      };
+      resolve(db);
+    };
+    req.onerror = () => {
+      dbPromise = null;
+      reject(req.error);
+    };
+    req.onblocked = () => {
+      console.warn("IndexedDB upgrade blocked: close other Memento tabs.");
+    };
   });
+
+  return dbPromise;
 }
 
-// Helper: open DB, run a callback with the store, return a Promise.
+// Helper: run one request in a transaction, resolve when the transaction
+// commits (not just when the request succeeds), so a resolved write is durable.
 async function withStore(mode, fn) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
-    const tx    = db.transaction(STORE, mode);
-    const store = tx.objectStore(STORE);
-    const req   = fn(store);
-    if (req) {
-      req.onsuccess = (e) => resolve(e.target.result);
-      req.onerror   = (e) => reject(e.target.error);
-    } else {
-      tx.oncomplete = () => resolve();
-      tx.onerror    = (e) => reject(e.target.error);
-    }
+    const tx  = db.transaction(STORE, mode);
+    const req = fn(tx.objectStore(STORE));
+    tx.oncomplete = () => resolve(req?.result);
+    tx.onerror    = () => reject(tx.error);
+    tx.onabort    = () => reject(tx.error);
   });
 }
 
 // ── Public API ────────────────────────────────────────────────
 
 /** Save progress to a named slot (upsert). */
-export async function saveGame(slot, { nodeIdx, inventory }) {
+export async function saveGame(slot, { nodeId, inventory, flags }) {
   return withStore("readwrite", (store) =>
-    store.put({ slot, nodeIdx, inventory, timestamp: Date.now() })
+    store.put({ slot, nodeId, inventory, flags, timestamp: Date.now() })
   );
 }
 
 /** Load a save by slot. Returns the record or null if not found. */
 export async function loadGame(slot) {
-  return withStore("readonly", (store) => store.get(slot)).then(
-    (r) => r ?? null
-  );
+  const r = await withStore("readonly", (store) => store.get(slot));
+  return r ?? null;
 }
 
 /** List all saves, sorted by most recent first. */
 export async function listSaves() {
-  return withStore("readonly", (store) => store.getAll()).then((all) =>
-    (all ?? []).sort((a, b) => b.timestamp - a.timestamp)
-  );
+  const all = await withStore("readonly", (store) => store.getAll());
+  return (all ?? []).sort((a, b) => b.timestamp - a.timestamp);
 }
 
 /** Delete a specific save slot. */

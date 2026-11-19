@@ -1,47 +1,55 @@
-// GameScreen/GameScreen.jsx — Core game loop + inventory management + autosave
+// GameScreen/GameScreen.jsx — Core game loop: text reveal, choices,
+// inventory/flags (via engine.js), music per theme, autosave.
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import CardFan from "../CardFan/CardFan.jsx";
 import Dice from "../Dice/Dice.jsx";
+import PinPad from "../PinPad/PinPad.jsx";
 import SideMenu from "../SideMenu/SideMenu.jsx";
 import InventoryModal from "../InventoryModal/InventoryModal.jsx";
-import {
-  sfxTextReveal,
-  sfxTransition,
-  sfxMenuOpen,
-  startAmbientMusic,
-  stopAmbientMusic,
-} from "../audio.js";
+import { sfxTextReveal, sfxTransition, sfxMenuOpen, sfxClue } from "../audio.js";
+import { playMusic, stopMusic } from "../music.js";
 import { saveGame } from "../../db.js";
+import {
+  EMPTY_STATE,
+  applyEffects,
+  enterNode,
+  findDiceRule,
+  nodeKind,
+  visibleCards,
+} from "../../engine.js";
 import "./GameScreen.css";
 
 const TEXT_DELAYS = [2200, 1500, 900]; // Lento, Normale, Veloce
 const FADE_MS = 700; // fade-out duration before switching node
 const CARD_SELECT_MS = 800; // pause after a card is picked
 
+const freshStart = (story) => enterNode(story, story.start, EMPTY_STATE);
+
 export default function GameScreen({
-  story,
+  story, // built story: { start, nodes: Map } (engine.buildStory)
   settings,
   onMenu,
   onThemeChange,
-  initialNodeIdx = 0,
-  initialInventory = [],
+  initialNodeId, // undefined → new game
+  initialState, // { inventory, flags } from the save
 }) {
-  const [nodeIdx, setNodeIdx] = useState(initialNodeIdx);
-  const [inventory, setInventory] = useState(initialInventory);
+  const [nodeId, setNodeId] = useState(initialNodeId ?? story.start);
+  const [game, setGame] = useState(() => initialState ?? freshStart(story));
   const [shownTexts, setShownTexts] = useState([]);
   const [textCursor, setTextCursor] = useState(0);
   const [showChoices, setShowChoices] = useState(false);
   const [cardLocked, setCardLocked] = useState(false);
+  const [diceOutcome, setDiceOutcome] = useState(null); // { rule, state }
   const [menuOpen, setMenuOpen] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
   const [key, setKey] = useState(0);
 
-  // Latest inventory, readable from timers/callbacks without stale closures.
-  const inventoryRef = useRef(initialInventory);
+  // Latest game state, readable from timers/callbacks without stale closures.
+  const gameRef = useRef(game);
   useEffect(() => {
-    inventoryRef.current = inventory;
-  }, [inventory]);
+    gameRef.current = game;
+  }, [game]);
 
   // Pending transition timers. They are cleared on unmount, so going back to
   // the main menu mid-transition does not trigger a late node switch/autosave.
@@ -59,21 +67,23 @@ export default function GameScreen({
     timersRef.current.clear();
   }, []);
 
-  const node = story[nodeIdx];
+  const node = story.nodes.get(nodeId);
+  const kind = node ? nodeKind(node) : "none";
   const delay = TEXT_DELAYS[settings.textSpeed ?? 1];
 
-  // Ambient music lives as long as the game screen does
+  // Music lives as long as the game screen does
   useEffect(() => {
-    startAmbientMusic();
     return () => {
-      stopAmbientMusic();
+      stopMusic();
       clearTimers();
     };
   }, [clearTimers]);
 
-  // Notify parent of theme change
+  // Background + music follow the node's theme
   useEffect(() => {
-    if (node?.theme) onThemeChange(node.theme);
+    if (!node?.theme) return;
+    onThemeChange(node.theme);
+    playMusic(node.theme);
   }, [node?.theme, onThemeChange]);
 
   // Resets the per-node UI state (called together with every node switch)
@@ -82,39 +92,34 @@ export default function GameScreen({
     setTextCursor(0);
     setShowChoices(false);
     setCardLocked(false);
+    setDiceOutcome(null);
     setFadeOut(false);
   };
 
-  // Stable: reads the inventory through the ref, so it never goes stale.
+  // Moves to node `id`. `state` is the game state to carry over (defaults to
+  // the current one); the target's onEnter effects are applied on arrival.
   const goTo = useCallback(
-    (idx, newInventory) => {
+    (id, state) => {
       sfxTransition();
       setFadeOut(true);
       later(() => {
+        const next = enterNode(story, id, state ?? gameRef.current);
         resetNodeUI();
-        setNodeIdx(idx);
-        // Autosave whenever we advance
-        const inv = newInventory ?? inventoryRef.current;
-        saveGame("autosave", { nodeIdx: idx, inventory: inv }).catch(
-          console.error,
-        );
+        setGame(next);
+        setNodeId(id);
+        saveGame("autosave", { nodeId: id, ...next }).catch(console.error);
       }, FADE_MS);
     },
-    [later],
+    [later, story],
   );
 
   // Sequential text reveal
   useEffect(() => {
     if (!node) return;
     if (textCursor >= node.texts.length) {
-      // Pass-through node (no cards/dice): advance automatically
-      if (
-        node.nextNode != null &&
-        !node.isEnd &&
-        !node.cardsSelected &&
-        !node.dice
-      ) {
-        const t = setTimeout(() => goTo(node.nextNode), 500);
+      // Optional legacy behaviour: pass-through node that advances by itself
+      if (kind === "continue" && node.autoAdvance) {
+        const t = setTimeout(() => goTo(node.nextNode), delay);
         return () => clearTimeout(t);
       }
       const t = setTimeout(() => {
@@ -131,50 +136,40 @@ export default function GameScreen({
       textCursor === 0 ? 700 : delay,
     );
     return () => clearTimeout(t);
-  }, [textCursor, node, delay, goTo]);
+  }, [textCursor, node, kind, delay, goTo]);
 
-  // ── Inventory helpers ──────────────────────────────────────
-  const applyInventoryChanges = (card, currentInventory) => {
-    let inv = [...currentInventory];
-
-    // Remove first (e.g. consuming an item)
-    if (card.removeFromInventory) {
-      inv = inv.filter((item) => item.id !== card.removeFromInventory);
-    }
-
-    // Then add (avoids duplicates by id)
-    if (card.addToInventory) {
-      const alreadyHas = inv.some((item) => item.id === card.addToInventory.id);
-      if (!alreadyHas) inv.push(card.addToInventory);
-    }
-
-    return inv;
-  };
-
+  // ── Choices ────────────────────────────────────────────────
   const handleCardSelect = (card) => {
     if (cardLocked) return; // guards against a double tap/click
     setCardLocked(true);
-    const newInventory = applyInventoryChanges(card, inventory);
-    setInventory(newInventory);
-    later(() => goTo(card.nextNode, newInventory), CARD_SELECT_MS);
+    const next = applyEffects(gameRef.current, card);
+    setGame(next);
+    later(() => goTo(card.nextNode, next), CARD_SELECT_MS);
   };
 
-  const handleDiceResult = (result) => {
-    if (!node.dice) return;
-    const rule = node.dice.find(
-      (r) => result >= r.range[0] && result <= r.range[1],
-    );
-    if (rule) goTo(rule.nextNode);
+  const handleDiceResult = (roll) => {
+    const rule = findDiceRule(node, roll);
+    if (!rule) return;
+    const next = applyEffects(gameRef.current, rule);
+    setGame(next);
+    if (rule.text) {
+      // Show the clue and let the player continue when ready
+      sfxClue();
+      setDiceOutcome({ rule, state: next });
+    } else {
+      goTo(rule.nextNode, next);
+    }
   };
 
   const restart = () => {
     clearTimers();
     setMenuOpen(false);
     resetNodeUI();
-    setInventory([]);
-    setNodeIdx(0);
+    const fresh = freshStart(story);
+    setGame(fresh);
+    setNodeId(story.start);
     setKey((k) => k + 1);
-    saveGame("autosave", { nodeIdx: 0, inventory: [] }).catch(console.error);
+    saveGame("autosave", { nodeId: story.start, ...fresh }).catch(console.error);
   };
 
   if (!node) return null;
@@ -216,7 +211,7 @@ export default function GameScreen({
       />
 
       {/* ── Inventory button + modal ───────────────────────── */}
-      <InventoryModal inventory={inventory} />
+      <InventoryModal inventory={game.inventory} />
 
       {/* ── Main content ──────────────────────────────────── */}
       <div key={key} className="game-screen__content">
@@ -240,40 +235,88 @@ export default function GameScreen({
           ))}
         </div>
 
-        {/* Choices — pass-through nodes advance on their own (see above) */}
+        {/* Choices */}
         {showChoices && (
           <div className="game-screen__choices">
-            {node.isEnd ? (
-              <EndCard onMenu={onMenu} />
-            ) : node.cardsSelected ? (
+            {kind === "end" && (
+              <EndCard label={node.endLabel} onMenu={onMenu} />
+            )}
+
+            {kind === "cards" && (
               <CardFan
-                cards={node.cardsSelected}
+                cards={visibleCards(node, game)}
                 onSelect={handleCardSelect}
                 locked={cardLocked}
-                inventory={inventory}
               />
-            ) : node.dice ? (
-              <Dice onResult={handleDiceResult} />
-            ) : null}
+            )}
+
+            {kind === "dice" && (
+              <>
+                <Dice onResult={handleDiceResult} />
+                {diceOutcome && (
+                  <>
+                    <Clue text={diceOutcome.rule.text} />
+                    <ContinueBtn
+                      label={diceOutcome.rule.continueLabel ?? node.continueLabel}
+                      disabled={fadeOut}
+                      onClick={() => goTo(diceOutcome.rule.nextNode, diceOutcome.state)}
+                    />
+                  </>
+                )}
+              </>
+            )}
+
+            {kind === "pin" && (
+              <PinPad pin={node.pin} onSuccess={() => goTo(node.pin.nextNode)} />
+            )}
+
+            {kind === "continue" && !node.autoAdvance && (
+              <ContinueBtn
+                label={node.continueLabel}
+                disabled={fadeOut}
+                onClick={() => goTo(node.nextNode)}
+              />
+            )}
           </div>
         )}
       </div>
 
       {/* Node indicator */}
-      <p className="game-screen__node-indicator">
-        §{nodeIdx.toString().padStart(3, "0")}
-      </p>
+      <p className="game-screen__node-indicator">§{nodeId}</p>
     </div>
   );
 }
 
-function EndCard({ onMenu }) {
+function EndCard({ label, onMenu }) {
   return (
     <div className="end-card">
       <div className="end-card__divider" />
-      <p className="end-card__label">Fine Capitolo</p>
+      <p className="end-card__label">{label ?? "Fine Capitolo"}</p>
       <button className="end-card__btn" onClick={onMenu}>
         Menu Principale
+      </button>
+    </div>
+  );
+}
+
+function Clue({ text }) {
+  return (
+    <div className="game-clue">
+      <p className="game-clue__label">Indizio</p>
+      <p className="game-clue__text">{text}</p>
+    </div>
+  );
+}
+
+function ContinueBtn({ label, onClick, disabled }) {
+  return (
+    <div className="continue-btn">
+      <button
+        className="continue-btn__inner"
+        onClick={onClick}
+        disabled={disabled}
+      >
+        {label ?? "Continua"} ›
       </button>
     </div>
   );

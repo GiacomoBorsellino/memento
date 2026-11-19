@@ -8,6 +8,7 @@ import CreditsScreen from "./components/CreditsScreen/CreditsScreen.jsx";
 import GameScreen from "./components/GameScreen/GameScreen.jsx";
 import { setAudioSettings } from "./components/audio.js";
 import { loadGame, clearAllSaves } from "./db.js";
+import { buildStory } from "./engine.js";
 import "./App.css";
 
 const DEFAULT_SETTINGS = { volume: 70, sfx: true, textSpeed: 1 };
@@ -17,25 +18,25 @@ const DEFAULT_SETTINGS = { volume: 70, sfx: true, textSpeed: 1 };
 const STORY_URL = `${import.meta.env.BASE_URL}story.json`;
 
 export default function App() {
-  const [screen,   setScreen]   = useState("menu");
-  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
-  const [story,    setStory]    = useState(null);
-  const [bgTheme,  setBgTheme]  = useState("title");
+  const [screen,     setScreen]     = useState("menu");
+  const [settings,   setSettings]   = useState(DEFAULT_SETTINGS);
+  const [story,      setStory]      = useState(null);
+  const [storyError, setStoryError] = useState(null);
+  const [bgTheme,    setBgTheme]    = useState("title");
+  const [save,       setSave]       = useState(null); // autosave record
 
-  // Saved state to resume from
-  const [savedNodeIdx,   setSavedNodeIdx]   = useState(0);
-  const [savedInventory, setSavedInventory] = useState([]);
-  const [hasSave,        setHasSave]        = useState(false);
-
-  // Load story JSON
+  // Load and index story.json
   useEffect(() => {
     fetch(STORY_URL)
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
       })
-      .then(setStory)
-      .catch((e) => console.error("Failed to load story.json:", e));
+      .then((raw) => setStory(buildStory(raw)))
+      .catch((e) => {
+        console.error("Failed to load story.json:", e);
+        setStoryError(e.message);
+      });
   }, []);
 
   // Keep the audio module in sync with the user's settings
@@ -49,21 +50,19 @@ export default function App() {
     if (screen !== "menu") return;
     let cancelled = false;
     loadGame("autosave")
-      .then((save) => {
-        if (cancelled) return;
-        if (save && save.nodeIdx > 0) {
-          setSavedNodeIdx(save.nodeIdx);
-          setSavedInventory(save.inventory ?? []);
-          setHasSave(true);
-        } else {
-          setHasSave(false);
-        }
+      .then((record) => {
+        if (!cancelled) setSave(record?.nodeId ? record : null);
       })
       .catch(() => {
-        if (!cancelled) setHasSave(false);
+        if (!cancelled) setSave(null);
       });
     return () => { cancelled = true; };
   }, [screen]);
+
+  // A save is resumable only if its node still exists in the current story
+  // (the story can change between deploys) and it's past the first node.
+  const canContinue =
+    !!story && !!save && story.nodes.has(save.nodeId) && save.nodeId !== story.start;
 
   const handleThemeChange = useCallback((theme) => setBgTheme(theme), []);
 
@@ -74,18 +73,14 @@ export default function App() {
 
   const startNewGame = () => {
     clearAllSaves().catch(() => {});
-    setSavedNodeIdx(0);
-    setSavedInventory([]);
-    setBgTheme("mist");
+    setSave(null);
     setScreen("game");
   };
 
-  const continueGame = () => {
-    setBgTheme("mist");
-    setScreen("game-continue");
-  };
+  const continueGame = () => setScreen("game-continue");
 
   const inGame = screen === "game" || screen === "game-continue";
+  const resuming = screen === "game-continue" && canContinue;
 
   return (
     <div className="app">
@@ -93,7 +88,7 @@ export default function App() {
 
       {screen === "menu" && (
         <TitleScreen
-          hasSave={hasSave}
+          hasSave={canContinue}
           onStart={startNewGame}
           onContinue={continueGame}
           onSettings={() => setScreen("settings")}
@@ -120,12 +115,20 @@ export default function App() {
           settings={settings}
           onMenu={goToMenu}
           onThemeChange={handleThemeChange}
-          initialNodeIdx={screen === "game-continue" ? savedNodeIdx : 0}
-          initialInventory={screen === "game-continue" ? savedInventory : []}
+          initialNodeId={resuming ? save.nodeId : undefined}
+          initialState={
+            resuming
+              ? { inventory: save.inventory ?? [], flags: save.flags ?? [] }
+              : undefined
+          }
         />
       )}
 
-      {inGame && !story && <div className="app__loading">Caricamento...</div>}
+      {inGame && !story && (
+        <div className="app__loading">
+          {storyError ? `Impossibile caricare la storia (${storyError})` : "Caricamento..."}
+        </div>
+      )}
     </div>
   );
 }

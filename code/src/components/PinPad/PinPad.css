@@ -1,0 +1,130 @@
+/* PinPad.css — minimal phone lock screen */
+
+.pin-pad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 8px auto 0;
+  padding: 22px 26px 26px;
+  width: 260px;
+  border: 1px solid rgba(180, 160, 110, 0.22);
+  border-radius: 28px;
+  background: rgba(8, 6, 4, 0.55);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+}
+
+/* Entered digits */
+.pin-pad__dots {
+  display: flex;
+  gap: 16px;
+  height: 14px;
+  align-items: center;
+}
+
+.pin-pad__dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1px solid rgba(180, 160, 110, 0.6);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.pin-pad__dot--filled {
+  background: #a89870;
+}
+
+.pin-pad--error .pin-pad__dots {
+  animation: pinShake 0.45s ease;
+}
+
+.pin-pad--error .pin-pad__dot {
+  border-color: #a0503c;
+  background: #a0503c;
+}
+
+.pin-pad--success .pin-pad__dot {
+  border-color: #c8a84b;
+  background: #c8a84b;
+  box-shadow: 0 0 10px rgba(200, 168, 75, 0.6);
+}
+
+/* Prompt / error / hint */
+.pin-pad__message {
+  min-height: 34px;
+  max-width: 220px;
+  color: #a89870;
+  font-family: Georgia, serif;
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.pin-pad--error .pin-pad__message {
+  color: #c07a62;
+}
+
+/* Keypad */
+.pin-pad__keys {
+  display: grid;
+  grid-template-columns: repeat(3, 56px);
+  gap: 10px 18px;
+}
+
+.pin-pad__key {
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(180, 160, 110, 0.25);
+  background: rgba(180, 160, 110, 0.04);
+  color: #e8dfc8;
+  font-family: Georgia, serif;
+  font-size: 20px;
+  font-weight: normal;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.pin-pad__key:hover {
+  border-color: rgba(180, 160, 110, 0.55);
+}
+
+.pin-pad__key:active {
+  background: rgba(180, 160, 110, 0.2);
+}
+
+.pin-pad__key--back {
+  border-color: transparent;
+  background: transparent;
+  color: #a89870;
+  font-size: 18px;
+}
+
+@keyframes pinShake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-8px); }
+  40%      { transform: translateX(7px); }
+  60%      { transform: translateX(-5px); }
+  80%      { transform: translateX(3px); }
+}
+
+@media (max-width: 480px) {
+  .pin-pad {
+    padding: 18px 20px 20px;
+  }
+
+  .pin-pad__keys {
+    grid-template-columns: repeat(3, 52px);
+    gap: 8px 16px;
+  }
+
+  .pin-pad__key {
+    width: 52px;
+    height: 52px;
+  }
+}

@@ -1,21 +1,15 @@
-// audio.js — Web Audio API utilities for Memento
-// All sounds are generated procedurally, no external files required.
+// audio.js — Sound effects (Web Audio API, procedural, no external files).
+// Music lives in music.js; both share the AudioContext from audioContext.js.
 
-let _ac = null;
-const getAC = () => {
-  if (!_ac) _ac = new (window.AudioContext || window.webkitAudioContext)();
-  return _ac;
-};
+import { getAC } from "./audioContext.js";
+import { setMusicVolume } from "./music.js";
 
 // User settings, pushed in by App via setAudioSettings().
-//   sfxEnabled  → mutes/unmutes every sfx* function
-//   musicVolume → 0..1 multiplier applied to the ambient music
 let sfxEnabled = true;
-let musicVolume = 0.7;
 
 export const setAudioSettings = ({ sfx, volume }) => {
   sfxEnabled = !!sfx;
-  musicVolume = Math.max(0, Math.min(100, volume ?? 70)) / 100;
+  setMusicVolume(Math.max(0, Math.min(100, volume ?? 70)) / 100);
 };
 
 const tone = (freq, dur, type = "sine", vol = 0.2, startDelay = 0) => {
@@ -79,6 +73,12 @@ export const sfxDiceLand = (value) => {
   tone(base * 1.5, 0.25, "triangle", 0.12, 0.12);
 };
 
+export const sfxClue = () => {
+  // Two-note "aha": rising augmented second (gypsy minor colour)
+  tone(587, 0.3, "triangle", 0.12);
+  tone(698, 0.45, "triangle", 0.1, 0.12);
+};
+
 export const sfxPageTurn = () => {
   // Soft whoosh
   tone(200, 0.18, "sine", 0.08);
@@ -90,68 +90,17 @@ export const sfxTransition = () => {
   [110, 138, 165].forEach((f, i) => tone(f, 0.65, "sine", 0.08, i * 0.12));
 };
 
-// ── Ambient music ─────────────────────────────────────────────
+// ── Phone PIN pad ─────────────────────────────────────────────
 
-let ambientInterval = null;
-
-const ambientNote = (freq, dur, vol = 0.05, delay = 0) => {
-  const level = vol * musicVolume;
-  if (level <= 0) return;
-  try {
-    const ctx = getAC();
-
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    const filter = ctx.createBiquadFilter();
-
-    o.type = "sine";
-    o.frequency.value = freq;
-
-    filter.type = "lowpass";
-    filter.frequency.value = 1200;
-
-    o.connect(filter);
-    filter.connect(g);
-    g.connect(ctx.destination);
-
-    const t = ctx.currentTime + delay;
-
-    g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(level, t + 0.5);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-
-    o.start(t);
-    o.stop(t + dur + 0.1);
-  } catch (e) {
-    console.warn("Audio error:", e);
-  }
+export const sfxPinKey = () => {
+  tone(1200, 0.05, "square", 0.04);
 };
 
-/** Starts the ambient loop. Idempotent: calling it twice does nothing. */
-export const startAmbientMusic = () => {
-  if (ambientInterval) return;
-
-  const scale = [220, 261.63, 293.66, 329.63, 392, 440];
-
-  ambientInterval = setInterval(() => {
-    // drone base
-    ambientNote(110, 8, 0.03);
-
-    // nota casuale atmosferica
-    const note = scale[Math.floor(Math.random() * scale.length)];
-    ambientNote(note, 4 + Math.random() * 3, 0.04, Math.random() * 2);
-
-    // armonica sopra
-    if (Math.random() > 0.5) {
-      ambientNote(note * 1.5, 3, 0.02, Math.random() * 2);
-    }
-  }, 3000);
+export const sfxPinError = () => {
+  tone(220, 0.14, "square", 0.08);
+  tone(196, 0.22, "square", 0.08, 0.15);
 };
 
-/** Stops scheduling new ambient notes (notes already playing fade out). */
-export const stopAmbientMusic = () => {
-  if (ambientInterval) {
-    clearInterval(ambientInterval);
-    ambientInterval = null;
-  }
+export const sfxPinSuccess = () => {
+  [659, 880, 1319].forEach((f, i) => tone(f, 0.25, "sine", 0.1, i * 0.09));
 };
