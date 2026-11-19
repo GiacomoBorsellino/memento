@@ -139,6 +139,7 @@ Oggetto: `{ "id", "name", "description", "imagePath"?, "icon"?, "quantity"? }` �
 | --------- | ------------------------ | ---------------------------------------- |
 | `hotel`   | Ambra stanca             | Pianoforte scordato, orologio a cucù     |
 | `pub`     | Verde scuro e ottone     | Giga in 6/8: bodhrán, pizzicato, violino |
+| `legend`  | Buio color sangue        | Racconto di Tadhg: rintocchi, drone, lamento di violino |
 | `street`  | Grigio-blu, mare d'Irlanda | Pioggia, battito, ostinato basso       |
 | `library` | Ardesia                  | Esoterico: campane, violino lungo        |
 | `mist`    | Viola freddo             | Rivelazione: drone dissonante           |

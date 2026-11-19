@@ -380,6 +380,25 @@ const MOODS = {
     },
   },
 
+  // Tadhg's tale of Glen Bootleg: the pub fades, the music darkens —
+  // low piano tolls, a dissonant drone, a slow fiddle lament, distant drum
+  legend: {
+    step: 0.6, prog: [0, 0, 5, 4], reverb: 0.65, rest: 0.35, scale: HUNG,
+    play({ out, t, s, bar, root, motif }) {
+      if (s === 0 && bar % 2 === 0) {
+        drone(out, t, deg(root, -1), this.step * 12, 0.06);
+        drone(out, t, deg(root, -1) * Math.pow(2, 1 / 12), this.step * 12, 0.018);
+      }
+      if (s === 0) piano(out, t, deg(root, -1), 0.16, 3);
+      if (s === 3 && chance(0.5)) piano(out, t, deg(root + 4, -1, HUNG), 0.08, 2.5);
+      const m = motif[s];
+      if ((s === 0 || s === 3) && m != null) {
+        fiddle(out, t, deg(m + root, 0, HUNG), this.step * 2.8, 0.04);
+      }
+      if (s === 4 && bar % 4 === 3) drum(out, t, 0.22);
+    },
+  },
+
   // Arklow streets: rain, heartbeat, low pizzicato ostinato
   street: {
     step: 0.32, prog: [0, 0, 5, 4], reverb: 0.35, rest: 0.6,
@@ -425,7 +444,7 @@ const MOODS = {
 
 // Old demo themes fall back to the closest mood
 const THEME_TO_MOOD = {
-  title: "title", hotel: "hotel", pub: "pub", street: "street",
+  title: "title", hotel: "hotel", pub: "pub", legend: "legend", street: "street",
   library: "library", mist: "mist", dusk: "street", dawn: "title",
   forest: "title", forge: "hotel", throne: "title",
 };

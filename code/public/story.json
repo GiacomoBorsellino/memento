@@ -32,6 +32,28 @@
       "title": "La stanza di quart'ordine",
       "theme": "hotel",
       "onEnter": {
+        "addToInventory": {
+          "id": "cellulare",
+          "name": "Cellulare",
+          "description": "Niente linea, bloccato da un PIN. Sullo schermo, una notifica di Ellyn.",
+          "icon": "📱"
+        }
+      },
+      "texts": [
+        "Ti alzi, ancora vestito, da un letto dalle coperte pesanti che sanno di muffa.",
+        "Intorno, una stanza d'albergo di quart'ordine: carta da parati sbeccata, mobili vetusti con orli e merletti di sessant'anni fa, mai stati raffinati nemmeno da nuovi.",
+        "Sul comodino c'è il tuo cellulare. Lo schermo si accende: niente linea, bloccato da un PIN. Resta solo l'anteprima di una notifica.",
+        "Ellyn: «Non credo di poterci essere, vai tu, Collin St…»",
+        "Chi è Ellyn? E dove dovresti andare? La giacca ti pesa addosso: le tasche sono piene."
+      ],
+      "nextNode": "S03",
+      "continueLabel": "Fruga nella giacca"
+    },
+    {
+      "id": "S03",
+      "title": "Le tasche della giacca",
+      "theme": "hotel",
+      "onEnter": {
         "addToInventory": [
           {
             "id": "fiammiferi",
@@ -43,7 +65,7 @@
           {
             "id": "ritaglio",
             "name": "Ritaglio di giornale",
-            "description": "La vittoria dell'Arklow e l'anniversario della squadra, fondata nel 1948.",
+            "description": "Wicklow People, maggio 2023: «Arklow Town, settantacinque anni di passione». La festa si è chiusa con un 2-1 ai Wicklow Rovers.",
             "icon": "📰"
           },
           {
@@ -51,43 +73,39 @@
             "name": "Tessera di Patrick Dunn",
             "description": "Tessera della biblioteca comunale. Non è tua.",
             "icon": "🪪"
-          },
-          {
-            "id": "cellulare",
-            "name": "Cellulare",
-            "description": "Niente linea, niente app. Sullo schermo, una notifica di Ellyn.",
-            "icon": "📱"
           }
         ]
       },
       "texts": [
-        "Ti alzi, ancora vestito, da un letto dalle coperte pesanti che sanno di muffa.",
-        "Intorno, una stanza d'albergo di quart'ordine: carta da parati sbeccata, mobili vetusti con orli e merletti di sessant'anni fa, mai stati raffinati nemmeno da nuovi.",
-        "Frughi nella giacca. Una scatoletta di fiammiferi con il nome di un pub: dentro ne restano due. Un ritaglio di giornale sull'Arklow. Una tessera della biblioteca intestata a un certo Patrick Dunn. E il tuo cellulare.",
-        "Il telefono è un guscio morto: niente linea, bloccato da un PIN. Sullo schermo resta solo l'anteprima di una notifica.",
-        "Ellyn: «Non credo di poterci essere, vai tu, Collin St…»"
+        "Una scatoletta di fiammiferi con il nome di un pub stampato sopra: Maisie Kelly, Bridge Street 13. Dentro ne restano solo due.",
+        "Un ritaglio di giornale piegato in quattro, con lo stemma della squadra di calcio di Arklow.",
+        "Una tessera della biblioteca comunale, intestata a un certo Patrick Dunn. Non è tua. O almeno, non credi.",
+        "Il Maisie Kelly è l'unico indirizzo che hai. Qualcuno, di sotto, saprà dirti come arrivarci."
       ],
       "cards": [
         {
-          "textCard": "Esamina la giacca",
-          "effectCard": "Fiammiferi e ritaglio, con calma",
-          "nextNode": "S03"
+          "textCard": "Leggi il ritaglio",
+          "effectCard": "Perché te lo porti dietro?",
+          "cardPath": "./assets/cards/card_libraio.png",
+          "nextNode": "S03B"
         },
         {
           "textCard": "Scendi nella hall",
           "effectCard": "Qualcuno saprà come ci sei arrivato",
+          "cardPath": "./assets/cards/card_caput_mundi.png",
           "nextNode": "S04"
         }
       ]
     },
     {
-      "id": "S03",
-      "title": "Dettagli nella giacca",
+      "id": "S03B",
+      "title": "Il ritaglio",
       "theme": "hotel",
       "texts": [
-        "Stringi tra le dita la scatoletta: due fiammiferi soltanto. Risorsa scarsa, ma utile se servirà luce o fuoco.",
-        "Sul ritaglio spicca la squadra di calcio di Arklow. «Fondata nel 1948», ricorda l'articolo, che ne celebra la vittoria e l'anniversario.",
-        "Il cellulare resta bloccato sul PIN. La tempia ti pulsa ancora, di adrenalina e dolore."
+        "Spieghi il ritaglio sulla coperta. È del Wicklow People, maggio 2023.",
+        "«Arklow Town, settantacinque anni di passione»: la festa per l'anniversario si è chiusa con un 2-1 ai Wicklow Rovers.",
+        "Qualcuno ha sottolineato il titolo a penna, due volte. Forse tu.",
+        "La tempia ti pulsa ancora, di adrenalina e dolore."
       ],
       "nextNode": "S04",
       "continueLabel": "Scendi nella hall"
@@ -102,7 +120,7 @@
         "Ad aprirti era stata sua moglie. Vedendoti in quello stato aveva chiamato lui, e stavano per avvertire la polizia; poi hai promesso il doppio in contanti e ti hanno dato una stanza.",
         "«Stamattina è uscita presto», borbotta Cillian. «Diceva che ridursi così era un cattivo presagio. È andata da una cartomante, Lady Trish D.»",
         "«Cose che non mi convincono... A volte sembra che certe persone si tirino addosso i guai, o spariscano proprio quando serve.»",
-        "Gli mostri la scatoletta di fiammiferi. «Il Maisie Kelly? Bridge Street 13, a due passi da qui», e ti indica la strada verso il centro."
+        "Gli mostri la scatoletta di fiammiferi. «Il Maisie Kelly? Bridge Street, a due passi da qui», e ti indica la strada verso il centro."
       ],
       "dice": [
         {
@@ -131,11 +149,13 @@
         {
           "textCard": "Parla con Liam",
           "effectCard": "Cosa è successo ieri sera?",
+          "cardPath": "./assets/cards/card_caput_mundi.png",
           "nextNode": "S06"
         },
         {
           "textCard": "Avvicinati al vecchio",
           "effectCard": "Sembra conoscerti",
+          "cardPath": "./assets/cards/card_inventore.png",
           "nextNode": "S07B"
         }
       ]
@@ -186,37 +206,43 @@
         {
           "textCard": "Avvicinati al vecchio",
           "effectCard": "Ti fissa dall'angolo",
+          "cardPath": "./assets/cards/card_inventore.png",
           "hideIfFlag": "tadhg",
           "nextNode": "S07B"
         },
         {
           "textCard": "Sblocca il cellulare",
-          "effectCard": "Forse il ritaglio c'entra",
+          "effectCard": "Quattro cifre",
+          "cardPath": "./assets/cards/card_libraio.png",
+          "requiresFlag": "tadhg",
           "nextNode": "S08"
         }
       ]
     },
     {
       "id": "S07B",
-      "title": "Tadhg McSeagull",
-      "theme": "pub",
+      "title": "Tadhg McSeagull e la leggenda di Glen",
+      "theme": "legend",
       "onEnter": { "setFlags": "tadhg" },
       "texts": [
-        "Nell'angolo siede il vecchio Tadhg McSeagull, lo svitato del villaggio. Ti fa cenno di sederti.",
-        "Ti racconta di Glen Bootleg: pizzetto, capelli rossi, un sorriso sempre smagliante. Una leggenda: forse il diavolo, forse un folletto.",
-        "«Fa patti agli incroci», sussurra, «ma dà sempre qualcosa di diverso da ciò che la gente vuole.»",
-        "«Ieri sera ti ho visto con un tizio che me lo ricordava. Affabile, brillante, faceva ridere tutti...» Beve un sorso. «Strano che nessuno si ricordi di lui.»"
+        "Nell'angolo siede il vecchio Tadhg McSeagull, lo svitato del villaggio. Ti fa cenno di sederti, e quando lo fai il chiasso del pub sembra allontanarsi.",
+        "«Hai mai sentito parlare di Glen Bootleg?» Pizzetto, capelli rossi, un sorriso sempre smagliante. Il diavolo, dicono alcuni. Un folletto, dicono altri.",
+        "«Si fece un nome nel '98, durante la rivolta», sussurra. «Alcuni capi della Society of United Irishmen andarono a cercarlo a un incrocio, di notte. Volevano la vittoria, e strinsero un patto.»",
+        "«La vittoria non venne. Persero lo stesso, e il sangue scorse a fiumi. Qui ad Arklow, a giugno, i ribelli caddero a centinaia.» Beve un sorso. «Glen dà sempre qualcosa di diverso da ciò che la gente vuole.»",
+        "«Ieri sera ti ho visto con un tizio che me lo ricordava. Affabile, brillante, faceva ridere tutti...» Ti fissa a lungo. «Strano che nessuno si ricordi di lui.»"
       ],
       "cards": [
         {
           "textCard": "Vai al bancone da Liam",
           "effectCard": "Ti sta fulminando con lo sguardo",
+          "cardPath": "./assets/cards/card_caput_mundi.png",
           "hideIfItem": "tessera_g",
           "nextNode": "S06"
         },
         {
           "textCard": "Sblocca il cellulare",
-          "effectCard": "Forse il ritaglio c'entra",
+          "effectCard": "Quattro cifre",
+          "cardPath": "./assets/cards/card_libraio.png",
           "requiresItem": "tessera_g",
           "nextNode": "S08"
         }
@@ -228,13 +254,13 @@
       "theme": "pub",
       "texts": [
         "Ti siedi in disparte e tiri fuori il cellulare. Lo schermo chiede un PIN di quattro cifre.",
-        "Tra le mani hai il ritaglio sull'Arklow. Se tifavi così tanto per quella squadra, forse il codice viene da lì."
+        "Ieri sera hai fatto a pugni per l'Arklow. Uno che tifa così, che numero sceglierebbe?"
       ],
       "pin": {
         "code": "1948",
         "prompt": "Inserisci il PIN",
-        "errorText": "Non si sblocca. Ricontrolla le date sul ritaglio dell'Arklow.",
-        "hint": "L'anniversario si conta da un anno preciso: quello in cui la squadra è nata.",
+        "errorText": "Non si sblocca.",
+        "hint": "Il ritaglio parla di un anniversario. Ogni anniversario conta gli anni da un inizio.",
         "hintAfter": 3,
         "successText": "Sbloccato",
         "nextNode": "S09"
@@ -281,8 +307,7 @@
       "title": "La cassetta delle lettere",
       "theme": "street",
       "texts": [
-        "Nella cassetta delle lettere trovi dei documenti e una rivista di cucina, spediti dalla Arklow Library, 7 Main Street.",
-        "La rivista è aperta sulla ricetta della meringata al limone, cerchiata a penna più volte.",
+        "Nella cassetta delle lettere trovi dei documenti e una rivista di ricette, spediti dalla Arklow Library, 7 Main Street.",
         "Di Denise, nessuna traccia. E quel sangue sulla porta continua a pesarti sullo stomaco."
       ],
       "nextNode": "S12",
@@ -301,18 +326,21 @@
         {
           "textCard": "Dai la tessera di Patrick Dunn",
           "effectCard": "Vediamo cosa leggeva",
+          "cardPath": "./assets/cards/card_caput_mundi.png",
           "requiresItem": "tessera_dunn",
           "nextNode": "S13"
         },
         {
           "textCard": "Dai la tessera con la G",
           "effectCard": "Quella con la tua foto",
+          "cardPath": "./assets/cards/card_libraio.png",
           "requiresItem": "tessera_g",
           "nextNode": "S14"
         },
         {
           "textCard": "Chiedi una ristampa",
           "effectCard": "Per leggere il tuo nome",
+          "cardPath": "./assets/cards/card_inventore.png",
           "nextNode": "S15"
         }
       ]
@@ -323,20 +351,23 @@
       "theme": "library",
       "onEnter": { "setFlags": "meringata" },
       "texts": [
-        "A nome di Patrick Dunn risulta in prestito un libro di ricette.",
-        "Una pagina è piegata: la meringata al limone. La stessa ricetta cerchiata sulla rivista di Denise.",
+        "A nome di Patrick Dunn risulta in prestito un libro di ricette. Tina lo recupera dal carrello dei resi.",
+        "Una pagina è piegata all'angolo: la meringata al limone.",
+        "Tina sorride, poi si rabbuia. «Il dolce preferito di Denise. Ne parla sempre.»",
         "Dunn e Denise: un legame, forse. Potrà tornarti utile più avanti, ma non ti dice dov'è finita lei."
       ],
       "cards": [
         {
           "textCard": "Dai la tessera con la G",
           "effectCard": "Quella con la tua foto",
+          "cardPath": "./assets/cards/card_libraio.png",
           "requiresItem": "tessera_g",
           "nextNode": "S14"
         },
         {
           "textCard": "Chiedi una ristampa",
           "effectCard": "Per leggere il tuo nome",
+          "cardPath": "./assets/cards/card_inventore.png",
           "hideIfFlag": "ristampa",
           "nextNode": "S15"
         }
@@ -355,12 +386,14 @@
         {
           "textCard": "Dai la tessera con la G",
           "effectCard": "Quella con la tua foto",
+          "cardPath": "./assets/cards/card_libraio.png",
           "requiresItem": "tessera_g",
           "nextNode": "S14"
         },
         {
           "textCard": "Dai la tessera di Patrick Dunn",
           "effectCard": "Vediamo cosa leggeva",
+          "cardPath": "./assets/cards/card_caput_mundi.png",
           "requiresItem": "tessera_dunn",
           "hideIfFlag": "meringata",
           "nextNode": "S13"

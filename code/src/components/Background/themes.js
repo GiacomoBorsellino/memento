@@ -7,6 +7,7 @@ export const THEMES = {
   // ── Arklow, Capitolo 1 ──
   hotel: { sky: [40, 30, 22], fog: [62, 46, 30], mist: [24, 17, 12] }, // ambra stanca, carta da parati
   pub: { sky: [18, 30, 24], fog: [40, 48, 30], mist: [12, 18, 14] }, // verde scuro e ottone
+  legend: { sky: [22, 10, 10], fog: [42, 18, 16], mist: [12, 5, 5] }, // la leggenda di Glen: buio color sangue
   street: { sky: [26, 32, 38], fog: [44, 54, 62], mist: [16, 20, 26] }, // grigio-blu del mare d'Irlanda
   library: { sky: [22, 30, 44], fog: [30, 40, 58], mist: [14, 20, 32] }, // ardesia
   mist: { sky: [32, 28, 42], fog: [44, 38, 56], mist: [20, 18, 30] }, // viola freddo, esoterico

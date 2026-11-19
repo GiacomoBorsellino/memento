@@ -2,15 +2,17 @@
 
 > **Nota (19/11/2026)** — Questa è la bozza di lavoro. La versione giocabile, con i testi rivisti, è in `public/story.json` (controllala con `npm run validate`). Modifiche rispetto alla bozza:
 >
-> - **S02**: si vede solo l'anteprima della notifica di Ellyn; il messaggio completo arriva in **S09**, dopo il PIN. Gli oggetti della giacca entrano nell'inventario (fiammiferi ×2).
-> - **S06 → S07**: dopo la rissa Liam ti manda a pulire il bagno ("se ci tieni ai tuoi pollici…"): la tessera con la G non si può più saltare.
-> - **S07** diviso in **S07** (bagno, tessera G) e **S07B** (Tadhg McSeagull). Da S05 si può andare prima da Tadhg; le carte si adattano a cosa hai già fatto (flag `tadhg`, oggetto `tessera_g`).
-> - **PIN** in S08: `1948`; dopo 3 errori compare un suggerimento.
+> - **S02**: vedi la stanza e il cellulare, con solo l'anteprima della notifica di Ellyn; il messaggio completo arriva in **S09**, dopo il PIN.
+> - **S03** (obbligatorio): frughi nella giacca e trovi fiammiferi ×2 (Maisie Kelly, Bridge Street 13), ritaglio e tessera di Dunn, così in hall hai l'indirizzo del pub. Scelta: **S03B** (leggi il ritaglio) oppure scendi subito in **S04**.
+> - **Ritaglio**: non dice più l'anno di fondazione. Riporta «Arklow Town, settantacinque anni di passione», Wicklow People, maggio 2023: il **PIN 1948** va ricavato (2023 − 75). Dopo 3 errori arriva un suggerimento che non dà la cifra.
+> - **S06 → S07**: dopo la rissa Liam ti manda a pulire il bagno ("se ci tieni ai tuoi pollici…"): la tessera con la G non si può saltare.
+> - **S07** diviso in **S07** (bagno, tessera G) e **S07B** (Tadhg McSeagull). **Tadhg è obbligatorio**: puoi incontrarlo prima o dopo Liam, ma il cellulare si sblocca solo dopo averlo ascoltato. La sua leggenda (Glen Bootleg, il patto con alcuni capi della Society of United Irishmen nel 1798, la sconfitta nel sangue — anche qui ad Arklow) ha un tema suo, `legend`: sfondo color sangue, musica cupa.
 > - **Dadi** (S01, S04, S06, S10): l'esito mostra un breve **indizio**, poi "Continua". Nuovo dettaglio inventato in S06 (4–6): il compagno di rissa ti teneva un braccio sulle spalle e rideva.
-> - **S11/S13**: la meringata è cerchiata sulla rivista (S11); in S13 la stessa pagina piegata nel libro di Dunn collega Dunn e Denise.
+> - **S11**: nella cassetta solo documenti e una rivista di ricette, nessuna ricetta in vista. **S13**: la pagina piegata nel libro di Dunn è la meringata al limone, e Tina dice che è il dolce preferito di Denise.
 > - **S13 ↔ S15**: ognuno dei due si visita una volta sola (flag `meringata`, `ristampa`), niente giri a vuoto.
 > - **S14**: hai perso la memoria, quindi non "riconosci" Glen. Qualcosa nella memoria si contrae e la didascalia ti dà il nome.
-> - Testi: paragrafi spezzati in frasi, "Dà a Tina" → "Dai", "Collin St street 6" → "Collin Street 6", S02 non nomina Cillian prima di averlo incontrato.
+> - Carte: per ora usano le tre illustrazioni esistenti (inventore, caput mundi, libraio), in attesa dei tarocchi.
+> - Testi: paragrafi spezzati in frasi, "Dà a Tina" → "Dai", "Collin St street 6" → "Collin Street 6".
 
 ## Atto I — Il risveglio al Dorney's Lodge Hotel
 
