@@ -263,8 +263,89 @@
         "hint": "Il ritaglio parla di un anniversario. Ogni anniversario conta gli anni da un inizio.",
         "hintAfter": 3,
         "successText": "Sbloccato",
-        "nextNode": "S09"
+        "nextNode": "S09",
+        "leave": { "label": "Rimetti via il telefono", "nextNode": "S08A" }
       }
+    },
+    {
+      "id": "S08A",
+      "title": "Di nuovo nel pub",
+      "theme": "pub",
+      "texts": [
+        "Rimetti il telefono in tasca. Lo schermo si spegne, e con lui un po' della tua pazienza.",
+        "Il Maisie Kelly continua la sua vita: Liam asciuga bicchieri, il vecchio Tadhg fissa il fondo del suo, al biliardo un tizio barcolla aggrappato alla stecca."
+      ],
+      "cards": [
+        {
+          "textCard": "Riprova con il cellulare",
+          "effectCard": "Quattro cifre",
+          "cardPath": "./assets/cards/card_libraio.png",
+          "nextNode": "S08"
+        },
+        {
+          "textCard": "Torna da Liam",
+          "effectCard": "Forse ora è più loquace",
+          "cardPath": "./assets/cards/card_caput_mundi.png",
+          "hideIfFlag": "liam_bis",
+          "nextNode": "S08B"
+        },
+        {
+          "textCard": "Torna da Tadhg",
+          "effectCard": "La sua storia non ti esce di testa",
+          "cardPath": "./assets/cards/card_inventore.png",
+          "hideIfFlag": "tadhg_bis",
+          "nextNode": "S08C"
+        },
+        {
+          "textCard": "Avvicinati al biliardo",
+          "effectCard": "Il tizio con la stecca barcolla",
+          "cardPath": "./assets/cards/card_caput_mundi.png",
+          "hideIfFlag": "ubriaco",
+          "nextNode": "S08D"
+        }
+      ]
+    },
+    {
+      "id": "S08B",
+      "title": "Liam, di nuovo",
+      "theme": "pub",
+      "onEnter": { "setFlags": "liam_bis" },
+      "texts": [
+        "Torni al bancone. Liam alza appena gli occhi. «Il cesso è pulito? Bene. E adesso che vuoi ancora?»",
+        "Gli chiedi di ieri sera. Sbuffa. «Eri insopportabile. Brindavi ai settantacinque anni dell'Arklow come se la squadra l'avessi messa al mondo tu.»",
+        "«E il tuo amico rideva, rideva...» Si ferma, con lo straccio a mezz'aria. «Non ricordo la sua faccia. Ed è strano: io le facce me le ricordo tutte.»"
+      ],
+      "nextNode": "S08A",
+      "continueLabel": "Lascialo ai suoi bicchieri"
+    },
+    {
+      "id": "S08C",
+      "title": "Tadhg, di nuovo",
+      "theme": "legend",
+      "onEnter": { "setFlags": "tadhg_bis" },
+      "texts": [
+        "Ti risiedi accanto al vecchio. Il chiasso del pub si allontana di nuovo, come risucchiato.",
+        "«Ti tormenta, eh?» ridacchia Tadhg. «Glen fa così. Ti entra in testa e non esce più.»",
+        "«Sai cosa conta, nei patti? Le date. Il giorno in cui una cosa comincia: lì si firma, e lì si paga.»",
+        "Si porta il bicchiere alle labbra e non aggiunge altro."
+      ],
+      "nextNode": "S08A",
+      "continueLabel": "Alzati"
+    },
+    {
+      "id": "S08D",
+      "title": "Il pescatore",
+      "theme": "pub",
+      "onEnter": { "setFlags": "ubriaco" },
+      "texts": [
+        "Ti avvicini al biliardo. Il tizio con la stecca ti squadra, ondeggia, apre la bocca per dire qualcosa...",
+        "...e ti vomita sulle scarpe.",
+        "Si pulisce la bocca con la manica, per niente imbarazzato, e ti si appoggia addosso con un sorriso sdentato.",
+        "«Belle guanciotte, che dici di farci un giro al porto? Sono un gran pescatore, scommetto che vorresti vedere il mio pesce.»",
+        "Lo scosti con due dita, sdegnato. «No, grazie, preferisco la carne...» E ti allontani, scuotendo una scarpa dopo l'altra."
+      ],
+      "nextNode": "S08",
+      "continueLabel": "Riprova con il cellulare"
     },
     {
       "id": "S09",

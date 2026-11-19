@@ -8,7 +8,8 @@
 //     "errorText": "...",        optional, shown after a wrong attempt
 //     "hint": "...",             optional, replaces errorText after `hintAfter` errors
 //     "hintAfter": 3,
-//     "successText": "..."
+//     "successText": "...",
+//     "leave": { "label": "...", "nextNode": "S08A" }   optional way out
 //   }
 // Works with taps and with the physical keyboard (digits, Backspace).
 
@@ -20,10 +21,10 @@ const KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", "⌫"];
 const ERROR_MS = 650;
 const SUCCESS_MS = 900;
 
-export default function PinPad({ pin, onSuccess }) {
+export default function PinPad({ pin, onSuccess, onLeave }) {
   const code = String(pin.code);
   const [digits, setDigits] = useState("");
-  const [status, setStatus] = useState("idle"); // idle | error | success
+  const [status, setStatus] = useState("idle"); // idle | error | success | leaving
   const [errors, setErrors] = useState(0);
   const timerRef = useRef(null);
 
@@ -65,6 +66,14 @@ export default function PinPad({ pin, onSuccess }) {
     const next = current + key;
     update({ digits: next });
     if (next.length === code.length) submit(next);
+  };
+
+  const leave = () => {
+    const { status: now } = inputRef.current;
+    if (now === "success" || now === "leaving") return;
+    clearTimeout(timerRef.current);
+    update({ status: "leaving" }); // blocks keys and a second click
+    onLeave();
   };
 
   // Physical keyboard. The ref always holds the latest `press`, so the
@@ -121,6 +130,12 @@ export default function PinPad({ pin, onSuccess }) {
           ),
         )}
       </div>
+
+      {onLeave && status !== "success" && (
+        <button className="pin-pad__leave" onClick={leave}>
+          {pin.leave?.label ?? "Rimetti via il telefono"}
+        </button>
+      )}
     </div>
   );
 }

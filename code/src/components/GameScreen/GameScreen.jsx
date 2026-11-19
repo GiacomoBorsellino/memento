@@ -267,7 +267,11 @@ export default function GameScreen({
             )}
 
             {kind === "pin" && (
-              <PinPad pin={node.pin} onSuccess={() => goTo(node.pin.nextNode)} />
+              <PinPad
+                pin={node.pin}
+                onSuccess={() => goTo(node.pin.nextNode)}
+                onLeave={node.pin.leave ? () => goTo(node.pin.leave.nextNode) : undefined}
+              />
             )}
 
             {kind === "continue" && !node.autoAdvance && (

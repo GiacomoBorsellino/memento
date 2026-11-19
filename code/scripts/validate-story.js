@@ -107,6 +107,7 @@ for (const node of story.nodes.values()) {
   if (node.pin) {
     if (!/^\d+$/.test(String(node.pin.code ?? ""))) errors.push(`${where} PIN mancante o non numerico`);
     targets.push([node.pin.nextNode, "PIN"]);
+    if (node.pin.leave) targets.push([node.pin.leave.nextNode, "PIN: rimetti via il telefono"]);
   }
 
   if (kind === "continue") targets.push([node.nextNode, "continua"]);

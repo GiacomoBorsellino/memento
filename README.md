@@ -106,9 +106,12 @@ Gli intervalli devono coprire 1–6 senza sovrapposizioni. Se la regola ha `text
   "errorText": "Non si sblocca...",
   "hint": "Suggerimento mostrato dopo hintAfter errori",
   "hintAfter": 3,
-  "successText": "Sbloccato"
+  "successText": "Sbloccato",
+  "leave": { "label": "Rimetti via il telefono", "nextNode": "S08A" }
 }
 ```
+
+`leave` è facoltativo: aggiunge sotto il tastierino un'uscita per allontanarsi e tornare più tardi.
 
 ### Nodo "Continua" e nodo finale
 

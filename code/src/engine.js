@@ -116,7 +116,8 @@ export function nodeKind(node) {
 
 /**
  * Every way out of `node` given `state`: [{ to, state, label }].
- * Dice rules are all possible; PIN only has the success exit.
+ * Dice: every rule is possible. PIN: the success exit, plus `pin.leave`
+ * (put the phone away) when the node offers it.
  */
 export function exits(node, state) {
   switch (nodeKind(node)) {
@@ -133,7 +134,12 @@ export function exits(node, state) {
         label: `dado ${r.range[0]}-${r.range[1]}`,
       }));
     case "pin":
-      return [{ to: node.pin.nextNode, state, label: "PIN corretto" }];
+      return [
+        { to: node.pin.nextNode, state, label: "PIN corretto" },
+        ...(node.pin.leave
+          ? [{ to: node.pin.leave.nextNode, state, label: "rimetti via il telefono" }]
+          : []),
+      ];
     case "continue":
       return [{ to: node.nextNode, state, label: "continua" }];
     default:
