@@ -1,5 +1,9 @@
 /* GameScreen.css */
 
+/* The screen scrolls when texts + choices are taller than the viewport.
+   Content is centred with auto margins (not justify-content: center), so
+   when it overflows it starts at the top instead of being cut on both ends.
+   Top/bottom padding keeps it clear of the fixed menu and inventory buttons. */
 .game-screen {
   position: fixed;
   inset: 0;
@@ -7,8 +11,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 20px 24px 80px;
+  padding: 76px 24px 96px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
   transition: opacity 0.7s ease;
 }
 
@@ -58,6 +65,8 @@
 .game-screen__content {
   max-width: 640px;
   width: 100%;
+  margin: auto 0;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -220,6 +229,39 @@
   font-size: 15px;
   font-style: italic;
   line-height: 1.6;
+}
+
+/* Phones / short screens: tighter text so more of it fits.
+   Kept at the end of the file so it overrides the base rules above. */
+@media (max-width: 480px), (max-height: 640px) {
+  .game-screen {
+    padding: 72px 18px 92px;
+  }
+
+  .game-screen__texts {
+    min-height: 0;
+    gap: 14px;
+  }
+
+  .game-screen__text {
+    line-height: 1.6;
+  }
+
+  .game-screen__text--first {
+    font-size: 18px;
+  }
+
+  .game-screen__text--body {
+    font-size: 15.5px;
+  }
+
+  .game-clue {
+    margin-top: 16px;
+  }
+
+  .game-clue__text {
+    font-size: 14px;
+  }
 }
 
 @keyframes mFadeUp {

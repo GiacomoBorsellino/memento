@@ -71,6 +71,18 @@ export default function GameScreen({
   const kind = node ? nodeKind(node) : "none";
   const delay = TEXT_DELAYS[settings.textSpeed ?? 1];
 
+  // On small screens the texts + choices are taller than the screen, and the
+  // game screen scrolls: follow the newest text / the choices down into view.
+  const screenRef = useRef(null);
+  useEffect(() => {
+    const el = screenRef.current;
+    if (!el) return;
+    const raf = requestAnimationFrame(() =>
+      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" }),
+    );
+    return () => cancelAnimationFrame(raf);
+  }, [shownTexts.length, showChoices, diceOutcome]);
+
   // Music lives as long as the game screen does
   useEffect(() => {
     return () => {
@@ -175,7 +187,10 @@ export default function GameScreen({
   if (!node) return null;
 
   return (
-    <div className={`game-screen${fadeOut ? " game-screen--fade" : ""}`}>
+    <div
+      ref={screenRef}
+      className={`game-screen${fadeOut ? " game-screen--fade" : ""}`}
+    >
       {/* ── Hamburger button ──────────────────────────────── */}
       <button
         className="game-screen__menu-btn"

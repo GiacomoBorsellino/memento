@@ -13,10 +13,16 @@
 // 25 ms and schedules on the AudioContext clock every note that falls in the
 // next LOOKAHEAD seconds — sample-accurate, immune to UI jank.
 
-import { getAC } from "./audioContext.js";
+import { getAC, isLowPowerDevice } from "./audioContext.js";
 
-const LOOKAHEAD = 0.15; // s of audio scheduled ahead
-const TICK_MS = 25;
+// LITE (phones/tablets): fewer oscillators per note, single-string plucks,
+// shorter mono reverb — same music, roughly a third less audio work.
+const LITE = isLowPowerDevice;
+
+// Notes are scheduled 0.5 s ahead: mobile browsers can delay timers by
+// hundreds of ms, and a note scheduled too late would play off-beat.
+const LOOKAHEAD = 0.5; // s of audio scheduled ahead
+const TICK_MS = 100;
 const FADE = 2.5; // crossfade between moods, s
 const MASTER = 0.55; // headroom before the compressor
 
@@ -47,10 +53,13 @@ let bus = null;
 let reverbIn = null;
 let musicVolume = 0.7;
 
-function makeImpulse(ac, seconds = 2.6, decay = 3) {
+// Reverb impulse: mono and shorter on LITE devices (convolution cost grows
+// with impulse length and channel count).
+function makeImpulse(ac, seconds = LITE ? 1.4 : 2.6, decay = 3) {
   const len = Math.floor(ac.sampleRate * seconds);
-  const buf = ac.createBuffer(2, len, ac.sampleRate);
-  for (let ch = 0; ch < 2; ch++) {
+  const channels = LITE ? 1 : 2;
+  const buf = ac.createBuffer(channels, len, ac.sampleRate);
+  for (let ch = 0; ch < channels; ch++) {
     const d = buf.getChannelData(ch);
     for (let i = 0; i < len; i++) {
       d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, decay);
@@ -109,10 +118,10 @@ function pluckBuffer(ac, freq, damp) {
 function pluck(out, t, freq, vol = 0.2, damp = 0.997) {
   const ac = getAC();
   const g = ac.createGain();
-  g.gain.value = vol;
+  g.gain.value = LITE ? vol * 1.5 : vol;
   g.connect(out);
-  // Two slightly detuned strings per note, like a cimbalom course
-  [-5, 5].forEach((cents) => {
+  // Two slightly detuned strings per note, like a cimbalom course (one on LITE)
+  (LITE ? [0] : [-5, 5]).forEach((cents) => {
     const src = ac.createBufferSource();
     src.buffer = pluckBuffer(ac, freq, damp);
     src.detune.value = cents;
@@ -134,11 +143,12 @@ function piano(out, t, freq, vol = 0.12, dur = 1.3) {
   g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
   f.connect(g);
   g.connect(out);
-  [
+  const partials = [
     ["triangle", 1, -11],
     ["triangle", 1, 9],
     ["sine", 2, 4],
-  ].forEach(([type, mult, cents]) => {
+  ];
+  (LITE ? partials.slice(0, 2) : partials).forEach(([type, mult, cents]) => {
     const o = ac.createOscillator();
     o.type = type;
     o.frequency.value = freq * mult;
@@ -165,9 +175,6 @@ function fiddle(out, t, freq, dur, vol = 0.05) {
   lfo.connect(depth);
   depth.connect(o.frequency);
 
-  const hp = ac.createBiquadFilter();
-  hp.type = "highpass";
-  hp.frequency.value = 220;
   const lp = ac.createBiquadFilter();
   lp.type = "lowpass";
   lp.frequency.value = 2600;
@@ -178,8 +185,15 @@ function fiddle(out, t, freq, dur, vol = 0.05) {
   g.gain.setValueAtTime(vol, t + dur * 0.7);
   g.gain.linearRampToValueAtTime(0.0001, t + dur);
 
-  o.connect(hp);
-  hp.connect(lp);
+  if (LITE) {
+    o.connect(lp); // skip the highpass: one filter less per note
+  } else {
+    const hp = ac.createBiquadFilter();
+    hp.type = "highpass";
+    hp.frequency.value = 220;
+    o.connect(hp);
+    hp.connect(lp);
+  }
   lp.connect(g);
   g.connect(out);
   o.start(t);
@@ -229,7 +243,7 @@ function drum(out, t, vol = 0.35) {
   g.connect(out);
   o.start(t);
   o.stop(t + 0.3);
-  noiseHit(out, t, { vol: vol * 0.25, dur: 0.05, type: "lowpass", freq: 900 });
+  if (!LITE) noiseHit(out, t, { vol: vol * 0.25, dur: 0.05, type: "lowpass", freq: 900 });
 }
 
 // Clock tick / tock
@@ -271,11 +285,12 @@ function drone(out, t, freq, dur, vol = 0.05) {
   g.gain.linearRampToValueAtTime(0.0001, t + dur);
   lp.connect(g);
   g.connect(out);
-  [
+  const voices = [
     ["sawtooth", -7],
     ["sawtooth", 7],
     ["sine", 0],
-  ].forEach(([type, cents]) => {
+  ];
+  (LITE ? voices.slice(0, 2) : voices).forEach(([type, cents]) => {
     const o = ac.createOscillator();
     o.type = type;
     o.frequency.value = freq;
@@ -367,7 +382,10 @@ const MOODS = {
       if (s === 0) pluck(out, t, deg(root, -1), 0.3, 0.985);
       if (s === 3) pluck(out, t, deg(root + 4, -1), 0.24, 0.985);
       if (s !== 0 && s !== 3) {
-        chordTones(root).slice(1).forEach((d) => pluck(out, t, deg(d), 0.07, 0.985));
+        // LITE: one chord note per off-beat instead of two
+        chordTones(root)
+          .slice(1, LITE ? 2 : 3)
+          .forEach((d) => pluck(out, t, deg(d), 0.07, 0.985));
       }
 
       const m = motif[s];
