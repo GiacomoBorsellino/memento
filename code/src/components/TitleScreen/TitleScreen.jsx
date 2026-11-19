@@ -55,7 +55,7 @@ export default function TitleScreen({
         <p
           className={`title-screen__subtitle${showSub ? " title-screen__subtitle--visible" : " title-screen__subtitle--hidden"}`}
         >
-          UN RACCONTO INTERATTIVO
+          I DIAVOLI DI ARKLOW
         </p>
       </div>
 
