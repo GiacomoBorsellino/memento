@@ -5,43 +5,42 @@
 import { useState, useRef, useEffect } from "react";
 import "./InventoryModal.css";
 
+const SLIDE_W = 260; // matches .inventory-modal__slide width
+
 export default function InventoryModal({ inventory = [] }) {
-  const [open, setOpen]           = useState(false);
+  const [open, setOpen] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
-  const carouselRef               = useRef();
+  const carouselRef = useRef();
+
+  // The carousel is mounted fresh on every open, so it already starts
+  // scrolled to the first slide: only the dot state needs resetting.
+  const openModal = () => {
+    setActiveSlide(0);
+    setOpen(true);
+  };
 
   // Sync active dot with scroll position
   const handleScroll = () => {
     if (!carouselRef.current) return;
-    const el    = carouselRef.current;
-    const slideW = 260; // matches .inventory-modal__slide width
-    const idx   = Math.round(el.scrollLeft / slideW);
+    const idx = Math.round(carouselRef.current.scrollLeft / SLIDE_W);
     setActiveSlide(Math.max(0, Math.min(idx, inventory.length - 1)));
   };
 
   // Scroll to a specific slide when dot is clicked
   const scrollTo = (idx) => {
     if (!carouselRef.current) return;
-    carouselRef.current.scrollTo({ left: idx * 260, behavior: "smooth" });
+    carouselRef.current.scrollTo({ left: idx * SLIDE_W, behavior: "smooth" });
     setActiveSlide(idx);
   };
 
   // Close on Escape
   useEffect(() => {
     if (!open) return;
-    const onKey = (e) => { if (e.key === "Escape") setOpen(false); };
+    const onKey = (e) => {
+      if (e.key === "Escape") setOpen(false);
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
-
-  // Reset to first slide on open
-  useEffect(() => {
-    if (open) {
-      setActiveSlide(0);
-      setTimeout(() => {
-        if (carouselRef.current) carouselRef.current.scrollLeft = 0;
-      }, 50);
-    }
   }, [open]);
 
   return (
@@ -49,7 +48,7 @@ export default function InventoryModal({ inventory = [] }) {
       {/* ── Floating trigger button ───────────────────────── */}
       <button
         className="inventory-btn"
-        onClick={() => setOpen(true)}
+        onClick={openModal}
         aria-label="Inventario"
         title="Inventario"
       >
@@ -63,7 +62,9 @@ export default function InventoryModal({ inventory = [] }) {
       {open && (
         <div
           className="inventory-modal__overlay"
-          onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setOpen(false);
+          }}
         >
           {/* Header */}
           <div className="inventory-modal__header">
@@ -80,9 +81,7 @@ export default function InventoryModal({ inventory = [] }) {
           <div className="inventory-modal__divider" />
 
           {inventory.length === 0 ? (
-            <p className="inventory-modal__empty">
-              Il tuo inventario è vuoto.
-            </p>
+            <p className="inventory-modal__empty">Il tuo inventario è vuoto.</p>
           ) : (
             <>
               {/* Carousel */}
@@ -100,7 +99,9 @@ export default function InventoryModal({ inventory = [] }) {
                     />
                     <div className="inventory-modal__item-info">
                       <p className="inventory-modal__item-name">{item.name}</p>
-                      <p className="inventory-modal__item-desc">{item.description}</p>
+                      <p className="inventory-modal__item-desc">
+                        {item.description}
+                      </p>
                     </div>
                   </div>
                 ))}

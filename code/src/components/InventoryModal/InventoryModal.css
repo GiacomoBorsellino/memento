@@ -148,7 +148,8 @@
   border-radius: 5px;
   border: 1px solid #a89870;
   object-fit: contain;
-  filter: invert(1) sepia(0.3) brightness(0.85);
+  filter: sepia(0.3);
+  mix-blend-mode: screen;
   opacity: 0.85;
   animation: imItemIn 0.4s ease both;
 }

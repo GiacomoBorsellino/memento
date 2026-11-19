@@ -1,40 +1,43 @@
+/* index.css — global reset and base styles (moved here from App.jsx) */
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  color-scheme: dark;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-a:hover {
-  color: #535bf2;
+
+html,
+body {
+  background: #080604;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  font-family: Georgia, serif;
+  line-height: 1.5;
+  color: #e8dfc8;
 }
 
 h1 {
-  font-size: 3.2em;
   line-height: 1.1;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Base button: same defaults the game inherited from Vite's starter CSS,
+   minus the blue hover border and the light-mode variant.
+   Components override what they need. */
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -46,23 +49,27 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+button:focus {
+  outline: 2px solid rgba(180, 160, 110, 0.3);
+  outline-offset: 2px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  background: rgba(180, 160, 110, 0.2);
+  border-radius: 1px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #a89870;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(168, 152, 112, 0.4);
 }

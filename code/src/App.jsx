@@ -1,4 +1,4 @@
-// App.jsx — Root component with autosave/continue support
+// App.jsx — Root component: screen routing, story loading, autosave/continue
 
 import { useState, useCallback, useEffect } from "react";
 import Background from "./components/Background/Background.jsx";
@@ -6,9 +6,15 @@ import TitleScreen from "./components/TitleScreen/TitleScreen.jsx";
 import SettingsScreen from "./components/SettingsScreen/SettingsScreen.jsx";
 import CreditsScreen from "./components/CreditsScreen/CreditsScreen.jsx";
 import GameScreen from "./components/GameScreen/GameScreen.jsx";
+import { setAudioSettings } from "./components/audio.js";
 import { loadGame, clearAllSaves } from "./db.js";
+import "./App.css";
 
 const DEFAULT_SETTINGS = { volume: 70, sfx: true, textSpeed: 1 };
+
+// BASE_URL follows Vite's `base` option, so the story still loads if the app
+// is served from a sub-path (or from a Capacitor webview).
+const STORY_URL = `${import.meta.env.BASE_URL}story.json`;
 
 export default function App() {
   const [screen,   setScreen]   = useState("menu");
@@ -23,22 +29,41 @@ export default function App() {
 
   // Load story JSON
   useEffect(() => {
-    fetch("/story.json")
-      .then((r) => r.json())
+    fetch(STORY_URL)
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
       .then(setStory)
       .catch((e) => console.error("Failed to load story.json:", e));
   }, []);
 
-  // Check for autosave on mount
+  // Keep the audio module in sync with the user's settings
   useEffect(() => {
-    loadGame("autosave").then((save) => {
-      if (save && save.nodeIdx > 0) {
-        setSavedNodeIdx(save.nodeIdx);
-        setSavedInventory(save.inventory ?? []);
-        setHasSave(true);
-      }
-    }).catch(() => {});
-  }, []);
+    setAudioSettings(settings);
+  }, [settings]);
+
+  // Re-read the autosave every time we land on the main menu, so "Continua"
+  // reflects the progress made in the game session that just ended.
+  useEffect(() => {
+    if (screen !== "menu") return;
+    let cancelled = false;
+    loadGame("autosave")
+      .then((save) => {
+        if (cancelled) return;
+        if (save && save.nodeIdx > 0) {
+          setSavedNodeIdx(save.nodeIdx);
+          setSavedInventory(save.inventory ?? []);
+          setHasSave(true);
+        } else {
+          setHasSave(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setHasSave(false);
+      });
+    return () => { cancelled = true; };
+  }, [screen]);
 
   const handleThemeChange = useCallback((theme) => setBgTheme(theme), []);
 
@@ -60,24 +85,10 @@ export default function App() {
     setScreen("game-continue");
   };
 
-  return (
-    <div style={{ position: "fixed", inset: 0, overflow: "hidden" }}>
-      <style>{`
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #080604; font-family: Georgia, serif; color: #e8dfc8; }
-        ::-webkit-scrollbar { display: none; }
-        button:focus { outline: 2px solid rgba(180,160,110,0.3); outline-offset: 2px; }
-        input[type=range] {
-          -webkit-appearance: none; height: 2px;
-          background: rgba(180,160,110,0.2); border-radius: 1px;
-        }
-        input[type=range]::-webkit-slider-thumb {
-          -webkit-appearance: none; width: 14px; height: 14px;
-          border-radius: 50%; background: #a89870; cursor: pointer;
-          box-shadow: 0 0 6px rgba(168,152,112,0.4);
-        }
-      `}</style>
+  const inGame = screen === "game" || screen === "game-continue";
 
+  return (
+    <div className="app">
       <Background theme={bgTheme} />
 
       {screen === "menu" && (
@@ -102,7 +113,7 @@ export default function App() {
         <CreditsScreen onBack={() => setScreen("menu")} />
       )}
 
-      {(screen === "game" || screen === "game-continue") && story && (
+      {inGame && story && (
         <GameScreen
           key={screen} // remount on new game vs continue
           story={story}
@@ -114,16 +125,7 @@ export default function App() {
         />
       )}
 
-      {(screen === "game" || screen === "game-continue") && !story && (
-        <div style={{
-          position: "fixed", inset: 0, zIndex: 10,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          color: "#5a5040", fontFamily: "Georgia, serif",
-          letterSpacing: "4px", fontSize: 12,
-        }}>
-          Caricamento...
-        </div>
-      )}
+      {inGame && !story && <div className="app__loading">Caricamento...</div>}
     </div>
   );
 }

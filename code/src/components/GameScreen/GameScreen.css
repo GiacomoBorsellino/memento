@@ -163,31 +163,6 @@
 }
 
 /* Continue button */
-.continue-btn {
-  display: flex;
-  justify-content: center;
-  margin-top: 28px;
-}
-
-.continue-btn__inner {
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid rgba(180, 160, 110, 0.3);
-  color: #a89870;
-  padding: 10px 0;
-  cursor: pointer;
-  font-family: Georgia, serif;
-  letter-spacing: 5px;
-  font-size: 11px;
-  text-transform: uppercase;
-  transition: all 0.25s;
-}
-
-.continue-btn__inner:hover {
-  border-bottom-color: rgba(180, 160, 110, 0.7);
-  color: #e8dfc8;
-}
-
 @keyframes mFadeUp {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: none; }

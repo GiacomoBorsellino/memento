@@ -1,32 +1,25 @@
-// Background/Background.jsx — Atmospheric canvas, unchanged logic, CSS extracted
+// Background/Background.jsx — Atmospheric canvas with smooth theme transitions
 
 import { useEffect, useRef } from "react";
+import { THEMES } from "./themes.js";
 import "./Background.css";
-
-export const THEMES = {
-  forest: { sky: [28, 52, 40], fog: [40, 68, 52], mist: [20, 38, 30] },
-  forge: { sky: [38, 28, 18], fog: [58, 42, 22], mist: [24, 18, 10] },
-  throne: { sky: [44, 38, 18], fog: [62, 52, 24], mist: [26, 22, 10] },
-  library: { sky: [22, 30, 44], fog: [30, 40, 58], mist: [14, 20, 32] },
-  mist: { sky: [32, 28, 42], fog: [44, 38, 56], mist: [20, 18, 30] },
-  dusk: { sky: [42, 28, 22], fog: [58, 38, 28], mist: [28, 18, 14] },
-  dawn: { sky: [24, 36, 46], fog: [34, 50, 62], mist: [16, 26, 36] },
-  title: { sky: [14, 12, 22], fog: [22, 18, 36], mist: [10, 8, 18] },
-};
 
 const lerpColor = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
 const rgb = (c) => `rgb(${c[0]},${c[1]},${c[2]})`;
 
 export default function Background({ theme = "title" }) {
   const canvasRef = useRef();
-  const themeRef = useRef(THEMES[theme] || THEMES.title);
-  const targetRef = useRef(THEMES[theme] || THEMES.title);
+  const fromRef = useRef(THEMES[theme] || THEMES.title); // transition start
+  const targetRef = useRef(THEMES[theme] || THEMES.title); // transition end
+  const shownRef = useRef(THEMES[theme] || THEMES.title); // colours on screen now
   const progressRef = useRef(1);
   const rafRef = useRef();
   const timeRef = useRef(0);
 
+  // On theme change, start the new transition from the colours currently
+  // drawn — so switching mid-transition doesn't jump back to the old theme.
   useEffect(() => {
-    themeRef.current = { ...themeRef.current };
+    fromRef.current = shownRef.current;
     targetRef.current = THEMES[theme] || THEMES.title;
     progressRef.current = 0;
   }, [theme]);
@@ -64,13 +57,12 @@ export default function Background({ theme = "title" }) {
       const p = progressRef.current;
       const ease = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p;
 
-      const cur = themeRef.current;
+      const from = fromRef.current;
       const tgt = targetRef.current;
-      const sky = lerpColor(cur.sky, tgt.sky, ease);
-      const fog = lerpColor(cur.fog, tgt.fog, ease);
-      const mist = lerpColor(cur.mist, tgt.mist, ease);
-
-      if (p >= 1) themeRef.current = { ...tgt };
+      const sky = lerpColor(from.sky, tgt.sky, ease);
+      const fog = lerpColor(from.fog, tgt.fog, ease);
+      const mist = lerpColor(from.mist, tgt.mist, ease);
+      shownRef.current = { sky, fog, mist };
 
       const grad = ctx.createLinearGradient(0, 0, 0, H);
       grad.addColorStop(0, rgb(sky));

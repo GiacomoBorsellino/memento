@@ -7,7 +7,19 @@ const getAC = () => {
   return _ac;
 };
 
+// User settings, pushed in by App via setAudioSettings().
+//   sfxEnabled  → mutes/unmutes every sfx* function
+//   musicVolume → 0..1 multiplier applied to the ambient music
+let sfxEnabled = true;
+let musicVolume = 0.7;
+
+export const setAudioSettings = ({ sfx, volume }) => {
+  sfxEnabled = !!sfx;
+  musicVolume = Math.max(0, Math.min(100, volume ?? 70)) / 100;
+};
+
 const tone = (freq, dur, type = "sine", vol = 0.2, startDelay = 0) => {
+  if (!sfxEnabled) return;
   try {
     const ctx = getAC();
     const o = ctx.createOscillator();
@@ -78,6 +90,44 @@ export const sfxTransition = () => {
   [110, 138, 165].forEach((f, i) => tone(f, 0.65, "sine", 0.08, i * 0.12));
 };
 
+// ── Ambient music ─────────────────────────────────────────────
+
+let ambientInterval = null;
+
+const ambientNote = (freq, dur, vol = 0.05, delay = 0) => {
+  const level = vol * musicVolume;
+  if (level <= 0) return;
+  try {
+    const ctx = getAC();
+
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    o.type = "sine";
+    o.frequency.value = freq;
+
+    filter.type = "lowpass";
+    filter.frequency.value = 1200;
+
+    o.connect(filter);
+    filter.connect(g);
+    g.connect(ctx.destination);
+
+    const t = ctx.currentTime + delay;
+
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(level, t + 0.5);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+
+    o.start(t);
+    o.stop(t + dur + 0.1);
+  } catch (e) {
+    console.warn("Audio error:", e);
+  }
+};
+
+/** Starts the ambient loop. Idempotent: calling it twice does nothing. */
 export const startAmbientMusic = () => {
   if (ambientInterval) return;
 
@@ -98,38 +148,10 @@ export const startAmbientMusic = () => {
   }, 3000);
 };
 
+/** Stops scheduling new ambient notes (notes already playing fade out). */
 export const stopAmbientMusic = () => {
   if (ambientInterval) {
     clearInterval(ambientInterval);
     ambientInterval = null;
   }
-};
-
-let ambientInterval = null;
-
-const ambientNote = (freq, dur, vol = 0.05, delay = 0) => {
-  const ctx = getAC();
-
-  const o = ctx.createOscillator();
-  const g = ctx.createGain();
-  const filter = ctx.createBiquadFilter();
-
-  o.type = "sine";
-  o.frequency.value = freq;
-
-  filter.type = "lowpass";
-  filter.frequency.value = 1200;
-
-  o.connect(filter);
-  filter.connect(g);
-  g.connect(ctx.destination);
-
-  const t = ctx.currentTime + delay;
-
-  g.gain.setValueAtTime(0, t);
-  g.gain.linearRampToValueAtTime(vol, t + 0.5);
-  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-
-  o.start(t);
-  o.stop(t + dur + 0.1);
 };
