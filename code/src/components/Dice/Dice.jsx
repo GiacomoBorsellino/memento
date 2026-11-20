@@ -1,8 +1,14 @@
-// Dice/Dice.jsx — Animated d6, CSS extracted
+// Dice/Dice.jsx — Animated d6: the face flickers, slows down, lands, and
+// after a short pause the result goes to the parent (GameScreen).
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { sfxDiceRoll, sfxDiceLand } from "../audio.js";
 import "./Dice.css";
+
+const ROLL_TICKS = 15; // random faces shown before landing
+const TICK_MS = 40; // first tick; each next one is TICK_SLOWDOWN_MS longer
+const TICK_SLOWDOWN_MS = 5;
+const RESULT_DELAY_MS = 1400; // pause on the landed face before onResult
 
 const FACE_DOTS = {
   1: [[1,1]],
@@ -42,26 +48,42 @@ export default function Dice({ onResult }) {
   const [rolling, setRolling] = useState(false);
   const [display, setDisplay] = useState(6);
 
+  // The one pending timer (animation tick or result delay). Cleared on
+  // unmount: otherwise, leaving the node mid-roll (restart chapter, main
+  // menu) let onResult fire later with the OLD node's rules, showing its
+  // clue — and its exit — on whatever node came next.
+  const timerRef = useRef(null);
+  useEffect(() => () => clearTimeout(timerRef.current), []);
+
+  // Set synchronously: two clicks in the same tick (die face + button, or a
+  // double click) would both still see `rolling === false` in state.
+  const startedRef = useRef(false);
+
   const roll = () => {
-    if (rolling || value !== null) return;
+    if (startedRef.current) return;
+    startedRef.current = true;
     sfxDiceRoll();
     setRolling(true);
-    setValue(null);
 
+    // A chain of timeouts, each a little longer than the previous one, so
+    // the die visibly slows down before landing. (A setInterval can't do
+    // this: its delay is fixed when it starts.)
     let ticks = 0;
-    const interval = setInterval(() => {
-      setDisplay(Math.ceil(Math.random() * 6));
+    const tick = () => {
       ticks++;
-      if (ticks > 14) {
-        clearInterval(interval);
-        const result = Math.ceil(Math.random() * 6);
-        setDisplay(result);
-        setValue(result);
-        setRolling(false);
-        sfxDiceLand(result);
-        setTimeout(() => onResult(result), 1400);
+      if (ticks < ROLL_TICKS) {
+        setDisplay(Math.ceil(Math.random() * 6));
+        timerRef.current = setTimeout(tick, TICK_MS + ticks * TICK_SLOWDOWN_MS);
+        return;
       }
-    }, 55 + ticks * 6);
+      const result = Math.ceil(Math.random() * 6);
+      setDisplay(result);
+      setValue(result);
+      setRolling(false);
+      sfxDiceLand(result);
+      timerRef.current = setTimeout(() => onResult(result), RESULT_DELAY_MS);
+    };
+    timerRef.current = setTimeout(tick, TICK_MS);
   };
 
   return (

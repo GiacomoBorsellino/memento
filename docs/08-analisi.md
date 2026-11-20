@@ -30,17 +30,17 @@ Gravità: **alta** = può rompere una partita; **media** = comportamento sbaglia
 
 ### Difetti
 
-#### 1. Il dado lascia timer attivi dopo lo smontaggio — alta (finestra stretta)
+#### 1. Il dado lascia timer attivi dopo lo smontaggio — alta (finestra stretta) — ✅ corretto
 
-`Dice.jsx:52-62`: né l'`setInterval` dell'animazione né il `setTimeout` di 1,4 s che chiama `onResult` vengono cancellati se il componente viene smontato.
+> **Corretto il 20/11/2026** (branch `fix/dado-timer`): l'animazione è una catena di `setTimeout` tenuta in un ref e cancellata allo smontaggio; un secondo ref impedisce due lanci nello stesso istante. Lo scenario qui sotto è stato rieseguito: dopo il riavvio `S01` non mostra più nessun indizio estraneo.
+
+Com'era: `Dice.jsx` non cancellava né l'`setInterval` dell'animazione né il `setTimeout` di 1,4 s che chiama `onResult` quando il componente veniva smontato.
 
 Scenario concreto, **riprodotto con Chrome headless**: in `S10` si lancia il dado e, entro un secondo e mezzo dall'arresto, si apre il menu laterale e si sceglie «Riavvia capitolo». Il timer scatta comunque e chiama la `handleDiceResult` del render vecchio, che conosce ancora `S10`: imposta un esito del dado di `S10` sulla partita appena ricominciata. Quando `S01` (anch'esso un nodo con dado) mostra le scelte, compare l'indizio di `S10` («Pensi soprattutto al rischio di farti notare…») con il pulsante «Alzati», che però porta all'uscita della regola di `S10`, cioè `S11`: metà capitolo saltata. Con «Menu principale» invece l'effetto è solo un suono d'indizio nel menu; ma se una regola del dado non avesse `text`, partirebbe un `goTo` dopo lo smontaggio e un autosave tardivo sovrascriverebbe il salvataggio.
 
-Correzione: tenere interval e timeout in ref e cancellarli in un `useEffect` di pulizia, come fa già `PinPad`.
+#### 2. L'animazione del dado non rallentava — bassa — ✅ corretto
 
-#### 2. L'animazione del dado non rallenta — bassa
-
-`Dice.jsx:64`: `setInterval(fn, 55 + ticks * 6)` calcola il ritardo **una volta sola**, quando `ticks` vale 0. L'intenzione (facce che cambiano sempre più lentamente, come un dado che si ferma) non si realizza: l'intervallo resta 55 ms. Correzione: una catena di `setTimeout`, ciascuno con il proprio ritardo.
+Com'era: `setInterval(fn, 55 + ticks * 6)` calcolava il ritardo **una volta sola**, quando `ticks` valeva 0, quindi l'intervallo restava fisso a 55 ms e l'effetto «dado che si ferma» non c'era. Ora ogni faccia dura 5 ms più della precedente (da 40 a 110 ms): il dado rallenta visibilmente e si ferma dopo circa 1,1 s invece di 0,8.
 
 #### 3. «Nuova partita» cancella tutti i salvataggi — bassa oggi, media domani
 
@@ -89,7 +89,7 @@ Nebbia, pioggia e animazioni ignorano `prefers-reduced-motion`. Si potrebbero fe
 
 #### 13. Residui del passato — bassa
 
-- Commenti d'intestazione «CSS extracted» in `TitleScreen`, `Dice`, `SideMenu`, `SettingsScreen`, `CreditsScreen` (ricordo di un vecchio refactoring).
+- Commenti d'intestazione «CSS extracted» in `TitleScreen`, `SideMenu`, `SettingsScreen`, `CreditsScreen` (ricordo di un vecchio refactoring).
 - `sfxPageTurn` (`audio.js`) non è usato.
 - I temi della demo (`forest`, `forge`, `throne`, `dusk`, `dawn`) sono ancora in `themes.js` e `music.js`.
 - `public/assets/inventory/blood.png` e `rolling-chair.png` non sono usati, e in realtà sono JPEG con estensione `.png`.
@@ -128,10 +128,10 @@ Netlify pubblica `main` così com'è. Una GitHub Action che esegua `npm run lint
 
 | Priorità | Intervento | Problemi |
 | -------- | ---------- | -------- |
-| 1 | Pulire i timer del dado | 1, 2 |
-| 2 | Carte accessibili da tastiera | 6 |
-| 3 | Impostazioni in IndexedDB (v3) e `deleteSave("autosave")` | 3, 4 |
-| 4 | Test del motore + controllo prima della pubblicazione | 15, 16 |
-| 5 | Unificare le uscite dei nodi | 9 |
-| 6 | Sfondo più leggero su telefono | 14 |
-| 7 | Pulizie: versioni, licenza, Node, residui, `device.js` | 10–13 |
+| ✅ | Pulire i timer del dado (fatto) | 1, 2 |
+| 1 | Carte accessibili da tastiera | 6 |
+| 2 | Impostazioni in IndexedDB (v3) e `deleteSave("autosave")` | 3, 4 |
+| 3 | Test del motore + controllo prima della pubblicazione | 15, 16 |
+| 4 | Unificare le uscite dei nodi | 9 |
+| 5 | Sfondo più leggero su telefono | 14 |
+| 6 | Pulizie: versioni, licenza, Node, residui, `device.js` | 10–13 |

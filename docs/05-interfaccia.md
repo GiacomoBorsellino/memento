@@ -45,7 +45,10 @@ Si ascolta solo `onClick` e non `onTouchEnd`: sui touchscreen il browser genera 
 
 ### `Dice`: il dado
 
-Un d6 con i puntini in una griglia 3×3. Al lancio la faccia cambia 15 volte, poi si ferma sul risultato, che viene mostrato («Il fato ha parlato: 4»); dopo 1,4 s il risultato passa a `GameScreen`. Si lancia una volta sola per nodo.
+Un d6 con i puntini in una griglia 3×3. Al lancio la faccia cambia 14 volte, sempre più lentamente (da 40 a 110 ms per faccia), poi si ferma sul risultato, che viene mostrato («Il fato ha parlato: 4»); dopo 1,4 s il risultato passa a `GameScreen`.
+
+- Si lancia **una volta sola** per nodo: un ref, aggiornato subito, blocca un secondo lancio anche se dado e pulsante vengono cliccati nello stesso istante.
+- L'unico timer in sospeso (animazione o attesa del risultato) sta in un ref ed è **cancellato allo smontaggio**: se il giocatore riavvia il capitolo o torna al menu mentre il dado gira, il risultato non arriva più a una partita che non lo aspetta.
 
 ### `PinPad`: il tastierino
 
