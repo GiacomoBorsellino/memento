@@ -15,7 +15,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildStory, enterNode, exits, nodeKind, EMPTY_STATE } from "../src/engine.js";
+import { buildStory, explore, nodeKind } from "../src/engine.js";
 import { THEMES } from "../src/components/Background/themes.js";
 
 const MAX_STATES = 50000;
@@ -130,49 +130,8 @@ for (const node of story.nodes.values()) {
 
 // ── 2. Play-through exploration ───────────────────────────────
 
-const stateKey = (id, st) =>
-  `${id}|${st.inventory.map((i) => `${i.id}:${i.quantity ?? 1}`).sort().join(",")}` +
-  `|${[...st.flags].sort().join(",")}`;
-
-const states = new Map(); // key → { id, parent, via }
-const edges = new Map(); // key → [keys]
-const endKeys = [];
-const deadEnds = [];
-
-const startState = enterNode(story, story.start, EMPTY_STATE);
-const startKey = stateKey(story.start, startState);
-states.set(startKey, { id: story.start, state: startState, parent: null, via: null });
-const queue = [startKey];
-let truncated = false;
-
-while (queue.length) {
-  const k = queue.shift();
-  const { id, state } = states.get(k);
-  const node = story.nodes.get(id);
-  const next = [];
-  edges.set(k, next);
-
-  if (node.isEnd) {
-    endKeys.push(k);
-    continue;
-  }
-  const outs = exits(node, state).filter((o) => story.nodes.has(o.to));
-  if (outs.length === 0) deadEnds.push(k);
-
-  for (const o of outs) {
-    const st = enterNode(story, o.to, o.state);
-    const k2 = stateKey(o.to, st);
-    next.push(k2);
-    if (!states.has(k2)) {
-      if (states.size >= MAX_STATES) {
-        truncated = true;
-        continue;
-      }
-      states.set(k2, { id: o.to, state: st, parent: k, via: o.label });
-      queue.push(k2);
-    }
-  }
-}
+// Same BFS the story graph page uses (src/engine.js → explore)
+const { states, edges, endKeys, deadEnds, truncated } = explore(story, MAX_STATES);
 
 function pathTo(k) {
   const steps = [];

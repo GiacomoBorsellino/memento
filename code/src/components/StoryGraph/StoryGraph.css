@@ -1,0 +1,360 @@
+/* StoryGraph.css — development page /grafo */
+
+.graph-page {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  background: #0d0b09;
+}
+
+.graph-page .react-flow {
+  flex: 1;
+  --xy-background-color: #0d0b09;
+  --xy-controls-button-background-color: #1a1611;
+  --xy-controls-button-border-color: #2e281f;
+  --xy-minimap-background-color: #15120e;
+}
+
+.graph-page__error {
+  padding: 40px;
+  color: #a89870;
+  font-family: Georgia, serif;
+}
+
+/* ── Nodes ── */
+
+.story-node {
+  width: 210px;
+  height: 80px;
+  padding: 8px 10px;
+  background: #17130f;
+  border: 1px solid #3a3226;
+  border-left: 5px solid var(--cat);
+  border-radius: 6px;
+  color: #e8dfc8;
+  font-family: Georgia, serif;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
+}
+
+.story-node:hover {
+  border-color: var(--cat);
+}
+
+.story-node--selected {
+  border-color: var(--cat);
+  box-shadow: 0 0 0 2px var(--cat), 0 0 24px rgba(0, 0, 0, 0.6);
+}
+
+.story-node--problem {
+  border-color: #d0453a;
+  border-style: dashed;
+  border-left-style: solid;
+}
+
+.story-node--missing {
+  border: 1px dashed #d0453a;
+  border-left: 5px solid #d0453a;
+  cursor: default;
+}
+
+.story-node__head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
+.story-node__id {
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--cat, #d0453a);
+  letter-spacing: 1px;
+}
+
+.story-node__badge {
+  font-family: monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: var(--cat);
+  color: #0d0b09;
+}
+
+.story-node__icon {
+  margin-left: auto;
+  font-size: 14px;
+}
+
+.story-node__title {
+  font-size: 13px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.story-node__problem {
+  margin-top: 2px;
+  font-family: monospace;
+  font-size: 10px;
+  color: #e0675c;
+}
+
+/* Handles are required by React Flow to attach edges, but the arrows follow
+   dagre's routes (RoutedEdge), not the handles: keep them invisible. */
+.story-node .react-flow__handle {
+  opacity: 0;
+}
+
+/* ── Arrows ── */
+
+.story-edge .react-flow__edge-path {
+  stroke: #8a7d63;
+  stroke-width: 1.5;
+}
+
+.story-edge--dashed .react-flow__edge-path {
+  stroke-dasharray: 6 4;
+}
+
+.story-edge--active .react-flow__edge-path {
+  stroke: #e8c96b;
+  stroke-width: 2.5;
+}
+
+.story-edge--dim {
+  opacity: 0.25;
+}
+
+.story-edge .react-flow__edge-text {
+  fill: #cfc3a6;
+  font-family: Georgia, serif;
+  font-size: 11px;
+}
+
+.story-edge .react-flow__edge-textbg {
+  fill: #0d0b09;
+  fill-opacity: 0.85;
+}
+
+/* ── Toolbar & legend ── */
+
+.graph-toolbar {
+  max-width: 340px;
+  padding: 12px 14px;
+  background: rgba(21, 18, 14, 0.92);
+  border: 1px solid #2e281f;
+  border-radius: 8px;
+  color: #cfc3a6;
+  font-family: Georgia, serif;
+  font-size: 12px;
+}
+
+.graph-toolbar__title {
+  font-family: var(--font-title);
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 1.3;
+  white-space: nowrap;
+  color: #e8dfc8;
+  margin-bottom: 4px;
+}
+
+.graph-toolbar__stats {
+  margin-bottom: 10px;
+}
+
+.graph-toolbar__ok {
+  color: #5fa98a;
+}
+
+.graph-toolbar__bad {
+  color: #e0675c;
+}
+
+.graph-toolbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.graph-toolbar__actions button,
+.graph-toolbar__actions a {
+  padding: 4px 10px;
+  border: 1px solid #3a3226;
+  border-radius: 4px;
+  background: #1f1a14;
+  color: #e8dfc8;
+  font-size: 12px;
+  font-family: Georgia, serif;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.graph-toolbar__actions button:hover,
+.graph-toolbar__actions a:hover {
+  border-color: #a89870;
+}
+
+.graph-legend {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 12px;
+}
+
+.graph-legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.graph-legend li::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--cat);
+  flex-shrink: 0;
+}
+
+.graph-legend__dashed::before {
+  height: 0 !important;
+  border-top: 2px dashed #8a7d63;
+  background: none !important;
+}
+
+/* ── Side panel ── */
+
+.graph-panel {
+  position: relative;
+  width: 380px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  padding: 22px 22px 40px;
+  background: #15120e;
+  border-left: 1px solid #2e281f;
+  color: #cfc3a6;
+  font-family: Georgia, serif;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.graph-panel__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 2px 8px;
+  background: transparent;
+  color: #8a7d63;
+}
+
+.graph-panel__id {
+  font-family: monospace;
+  color: #8a7d63;
+  letter-spacing: 2px;
+}
+
+.graph-panel__title {
+  font-family: var(--font-title);
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 1.2;
+  color: #e8dfc8;
+  margin: 2px 30px 4px 0;
+}
+
+.graph-panel__meta {
+  color: #8a7d63;
+  margin-bottom: 14px;
+}
+
+.graph-panel__play {
+  padding: 8px 16px;
+  border: 1px solid #c8a84b;
+  border-radius: 4px;
+  background: rgba(200, 168, 75, 0.12);
+  color: #e8c96b;
+  font-size: 13px;
+}
+
+.graph-panel__play:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.graph-panel__message {
+  margin-top: 8px;
+  color: #5fa98a;
+  font-size: 12px;
+}
+
+.graph-panel__section {
+  margin: 20px 0 8px;
+  font-family: monospace;
+  font-weight: normal;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #8a7d63;
+}
+
+.graph-panel__text {
+  margin-bottom: 8px;
+}
+
+.graph-panel__list,
+.graph-panel__path {
+  padding-left: 18px;
+}
+
+.graph-panel__exit {
+  margin-bottom: 6px;
+}
+
+.graph-panel__cond,
+.graph-panel__effect {
+  display: block;
+  font-size: 12px;
+}
+
+.graph-panel__cond {
+  color: #e0a35c;
+}
+
+.graph-panel__effect {
+  color: #5fa98a;
+}
+
+.graph-panel__via {
+  color: #8a7d63;
+  font-style: italic;
+  margin-right: 6px;
+}
+
+.graph-panel__via::after {
+  content: " →";
+}
+
+.graph-panel__link {
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  color: #e8c96b;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.graph-panel__link:hover {
+  text-decoration: underline;
+}

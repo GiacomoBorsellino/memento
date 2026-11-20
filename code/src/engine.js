@@ -146,3 +146,111 @@ export function exits(node, state) {
       return [];
   }
 }
+
+// ── Static view (no game state) ───────────────────────────────
+
+const CONDITION_KEYS = ["requiresItem", "hideIfItem", "requiresFlag", "hideIfFlag"];
+
+/**
+ * Every exit `node` could ever offer, conditions ignored: what the story graph
+ * draws. [{ to, label, kind, conditions, source }]
+ *   conditions: the card's requiresItem/hideIfItem/requiresFlag/hideIfFlag
+ *               (empty object when the exit is always available)
+ *   source:     the card or dice rule carrying the effects (null otherwise)
+ */
+export function staticExits(node) {
+  switch (nodeKind(node)) {
+    case "cards":
+      return node.cards.map((c) => ({
+        to: c.nextNode,
+        label: c.textCard,
+        kind: "card",
+        conditions: Object.fromEntries(
+          CONDITION_KEYS.filter((k) => c[k]).map((k) => [k, c[k]]),
+        ),
+        source: c,
+      }));
+    case "dice":
+      return node.dice.map((r) => ({
+        to: r.nextNode,
+        label: r.range[0] === r.range[1] ? `${r.range[0]}` : `${r.range[0]}–${r.range[1]}`,
+        kind: "dice",
+        conditions: {},
+        source: r,
+      }));
+    case "pin":
+      return [
+        { to: node.pin.nextNode, label: "PIN corretto", kind: "pin", conditions: {}, source: null },
+        ...(node.pin.leave
+          ? [{ to: node.pin.leave.nextNode, label: node.pin.leave.label ?? "esci", kind: "leave", conditions: {}, source: null }]
+          : []),
+      ];
+    case "continue":
+      return [{ to: node.nextNode, label: node.continueLabel ?? "continua", kind: "continue", conditions: {}, source: null }];
+    default:
+      return [];
+  }
+}
+
+// ── Play-through exploration ──────────────────────────────────
+
+/** One key per distinct game situation: node + inventory + flags. */
+export const stateKey = (id, st) =>
+  `${id}|${st.inventory.map((i) => `${i.id}:${i.quantity ?? 1}`).sort().join(",")}` +
+  `|${[...st.flags].sort().join(",")}`;
+
+/**
+ * Breadth-first search over EVERY reachable game state, with the same rules
+ * as the game. Returns:
+ *   states:    Map<key, { id, state, parent, via }>  (parent/via = how we got here)
+ *   edges:     Map<key, key[]>  (state graph, for the trap analysis)
+ *   endKeys:   states on a final node
+ *   deadEnds:  states on a non-final node with no available choice
+ *   truncated: true if maxStates was hit (results are partial)
+ * Breadth-first means the first state recorded for a node is one reached by
+ * a shortest path: the story graph uses it for "play from here".
+ */
+export function explore(story, maxStates = 50000) {
+  const states = new Map();
+  const edges = new Map();
+  const endKeys = [];
+  const deadEnds = [];
+  let truncated = false;
+
+  const startState = enterNode(story, story.start, EMPTY_STATE);
+  const startKey = stateKey(story.start, startState);
+  states.set(startKey, { id: story.start, state: startState, parent: null, via: null });
+  const queue = [startKey];
+
+  // Index-based queue: shift() is O(n) and the queue can grow large.
+  for (let head = 0; head < queue.length; head++) {
+    const k = queue[head];
+    const { id, state } = states.get(k);
+    const node = story.nodes.get(id);
+    const next = [];
+    edges.set(k, next);
+
+    if (node.isEnd) {
+      endKeys.push(k);
+      continue;
+    }
+    const outs = exits(node, state).filter((o) => story.nodes.has(o.to));
+    if (outs.length === 0) deadEnds.push(k);
+
+    for (const o of outs) {
+      const st = enterNode(story, o.to, o.state);
+      const k2 = stateKey(o.to, st);
+      next.push(k2);
+      if (!states.has(k2)) {
+        if (states.size >= maxStates) {
+          truncated = true;
+          continue;
+        }
+        states.set(k2, { id: o.to, state: st, parent: k, via: o.label });
+        queue.push(k2);
+      }
+    }
+  }
+
+  return { states, edges, endKeys, deadEnds, truncated };
+}
