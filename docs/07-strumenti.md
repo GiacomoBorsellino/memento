@@ -32,7 +32,7 @@ Esempio di uscita:
 
 ```
 Storia: public\story.json
-  21 nodi · 136 stati di gioco esplorati · finali raggiungibili: S14
+  27 nodi · 621 stati di gioco esplorati · finali raggiungibili: S14
 
 ✔ Nessun errore.
 ```

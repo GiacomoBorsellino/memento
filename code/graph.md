@@ -14,6 +14,14 @@
 > - **S14**: hai perso la memoria, quindi non "riconosci" Glen. Qualcosa nella memoria si contrae e la didascalia ti dà il nome.
 > - Carte: per ora usano le tre illustrazioni esistenti (inventore, caput mundi, libraio), in attesa dei tarocchi.
 > - Testi: paragrafi spezzati in frasi, "Dà a Tina" → "Dai", "Collin St street 6" → "Collin Street 6".
+>
+> **Aggiunte del 24/11/2026** (esplorazione facoltativa):
+>
+> - **S04 → S04A → S04B**: dopo Cillian, prima di uscire, puoi osservare il dipinto nella hall: uomini col volto coperto che bastonano soldati inglesi, la targhetta «Irish Society sfida la gabbia inglese – J. Moonshine 1798», il rosso come sangue, ferite e mutilazioni, e un personaggio intonso dal sorriso smagliante che ti scruta, con gli occhi che non seguono il sorriso. Tema `legend`, flag `dipinto`.
+> - **S11**: nella cassetta anche le riviste di ricette della serie Forky's. Poi scegli: biblioteca, oppure **porta sul retro (S11A)**: vetro rotto, puoi infilarci la mano (**S11B**, dado: solo con 6 riesci).
+>   - 1–5 → **S11C**: ti tagli (flag `mano_ferita`), il cane si lancia contro la porta, te ne vai.
+>   - 6 → **S11D**: entri nella cucina a soqquadro, arriva il cane, gli chiudi la porta della cucina in faccia; prima di scappare noti sul tavolo un libro antico, «Sefer ha-Zohar – La via attraverso i tarocchi» (flag `zohar`).
+> - **S14**: la tomba non è più di Montgomery ma di **John Moonshine** (lo stesso nome del pittore del dipinto nella hall).
 
 ## Atto I — Il risveglio al Dorney's Lodge Hotel
 
@@ -112,10 +120,10 @@
   * *"Chiedi a Tina una ristampa della tessera"* $\rightarrow$ `S15`
 
 ### `S14` — Il libro del 1798 e l'immagine di Glen (Cliffhanger)
-* **Testo:** Con la tua tessera salta fuori a tuo nome un libro esoterico sui patti della **Rivolta irlandese del 1798**, che rimanda alla **St. Saviour's Church** e alla tomba di un certo **Montgomery**. Mentre guardi il libro, ti trovi davanti l'immagine di **Glen**: il respiro ti si ferma. Quel viso, quel pizzetto, quello sguardo sono identici a quelli del tizio con cui eri la sera prima al pub. Un brivido ti corre lungo la schiena mentre ti chiedi cosa significhi davvero quel volto... e chi fossi tu accanto a lui.
+* **Testo:** Con la tua tessera salta fuori a tuo nome un libro esoterico sui patti della **Rivolta irlandese del 1798**, che rimanda alla **St. Saviour's Church** e alla tomba di un certo **John Moonshine**. Mentre guardi il libro, ti trovi davanti l'immagine di **Glen**: il respiro ti si ferma. Quel viso, quel pizzetto, quello sguardo sono identici a quelli del tizio con cui eri la sera prima al pub. Un brivido ti corre lungo la schiena mentre ti chiedi cosa significhi davvero quel volto... e chi fossi tu accanto a lui.
 * **Meccanica:** `Nessuna` — Chiusura di capitolo.
 * **Collegamenti:**
-  * **Fine Capitolo 1** $\rightarrow$ `S16` (*Inizio Capitolo 2: St. Saviour's Church e il cimitero di Montgomery*)
+  * **Fine Capitolo 1** $\rightarrow$ `S16` (*Inizio Capitolo 2: St. Saviour's Church e la tomba di John Moonshine*)
 
 ### `S15` — Richiesta di ristampa (Micro-scelta)
 * **Testo:** Provi a chiedere a Tina una ristampa per leggere il tuo nome, ma lei ti dice che può farlo solo Denise, che per adesso non c'è.

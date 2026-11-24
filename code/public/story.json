@@ -126,14 +126,51 @@
         {
           "range": [1, 3],
           "text": "Prendi le parole di Cillian per quello che sembrano: lo sfogo di un marito brontolone.",
-          "nextNode": "S05"
+          "nextNode": "S04A"
         },
         {
           "range": [4, 6],
           "text": "Cogli qualcosa di più: sua moglie non era inquieta solo per la tua notte. Era come se avesse sentito odore di guai.",
-          "nextNode": "S05"
+          "nextNode": "S04A"
         }
       ],
+      "continueLabel": "Avviati verso l'uscita"
+    },
+    {
+      "id": "S04A",
+      "title": "Il quadro nella hall",
+      "theme": "hotel",
+      "texts": [
+        "Prima di uscire, lo sguardo ti cade su un dipinto appeso alla parete della hall."
+      ],
+      "cards": [
+        {
+          "textCard": "Osserva il dipinto",
+          "effectCard": "Qualcosa ti trattiene",
+          "cardPath": "./assets/cards/card_libraio.png",
+          "nextNode": "S04B"
+        },
+        {
+          "textCard": "Vai al Maisie Kelly",
+          "effectCard": "Bridge Street, a due passi da qui",
+          "cardPath": "./assets/cards/card_inventore.png",
+          "nextNode": "S05"
+        }
+      ]
+    },
+    {
+      "id": "S04B",
+      "title": "Il dipinto di J. Moonshine",
+      "theme": "legend",
+      "onEnter": { "setFlags": "dipinto" },
+      "texts": [
+        "Ti avvicini. Uomini con il volto coperto attaccano a bastonate dei soldati inglesi.",
+        "Sotto, una targhetta: «Irish Society sfida la gabbia inglese – J. Moonshine 1798».",
+        "È un dipinto inquietante. Il rosso tinge la tela in modo ruvido, e sembra sangue. Molti dei personaggi hanno vistose ferite e mutilazioni.",
+        "Uno solo, stranamente intonso, sembra guardarti intensamente, come a scrutarti.",
+        "Ha un sorriso smagliante sul volto. Ma gli occhi non sembrano seguire quel sorriso."
+      ],
+      "nextNode": "S05",
       "continueLabel": "Vai al Maisie Kelly"
     },
     {
@@ -388,11 +425,89 @@
       "title": "La cassetta delle lettere",
       "theme": "street",
       "texts": [
-        "Nella cassetta delle lettere trovi dei documenti e una rivista di ricette, spediti dalla Arklow Library, 7 Main Street.",
+        "Nella cassetta delle lettere trovi dei documenti, spediti dalla Arklow Library, 7 Main Street.",
+        "Sotto, alcune riviste di ricette di cucina: la serie Forky's.",
         "Di Denise, nessuna traccia. E quel sangue sulla porta continua a pesarti sullo stomaco."
+      ],
+      "cards": [
+        {
+          "textCard": "Prova dalla porta sul retro",
+          "effectCard": "Forse c'è un'altra entrata",
+          "cardPath": "./assets/cards/card_inventore.png",
+          "nextNode": "S11A"
+        },
+        {
+          "textCard": "Vai alla Arklow Library",
+          "effectCard": "7 Main Street",
+          "cardPath": "./assets/cards/card_libraio.png",
+          "nextNode": "S12"
+        }
+      ]
+    },
+    {
+      "id": "S11A",
+      "title": "La porta sul retro",
+      "theme": "street",
+      "texts": [
+        "Fai il giro della casa fino alla porta sul retro.",
+        "Uno dei vetri è rotto. Infilando la mano nel buco potresti arrivare alla maniglia e aprire da dentro.",
+        "Ma le schegge rimaste nel telaio sono affilate come rasoi."
+      ],
+      "cards": [
+        {
+          "textCard": "Infila la mano nel vetro",
+          "effectCard": "Piano, senza toccare le schegge",
+          "cardPath": "./assets/cards/card_inventore.png",
+          "nextNode": "S11B"
+        },
+        {
+          "textCard": "Lascia perdere",
+          "effectCard": "Vai alla Arklow Library",
+          "cardPath": "./assets/cards/card_libraio.png",
+          "nextNode": "S12"
+        }
+      ]
+    },
+    {
+      "id": "S11B",
+      "title": "Il vetro rotto",
+      "theme": "street",
+      "texts": [
+        "Trattieni il fiato e infili la mano tra le schegge, piano, cercando la maniglia a tentoni.",
+        "Dall'altra parte della casa, il cane ha smesso di abbaiare."
+      ],
+      "dice": [
+        { "range": [1, 5], "nextNode": "S11C" },
+        { "range": [6, 6], "nextNode": "S11D" }
+      ]
+    },
+    {
+      "id": "S11C",
+      "title": "Il taglio",
+      "theme": "street",
+      "onEnter": { "setFlags": "mano_ferita" },
+      "texts": [
+        "Una scheggia ti morde il polso. Ritiri la mano di scatto: il sangue ti cola caldo tra le dita.",
+        "Dentro, il cane si lancia contro la porta, abbaiando furioso.",
+        "Ti stringi la mano nella manica della giacca e ti allontani, prima che qualcuno si affacci a guardare."
       ],
       "nextNode": "S12",
       "continueLabel": "Vai alla Arklow Library"
+    },
+    {
+      "id": "S11D",
+      "title": "La cucina",
+      "theme": "library",
+      "onEnter": { "setFlags": "zohar" },
+      "texts": [
+        "La maniglia cede. Sei dentro.",
+        "La cucina è a soqquadro.",
+        "Non fai in tempo a fare un passo oltre: il cane arriva di corsa, ringhiando. Lo anticipi per un soffio e gli chiudi in faccia la porta della cucina.",
+        "Prima di scappare, lo noti: sul tavolo della cucina ci sono dei libri. Uno spicca, sembra antico.",
+        "Copertina bruna, di pelle stinta. Il titolo è in lettere dorate, ormai mezze corrose dal tempo: «Sefer ha-Zohar – La via attraverso i tarocchi»."
+      ],
+      "nextNode": "S12",
+      "continueLabel": "Scappa dal retro"
     },
     {
       "id": "S12",
@@ -487,7 +602,7 @@
       "theme": "mist",
       "texts": [
         "Tina digita e aggrotta la fronte. A tuo nome risulta un libro esoterico sui patti stretti durante la Rivolta irlandese del 1798.",
-        "Le pagine rimandano alla St. Saviour's Church e alla tomba di un certo Montgomery.",
+        "Le pagine rimandano alla St. Saviour's Church e alla tomba di un certo John Moonshine.",
         "Sfogli, e ti trovi davanti un'illustrazione. Sotto, una didascalia: Glen. Il respiro ti si ferma.",
         "Quel viso, quel pizzetto, quello sguardo. Qualcosa in fondo alla tua memoria si contrae: era con te ieri sera, al pub. Ne sei certo, anche se non ricordi altro.",
         "Un brivido ti corre lungo la schiena. Cosa significa quel volto... e chi eri tu, accanto a lui?"
