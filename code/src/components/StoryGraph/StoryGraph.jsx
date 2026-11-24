@@ -143,6 +143,13 @@ function DetailPanel({ story, analysis, id, onSelect, onClose }) {
       <h2 className="graph-panel__title">{node.title ?? "(senza titolo)"}</h2>
       <p className="graph-panel__meta">
         tema <strong>{node.theme ?? "—"}</strong>
+        {node.location && (
+          <>
+            {" · luogo "}
+            <strong>{story.map?.locations.get(node.location)?.name ?? node.location}</strong>
+          </>
+        )}
+        {node.reveals && <> · fa scoprire {[].concat(node.reveals).join(", ")}</>}
       </p>
 
       <button className="graph-panel__play" onClick={playFromHere} disabled={!arrival}>

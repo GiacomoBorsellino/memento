@@ -63,6 +63,22 @@ Il blocco schermo di un telefono: pallini, messaggio, tastiera 3×4 con cancella
 
 Un pulsante con lo zaino 🎒 e un contatore degli oggetti. Apre un pannello a tutto schermo con un **carosello** a scorrimento orizzontale (CSS *scroll-snap*: lo scorrimento si ferma sempre su una scheda). Ogni scheda mostra immagine o icona, nome, quantità (se maggiore di 1) e descrizione. I pallini sotto il carosello seguono lo scorrimento e permettono di saltare a un oggetto. Si chiude con ✕, con un clic fuori o con Esc.
 
+## La mappa: `TownMap`
+
+Un pulsante 🗺️ a sinistra dello zaino apre la mappa di Arklow a tutto schermo. Un puntino dorato sul pulsante segnala che c'è un luogo nuovo da vedere.
+
+- **La carta** (`ArklowBase.jsx`) è un SVG disegnato in codice nello stile di una carta antica color seppia: carta macchiata e bruciata ai bordi, il fiume Avoca che sfocia nel mare d'Irlanda, il ponte, Main Street e Bridge Street, Ferrybank a nord, il porto, Arklow Rock, rosa dei venti e cartiglio con il nome in gotico. È **ispirata** ad Arklow ma stilizzata, non in scala. Con `map.image` in `story.json` si sostituisce con un disegno.
+- **Sopra la carta**, un SVG con lo stesso sistema di coordinate:
+  - una **nebbia** scura (rumore `feTurbulence`) copre ciò che il protagonista non ricorda; una maschera la apre attorno ai luoghi visitati e la dirada attorno a quelli solo sentiti;
+  - luoghi **visitati**: punto a inchiostro e nome;
+  - luoghi **sentiti nominare**: cerchio a matita tratteggiato con «?»;
+  - **percorso**: linea rossa tratteggiata nell'ordine di scoperta;
+  - **sei qui**: anello rosso che pulsa.
+- **Animazione**: i luoghi scoperti dall'ultima apertura «si inchiostrano» (la nebbia si apre e il nome compare). Con «riduci movimento» le animazioni sono spente.
+- **Elenco** sotto la mappa: luoghi visitati e sentiti nominare, con le note (anche quelli senza coordinate).
+- **Telefono**: sotto i 760 px la carta resta larga 720 px, scorre di lato e si apre centrata su «sei qui».
+- Si chiude con ✕, Esc o un clic fuori; apre con il fruscio di `sfxPageTurn`.
+
 ## Le altre schermate
 
 | Componente | Contenuto |

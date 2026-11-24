@@ -128,6 +128,34 @@ for (const node of story.nodes.values()) {
   }
 }
 
+// Town map: locations, and the nodes that point to them
+const map = story.map;
+if (map) {
+  for (const [id, l] of map.locations) {
+    if (!l.name) errors.push(`[mappa] il luogo "${id}" non ha "name"`);
+    const hasX = typeof l.x === "number";
+    const hasY = typeof l.y === "number";
+    if (hasX !== hasY) errors.push(`[mappa] il luogo "${id}" ha solo una coordinata: servono x e y, oppure nessuna`);
+    if (hasX && hasY && (l.x < 0 || l.x > map.width || l.y < 0 || l.y > map.height)) {
+      errors.push(`[mappa] il luogo "${id}" è fuori dalla mappa (${map.width}×${map.height})`);
+    }
+  }
+  if (map.image && !publicAsset(map.image)) errors.push(`[mappa] immagine mancante: ${map.image}`);
+}
+const placesUsed = new Set();
+for (const node of story.nodes.values()) {
+  const refs = [node.location, ...toArray(node.reveals)].filter(Boolean);
+  for (const id of refs) {
+    placesUsed.add(id);
+    if (!map) errors.push(`[${node.id}] usa il luogo "${id}", ma la storia non ha "map"`);
+    else if (!map.locations.has(id)) errors.push(`[${node.id}] il luogo "${id}" non esiste in map.locations`);
+  }
+  if (map && !node.location) warnings.push(`[${node.id}] nessun "location": sulla mappa resta il luogo precedente`);
+}
+for (const id of map?.locations.keys() ?? []) {
+  if (!placesUsed.has(id)) warnings.push(`[mappa] il luogo "${id}" non è usato da nessun nodo`);
+}
+
 // ── 2. Play-through exploration ───────────────────────────────
 
 // Same BFS the story graph page uses (src/engine.js → explore)

@@ -187,6 +187,39 @@ Si possono combinare: devono valere tutte.
 - **Due scene in ordine libero, entrambe obbligatorie**: dal pub si può andare prima da Liam o prima da Tadhg. In `S07` la carta per Tadhg ha `hideIfFlag: "tadhg"` e quella per il telefono `requiresFlag: "tadhg"`; in `S07B` la carta per Liam ha `hideIfItem: "tessera_g"` e quella per il telefono `requiresItem: "tessera_g"`. Così il telefono compare solo dopo aver fatto entrambe le cose.
 - **Un luogo da cui si esce e si rientra**: `S08A` è un nodo «snodo» con più carte che riportano a sé stesso o al PIN.
 
+## La mappa della città
+
+Facoltativa: se la storia ha `map`, in partita compare il pulsante 🗺️ accanto allo zaino.
+
+```json
+"map": {
+  "image": "./assets/map/arklow.png",
+  "width": 1000,
+  "height": 700,
+  "locations": [
+    { "id": "pub", "name": "Maisie Kelly", "x": 452, "y": 372, "note": "Bridge Street 13" },
+    { "id": "cartomante", "name": "Lady Trish D., la cartomante", "note": "Indirizzo sconosciuto" }
+  ]
+}
+```
+
+| Campo | Significato |
+| ----- | ----------- |
+| `image` | Facoltativo: un disegno al posto della carta di Arklow disegnata in SVG. Va in `public/`, con le proporzioni di `width` × `height` |
+| `width`, `height` | Il sistema di coordinate della mappa (predefinito 1000 × 700) |
+| `locations[].id` | Identificatore usato dai nodi |
+| `locations[].name`, `note` | Nome sulla mappa e nota nell'elenco sotto la mappa |
+| `locations[].x`, `y` | Posizione sulla mappa. Senza coordinate il luogo compare solo nell'elenco (per esempio un indirizzo che non si conosce ancora) |
+
+Sui nodi:
+
+| Campo | Significato |
+| ----- | ----------- |
+| `location` | Dove si svolge la scena: il luogo diventa **visitato** (a inchiostro) ed è il «sei qui» |
+| `reveals` | Uno o più luoghi di cui il giocatore **sente parlare** (a matita con «?») |
+
+Si assegna il luogo a ogni nodo; un nodo senza `location` lascia il segno «sei qui» sull'ultimo luogo visitato (il validatore lo segnala come avviso). Visitati e sentiti diventano flag automatici, `visitato:<id>` e `sentito:<id>`, quindi si possono usare anche nelle condizioni delle carte (per esempio `"requiresFlag": "visitato:biblioteca"`).
+
 ## Temi
 
 `theme` sceglie i colori dello sfondo (`src/components/Background/themes.js`) e la musica (`src/components/music.js`). Le chiavi sono le stesse nei due file.

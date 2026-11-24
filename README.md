@@ -46,6 +46,7 @@ Seguendo quello che hai in tasca ricostruirai la notte appena passata: una rissa
 - **Lancia il dado.** Decide quanto riesci a cogliere, e a volte ti lascia un indizio.
 - **Raccogli oggetti.** Certe strade si aprono solo se hai in tasca la cosa giusta.
 - **Risolvi gli enigmi.** La soluzione è sempre nella storia, per chi sa dove guardare.
+- **Ricostruisci la mappa.** Arklow è avvolta nella nebbia della tua memoria: ogni luogo che visiti torna a inchiostro sulla carta, quelli di cui senti parlare restano a matita.
 
 La partita si salva da sola a ogni scena: puoi chiudere e riprendere più tardi con «Continua».
 

@@ -1,10 +1,21 @@
 {
   "title": "Memento — Capitolo 1",
   "start": "S01",
+  "map": {
+    "locations": [
+      { "id": "albergo", "name": "L'albergo", "x": 352, "y": 470, "note": "Qui ti sei svegliato" },
+      { "id": "pub", "name": "Maisie Kelly", "x": 452, "y": 372, "note": "Bridge Street 13" },
+      { "id": "casa_denise", "name": "Casa di Denise", "x": 612, "y": 566, "note": "Collin Street 6" },
+      { "id": "biblioteca", "name": "Arklow Library", "x": 540, "y": 436, "note": "7 Main Street" },
+      { "id": "chiesa", "name": "St. Saviour's Church", "x": 706, "y": 452, "note": "Il libro del 1798 rimanda qui" },
+      { "id": "cartomante", "name": "Lady Trish D., la cartomante", "note": "Indirizzo sconosciuto" }
+    ]
+  },
   "nodes": [
     {
       "id": "S01",
       "title": "Il risveglio",
+      "location": "albergo",
       "theme": "hotel",
       "texts": [
         "Senti il tessuto ruvido stropicciarti la faccia. L'odore di lana umida, polvere e sigaretta ti risale le narici e si mescola alla tua coscienza.",
@@ -30,6 +41,7 @@
     {
       "id": "S02",
       "title": "La stanza di quart'ordine",
+      "location": "albergo",
       "theme": "hotel",
       "onEnter": {
         "addToInventory": {
@@ -52,6 +64,8 @@
     {
       "id": "S03",
       "title": "Le tasche della giacca",
+      "location": "albergo",
+      "reveals": "pub",
       "theme": "hotel",
       "onEnter": {
         "addToInventory": [
@@ -100,6 +114,7 @@
     {
       "id": "S03B",
       "title": "Il ritaglio",
+      "location": "albergo",
       "theme": "hotel",
       "texts": [
         "Spieghi il ritaglio sulla coperta. È del Wicklow People, maggio 2023.",
@@ -113,6 +128,8 @@
     {
       "id": "S04",
       "title": "La hall",
+      "location": "albergo",
+      "reveals": "cartomante",
       "theme": "hotel",
       "texts": [
         "Un albergo polveroso a due stelle, con poche stanze. Dietro il banco, il proprietario, Cillian, ti guarda storto.",
@@ -139,6 +156,7 @@
     {
       "id": "S04A",
       "title": "Il quadro nella hall",
+      "location": "albergo",
       "theme": "hotel",
       "texts": [
         "Prima di uscire, lo sguardo ti cade su un dipinto appeso alla parete della hall."
@@ -161,6 +179,7 @@
     {
       "id": "S04B",
       "title": "Il dipinto di J. Moonshine",
+      "location": "albergo",
       "theme": "legend",
       "onEnter": { "setFlags": "dipinto" },
       "texts": [
@@ -176,6 +195,7 @@
     {
       "id": "S05",
       "title": "Bridge Street 13: il Maisie Kelly",
+      "location": "pub",
       "theme": "pub",
       "texts": [
         "Una bettola stretta e sporca, ficcata in un vicolo poco distante dall'hotel.",
@@ -200,6 +220,7 @@
     {
       "id": "S06",
       "title": "La rissa",
+      "location": "pub",
       "theme": "pub",
       "texts": [
         "Liam ti guarda torvo. Ieri sera hai attaccato rissa, ubriaco, insieme a un tizio di cui nessuno ricorda il nome. Il motivo? Il tuo tifo per l'Arklow contro i Wicklow Rovers.",
@@ -225,6 +246,7 @@
     {
       "id": "S07",
       "title": "Il bagno",
+      "location": "pub",
       "theme": "pub",
       "onEnter": {
         "addToInventory": {
@@ -259,6 +281,7 @@
     {
       "id": "S07B",
       "title": "Tadhg McSeagull e la leggenda di Glen",
+      "location": "pub",
       "theme": "legend",
       "onEnter": { "setFlags": "tadhg" },
       "texts": [
@@ -288,6 +311,7 @@
     {
       "id": "S08",
       "title": "Il PIN del telefono",
+      "location": "pub",
       "theme": "pub",
       "texts": [
         "Ti siedi in disparte e tiri fuori il cellulare. Lo schermo chiede un PIN di quattro cifre.",
@@ -307,6 +331,7 @@
     {
       "id": "S08A",
       "title": "Di nuovo nel pub",
+      "location": "pub",
       "theme": "pub",
       "texts": [
         "Rimetti il telefono in tasca. Lo schermo si spegne, e con lui un po' della tua pazienza.",
@@ -345,6 +370,7 @@
     {
       "id": "S08B",
       "title": "Liam, di nuovo",
+      "location": "pub",
       "theme": "pub",
       "onEnter": { "setFlags": "liam_bis" },
       "texts": [
@@ -358,6 +384,7 @@
     {
       "id": "S08C",
       "title": "Tadhg, di nuovo",
+      "location": "pub",
       "theme": "legend",
       "onEnter": { "setFlags": "tadhg_bis" },
       "texts": [
@@ -372,6 +399,7 @@
     {
       "id": "S08D",
       "title": "Il pescatore",
+      "location": "pub",
       "theme": "pub",
       "onEnter": { "setFlags": "ubriaco" },
       "texts": [
@@ -387,6 +415,8 @@
     {
       "id": "S09",
       "title": "Gli SMS di Ellyn",
+      "location": "pub",
+      "reveals": "casa_denise",
       "theme": "pub",
       "texts": [
         "Il telefono si sblocca. Ma per capire chi sei resta inutile: niente linea, impossibile inviare messaggi, nessuna app con un nome o un dato tuo.",
@@ -399,6 +429,7 @@
     {
       "id": "S10",
       "title": "Collin Street 6",
+      "location": "casa_denise",
       "theme": "street",
       "texts": [
         "Collin Street 6. Suoni, ma non risponde nessuno.",
@@ -423,6 +454,8 @@
     {
       "id": "S11",
       "title": "La cassetta delle lettere",
+      "location": "casa_denise",
+      "reveals": "biblioteca",
       "theme": "street",
       "texts": [
         "Nella cassetta delle lettere trovi dei documenti, spediti dalla Arklow Library, 7 Main Street.",
@@ -447,6 +480,7 @@
     {
       "id": "S11A",
       "title": "La porta sul retro",
+      "location": "casa_denise",
       "theme": "street",
       "texts": [
         "Fai il giro della casa fino alla porta sul retro.",
@@ -471,6 +505,7 @@
     {
       "id": "S11B",
       "title": "Il vetro rotto",
+      "location": "casa_denise",
       "theme": "street",
       "texts": [
         "Trattieni il fiato e infili la mano tra le schegge, piano, cercando la maniglia a tentoni.",
@@ -484,6 +519,7 @@
     {
       "id": "S11C",
       "title": "Il taglio",
+      "location": "casa_denise",
       "theme": "street",
       "onEnter": { "setFlags": "mano_ferita" },
       "texts": [
@@ -497,6 +533,7 @@
     {
       "id": "S11D",
       "title": "La cucina",
+      "location": "casa_denise",
       "theme": "library",
       "onEnter": { "setFlags": "zohar" },
       "texts": [
@@ -512,6 +549,7 @@
     {
       "id": "S12",
       "title": "Arklow Library",
+      "location": "biblioteca",
       "theme": "library",
       "texts": [
         "La biblioteca odora di carta umida e cera per pavimenti. Denise non c'è.",
@@ -544,6 +582,7 @@
     {
       "id": "S13",
       "title": "La meringata al limone",
+      "location": "biblioteca",
       "theme": "library",
       "onEnter": { "setFlags": "meringata" },
       "texts": [
@@ -572,6 +611,7 @@
     {
       "id": "S15",
       "title": "La ristampa",
+      "location": "biblioteca",
       "theme": "library",
       "onEnter": { "setFlags": "ristampa" },
       "texts": [
@@ -599,6 +639,8 @@
     {
       "id": "S14",
       "title": "Il libro del 1798",
+      "location": "biblioteca",
+      "reveals": "chiesa",
       "theme": "mist",
       "texts": [
         "Tina digita e aggrotta la fronte. A tuo nome risulta un libro esoterico sui patti stretti durante la Rivolta irlandese del 1798.",

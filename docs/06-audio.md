@@ -27,7 +27,7 @@ Ogni effetto è una piccola sequenza di toni (oscillatore + inviluppo di volume)
 | `sfxTextReveal` | comparsa delle scelte |
 | `sfxTransition` | cambio di nodo |
 | `sfxPinKey`, `sfxPinError`, `sfxPinSuccess` | tastierino |
-| `sfxPageTurn` | definito ma non usato |
+| `sfxPageTurn` | apertura della mappa |
 
 `setAudioSettings({ sfx, volume })`, chiamata da `App`, accende o spegne gli effetti e regola il volume della **musica** (gli effetti hanno un volume fisso).
 

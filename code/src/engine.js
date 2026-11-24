@@ -31,7 +31,22 @@ export function buildStory(raw) {
   }
   const start = raw.start ?? raw.nodes[0]?.id;
   if (!nodes.has(start)) throw new Error(`story.json: start node ${start} not found`);
-  return { title: raw.title ?? "", start, nodes };
+  return { title: raw.title ?? "", start, nodes, map: buildMap(raw.map) };
+}
+
+/**
+ * story.json "map": { image?, width?, height?, locations: [{ id, name, x?, y?, note? }] }
+ * → { image, width, height, locations: Map<id, location> } or null (no map).
+ * A location without x/y is known only by name (shown in the map's margin).
+ */
+function buildMap(raw) {
+  if (!raw || !Array.isArray(raw.locations)) return null;
+  return {
+    image: raw.image ?? null,
+    width: raw.width ?? 1000,
+    height: raw.height ?? 700,
+    locations: new Map(raw.locations.map((l) => [l.id, l])),
+  };
 }
 
 // ── Inventory & flags ─────────────────────────────────────────
@@ -82,9 +97,42 @@ export function applyEffects(state, source) {
     : { inventory, flags };
 }
 
-/** State after arriving on a node (its onEnter effects applied). */
+// ── Places (the town map) ─────────────────────────────────────
+// A node may say where it happens ("location") and which places it makes
+// the player hear about ("reveals"). Both become ordinary flags, added on
+// arrival: "visitato:pub", "sentito:biblioteca". Being flags, they are saved
+// with the game (no new field in the IndexedDB record), conditions can use
+// them, and their order in `flags` is the order of discovery.
+
+export const VISITED = "visitato:";
+export const HEARD = "sentito:";
+
+const placeFlags = (node) => [
+  ...(node?.location ? [VISITED + node.location] : []),
+  ...toArray(node?.reveals).map((id) => HEARD + id),
+];
+
+/** State after arriving on a node: its onEnter effects, then its place flags. */
 export function enterNode(story, nodeId, state) {
-  return applyEffects(state, story.nodes.get(nodeId)?.onEnter);
+  const node = story.nodes.get(nodeId);
+  const entered = applyEffects(state, node?.onEnter);
+  const places = placeFlags(node);
+  return places.length ? applyEffects(entered, { setFlags: places }) : entered;
+}
+
+/**
+ * What the map shows for a game state:
+ *   visited: location ids in the order they were first visited
+ *   heard:   ids heard of but not visited yet
+ *   current: where the player is (the node's location, else the last visited)
+ */
+export function mapProgress(story, state, nodeId) {
+  const ids = (prefix) =>
+    state.flags.filter((f) => f.startsWith(prefix)).map((f) => f.slice(prefix.length));
+  const visited = ids(VISITED);
+  const heard = ids(HEARD).filter((id) => !visited.includes(id));
+  const current = story.nodes.get(nodeId)?.location ?? visited.at(-1) ?? null;
+  return { visited, heard, current };
 }
 
 // ── Conditions ────────────────────────────────────────────────

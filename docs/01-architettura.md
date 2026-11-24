@@ -35,6 +35,7 @@ memento/
             ├── GameScreen/      il loop di gioco
             ├── CardFan/  Dice/  PinPad/      le tre meccaniche di scelta
             ├── InventoryModal/  SideMenu/
+            ├── TownMap/         mappa di Arklow (ArklowBase = la carta in SVG)
             └── StoryGraph/      grafo della storia (solo sviluppo)
 ```
 
@@ -50,7 +51,8 @@ flowchart LR
   App --> GameScreen
   App --> engine[engine.js]
   App --> db[db.js]
-  GameScreen --> CardFan & Dice & PinPad & InventoryModal & SideMenu
+  GameScreen --> CardFan & Dice & PinPad & InventoryModal & SideMenu & TownMap
+  TownMap --> engine
   GameScreen --> engine
   GameScreen --> db
   GameScreen --> music[music.js]

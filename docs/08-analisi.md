@@ -90,7 +90,7 @@ Nebbia, pioggia e animazioni ignorano `prefers-reduced-motion`. Si potrebbero fe
 #### 13. Residui del passato — bassa
 
 - Commenti d'intestazione «CSS extracted» in `TitleScreen`, `SideMenu`, `SettingsScreen`, `CreditsScreen` (ricordo di un vecchio refactoring).
-- `sfxPageTurn` (`audio.js`) non è usato.
+- ~~`sfxPageTurn` (`audio.js`) non è usato.~~ Ora suona all'apertura della mappa.
 - I temi della demo (`forest`, `forge`, `throne`, `dusk`, `dawn`) sono ancora in `themes.js` e `music.js`.
 - `public/assets/inventory/blood.png` e `rolling-chair.png` non sono usati, e in realtà sono JPEG con estensione `.png`.
 

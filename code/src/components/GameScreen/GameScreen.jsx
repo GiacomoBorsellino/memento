@@ -7,6 +7,7 @@ import Dice from "../Dice/Dice.jsx";
 import PinPad from "../PinPad/PinPad.jsx";
 import SideMenu from "../SideMenu/SideMenu.jsx";
 import InventoryModal from "../InventoryModal/InventoryModal.jsx";
+import TownMap from "../TownMap/TownMap.jsx";
 import { sfxTextReveal, sfxTransition, sfxMenuOpen, sfxClue } from "../audio.js";
 import { playMusic, stopMusic } from "../music.js";
 import { saveGame } from "../../db.js";
@@ -225,8 +226,9 @@ export default function GameScreen({
         }}
       />
 
-      {/* ── Inventory button + modal ───────────────────────── */}
+      {/* ── Inventory and map: buttons + modals ────────────── */}
       <InventoryModal inventory={game.inventory} />
+      {story.map && <TownMap story={story} state={game} nodeId={nodeId} />}
 
       {/* ── Main content ──────────────────────────────────── */}
       <div key={key} className="game-screen__content">

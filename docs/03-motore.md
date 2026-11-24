@@ -32,7 +32,16 @@ La `Map` permette di trovare un nodo per id in tempo costante (`story.nodes.get(
 | `hasItem(state, id)` | `true` se l'oggetto è nell'inventario |
 | `hasFlag(state, flag)` | `true` se il flag è impostato |
 | `applyEffects(state, source)` | Applica gli effetti di una carta, di una regola del dado o di un `onEnter`: prima `removeFromInventory`, poi `addToInventory`, poi `setFlags`. Se non cambia niente restituisce **lo stesso oggetto** `state` (utile per confronti rapidi) |
-| `enterNode(story, id, state)` | Lo stato dopo l'arrivo nel nodo `id`, cioè con il suo `onEnter` applicato |
+| `enterNode(story, id, state)` | Lo stato dopo l'arrivo nel nodo `id`: prima il suo `onEnter`, poi i flag dei luoghi (`visitato:<location>`, `sentito:<reveals>`) |
+| `mapProgress(story, state, nodeId)` | Per la mappa: luoghi visitati (nell'ordine di scoperta), luoghi solo sentiti nominare, luogo attuale |
+
+### I luoghi come flag
+
+La mappa non ha uno stato suo: i luoghi conosciuti sono **flag normali** con un prefisso (`VISITED = "visitato:"`, `HEARD = "sentito:"`), aggiunti da `enterNode`. Scelta voluta:
+
+- **niente modifiche al salvataggio**: il record di IndexedDB ha già `flags`, quindi non serve un campo nuovo né una nuova versione del database (vedi [Salvataggi](04-salvataggi-indexeddb.md));
+- **l'ordine di scoperta è gratis**: `applyEffects` aggiunge i flag in coda, quindi l'array `flags` è già in ordine cronologico, ed è da lì che la mappa disegna il percorso;
+- **validatore e grafo li vedono già**: l'esplorazione li tratta come gli altri flag. Siccome nel Capitolo 1 i luoghi stanno sul percorso obbligato, non aumentano le situazioni di gioco (sono sempre 621).
 
 Regole sugli oggetti (funzioni interne `addItem` / `removeItem`):
 
@@ -79,7 +88,7 @@ Dettagli:
 - **Chiave della situazione**: `stateKey(id, stato)` produce una stringa come `S08|cellulare:1,fiammiferi:2|tadhg`. Oggetti e flag sono ordinati, così lo stesso insieme dà sempre la stessa chiave.
 - **Ricerca in ampiezza (BFS)**: si esplora prima tutto ciò che dista un passo, poi due, e così via. Di conseguenza, la prima volta che si incontra un nodo ci si è arrivati con il **percorso più breve**. Il grafo usa proprio quella situazione per «Gioca da qui».
 - La coda è un array letto con un indice (`head`) invece di `shift()`, che su array lunghi costa O(n) a ogni chiamata.
-- **Limite**: oltre `maxStates` situazioni l'esplorazione si ferma e segnala `truncated: true`. Il Capitolo 1 ha 21 nodi e 136 situazioni: il limite serve per storie future con molti oggetti cumulabili, dove le combinazioni possono esplodere.
+- **Limite**: oltre `maxStates` situazioni l'esplorazione si ferma e segnala `truncated: true`. Il Capitolo 1 ha 27 nodi e 621 situazioni. Le situazioni crescono molto più in fretta dei nodi: aggiungendo 6 nodi e 3 flag facoltativi (`dipinto`, `mano_ferita`, `zohar`) si è passati da 136 a 621, perché ogni flag che si può avere o non avere moltiplica le combinazioni possibili nei nodi successivi. Il limite serve per storie future con molti flag e oggetti cumulabili.
 
 Restituisce:
 
