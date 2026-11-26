@@ -137,17 +137,43 @@ export function mapProgress(story, state, nodeId) {
 
 // ── Conditions ────────────────────────────────────────────────
 
-/** Card conditions: requiresItem / hideIfItem / requiresFlag / hideIfFlag. */
-export function isCardVisible(card, state) {
-  if (card.requiresItem && !hasItem(state, card.requiresItem)) return false;
-  if (card.hideIfItem && hasItem(state, card.hideIfItem)) return false;
-  if (card.requiresFlag && !hasFlag(state, card.requiresFlag)) return false;
-  if (card.hideIfFlag && hasFlag(state, card.hideIfFlag)) return false;
+export const CONDITION_KEYS = ["requiresItem", "hideIfItem", "requiresFlag", "hideIfFlag"];
+
+/**
+ * requiresItem / hideIfItem / requiresFlag / hideIfFlag, all must hold.
+ * Used by cards and by conditional texts.
+ */
+export function meetsConditions(obj, state) {
+  if (obj.requiresItem && !hasItem(state, obj.requiresItem)) return false;
+  if (obj.hideIfItem && hasItem(state, obj.hideIfItem)) return false;
+  if (obj.requiresFlag && !hasFlag(state, obj.requiresFlag)) return false;
+  if (obj.hideIfFlag && hasFlag(state, obj.hideIfFlag)) return false;
   return true;
 }
 
+/** The conditions set on a card or a text, as { key: value } (empty if none). */
+export const conditionsOf = (obj) =>
+  Object.fromEntries(CONDITION_KEYS.filter((k) => obj?.[k]).map((k) => [k, obj[k]]));
+
+export const isCardVisible = meetsConditions;
+
 export const visibleCards = (node, state) =>
   (node.cards ?? []).filter((c) => isCardVisible(c, state));
+
+// ── Texts ─────────────────────────────────────────────────────
+// An entry of "texts" is a string, or { text, requiresFlag?, hideIfFlag?,
+// requiresItem?, hideIfItem? } to show it only in some game states
+// (e.g. "you keep the wounded hand in your pocket" only with mano_ferita).
+
+export const textOf = (t) => (typeof t === "string" ? t : (t?.text ?? ""));
+export const isConditionalText = (t) =>
+  typeof t === "object" && t !== null && Object.keys(conditionsOf(t)).length > 0;
+
+/** The paragraphs the player reads on `node` in `state`, as strings. */
+export const visibleTexts = (node, state) =>
+  (node.texts ?? [])
+    .filter((t) => typeof t === "string" || meetsConditions(t, state))
+    .map(textOf);
 
 export const findDiceRule = (node, roll) =>
   (node.dice ?? []).find((r) => roll >= r.range[0] && roll <= r.range[1]);
@@ -197,8 +223,6 @@ export function exits(node, state) {
 
 // ── Static view (no game state) ───────────────────────────────
 
-const CONDITION_KEYS = ["requiresItem", "hideIfItem", "requiresFlag", "hideIfFlag"];
-
 /**
  * Every exit `node` could ever offer, conditions ignored: what the story graph
  * draws. [{ to, label, kind, conditions, source }]
@@ -213,9 +237,7 @@ export function staticExits(node) {
         to: c.nextNode,
         label: c.textCard,
         kind: "card",
-        conditions: Object.fromEntries(
-          CONDITION_KEYS.filter((k) => c[k]).map((k) => [k, c[k]]),
-        ),
+        conditions: conditionsOf(c),
         source: c,
       }));
     case "dice":

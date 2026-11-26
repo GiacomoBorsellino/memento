@@ -80,7 +80,10 @@ export default function Background({ theme = "title" }) {
       const mist = lerpColor(from.mist, tgt.mist, ease);
       const fromRain = from.rain ?? 0;
       const rain = fromRain + ((tgt.rain ?? 0) - fromRain) * ease;
-      shownRef.current = { sky, fog, mist, rain };
+      const fromHaze = from.haze ?? 0;
+      const haze = fromHaze + ((tgt.haze ?? 0) - fromHaze) * ease;
+      shownRef.current = { sky, fog, mist, rain, haze };
+      const fogAlpha = 1 + 2.5 * haze; // thicker fog banks with "haze"
 
       const grad = ctx.createLinearGradient(0, 0, 0, H);
       grad.addColorStop(0, rgb(sky));
@@ -120,7 +123,7 @@ export default function Background({ theme = "title" }) {
         const g2 = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, pt.r);
         g2.addColorStop(
           0,
-          `rgba(${fog[0] + 20},${fog[1] + 20},${fog[2] + 20},${pt.a * breathe})`,
+          `rgba(${fog[0] + 20},${fog[1] + 20},${fog[2] + 20},${pt.a * breathe * fogAlpha})`,
         );
         g2.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = g2;

@@ -460,9 +460,12 @@ const MOODS = {
   },
 };
 
+// Morning fog: the street mood (heartbeat, low ostinato) without the rain bed
+MOODS.fog = { ...MOODS.street, start: undefined };
+
 // Old demo themes fall back to the closest mood
 const THEME_TO_MOOD = {
-  title: "title", hotel: "hotel", pub: "pub", legend: "legend", street: "street",
+  title: "title", hotel: "hotel", pub: "pub", legend: "legend", street: "street", fog: "fog",
   library: "library", mist: "mist", dusk: "street", dawn: "title",
   forest: "title", forge: "hotel", throne: "title",
 };

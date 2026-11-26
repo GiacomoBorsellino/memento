@@ -18,7 +18,13 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { buildStory, staticExits } from "../../engine.js";
+import {
+  buildStory,
+  conditionsOf,
+  isConditionalText,
+  staticExits,
+  textOf,
+} from "../../engine.js";
 import { saveGame } from "../../db.js";
 import {
   CATEGORIES,
@@ -56,11 +62,19 @@ function StoryNode({ data }) {
       <div className="story-node__head">
         <span className="story-node__id">{node.id}</span>
         {badge && <span className="story-node__badge">{badge}</span>}
+        {data.conditionalTexts > 0 && (
+          <span
+            className="story-node__cond"
+            title={`${data.conditionalTexts} testi condizionati: cambiano secondo flag e oggetti`}
+          >
+            🔒¶
+          </span>
+        )}
         <span className="story-node__icon" title={MECHANICS[mechanic].label}>
           {MECHANICS[mechanic].icon}
         </span>
       </div>
-      <div className="story-node__title">{node.title ?? node.texts?.[0] ?? ""}</div>
+      <div className="story-node__title">{node.title ?? textOf(node.texts?.[0])}</div>
       {problems.length > 0 && (
         <div className="story-node__problem">⚠ {problems.join(", ")}</div>
       )}
@@ -159,8 +173,17 @@ function DetailPanel({ story, analysis, id, onSelect, onClose }) {
 
       <h3 className="graph-panel__section">Testi</h3>
       {(node.texts ?? []).map((t, i) => (
-        <p key={i} className="graph-panel__text">
-          {t}
+        <p
+          key={i}
+          className={`graph-panel__text${isConditionalText(t) ? " graph-panel__text--cond" : ""}`}
+        >
+          {isConditionalText(t) &&
+            describeConditions(conditionsOf(t), items).map((c) => (
+              <span key={c} className="graph-panel__cond">
+                🔒 solo se: {c}
+              </span>
+            ))}
+          {textOf(t)}
         </p>
       ))}
 
@@ -359,6 +382,9 @@ function GraphView() {
               </li>
             ))}
             <li className="graph-legend__dashed">Condizionata / uscita</li>
+            <li className="graph-legend__cond">
+              <span className="story-node__cond">🔒¶</span> Testi condizionati
+            </li>
           </ul>
         </Panel>
       </ReactFlow>

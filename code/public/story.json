@@ -8,7 +8,10 @@
       { "id": "casa_denise", "name": "Casa di Denise", "x": 612, "y": 566, "note": "Collin Street 6" },
       { "id": "biblioteca", "name": "Arklow Library", "x": 540, "y": 436, "note": "7 Main Street" },
       { "id": "chiesa", "name": "St. Saviour's Church", "x": 706, "y": 452, "note": "Il libro del 1798 rimanda qui" },
-      { "id": "cartomante", "name": "Lady Trish D., la cartomante", "note": "Indirizzo sconosciuto" }
+      { "id": "cartomante", "name": "Lady Trish D., la cartomante", "note": "Indirizzo sconosciuto" },
+      { "id": "strada_nebbia", "name": "Nella nebbia", "x": 405, "y": 438, "transit": true },
+      { "id": "strada_collin", "name": "Verso Collin Street", "x": 602, "y": 495, "transit": true },
+      { "id": "strada_biblioteca", "name": "Verso la biblioteca", "x": 575, "y": 440, "transit": true }
     ]
   },
   "nodes": [
@@ -21,7 +24,7 @@
         "Senti il tessuto ruvido stropicciarti la faccia. L'odore di lana umida, polvere e sigaretta ti risale le narici e si mescola alla tua coscienza.",
         "Apri gli occhi impastati, come se non volessero lasciarti svegliare. La vista si snebbia a poco a poco, come una pesante tenda di velluto che si scosta.",
         "Sulla parete, un orologio a cucù segna le 9:06. Le lancette sembrano lente, come se ogni tic-tac costasse uno sforzo disumano a ingranaggi più vecchi di te.",
-        "Una fitta alla tempia. La tocchi: sangue ormai rappreso. Ti tasti per assicurarti di essere intero, che ogni pezzo sia al suo posto.",
+        "Una fitta alla tempia. Ti tasti per assicurarti di essere intero, che ogni pezzo sia al suo posto.",
         "Chi sono? Come mi chiamo? E come sono finito qui?"
       ],
       "dice": [
@@ -133,8 +136,9 @@
       "theme": "hotel",
       "texts": [
         "Un albergo polveroso a due stelle, con poche stanze. Dietro il banco, il proprietario, Cillian, ti guarda storto.",
-        "«Ti sei presentato verso le quattro del mattino, battendo i pugni sull'uscio. Alticcio, puzzavi d'alcol.»",
-        "Ad aprirti era stata sua moglie. Vedendoti in quello stato aveva chiamato lui, e stavano per avvertire la polizia; poi hai promesso il doppio in contanti e ti hanno dato una stanza.",
+        "«Ti sei presentato verso le quattro del mattino, battendo i pugni sull'uscio. Ubriaco.»",
+        "Ad aprirti era stata sua moglie, e Cillian ripete le sue parole come se le avesse imparate a memoria: «Pietoso. Indecoroso. E soprattutto alterato.» Era sconvolta, disgustata.",
+        "Stavano per avvertire la polizia; poi hai promesso il doppio in contanti e ti hanno dato una stanza.",
         "«Stamattina è uscita presto», borbotta Cillian. «Diceva che ridursi così era un cattivo presagio. È andata da una cartomante, Lady Trish D.»",
         "«Cose che non mi convincono... A volte sembra che certe persone si tirino addosso i guai, o spariscano proprio quando serve.»",
         "Gli mostri la scatoletta di fiammiferi. «Il Maisie Kelly? Bridge Street, a due passi da qui», e ti indica la strada verso il centro."
@@ -172,7 +176,7 @@
           "textCard": "Vai al Maisie Kelly",
           "effectCard": "Bridge Street, a due passi da qui",
           "cardPath": "./assets/cards/card_inventore.png",
-          "nextNode": "S05"
+          "nextNode": "S04C"
         }
       ]
     },
@@ -183,14 +187,40 @@
       "theme": "legend",
       "onEnter": { "setFlags": "dipinto" },
       "texts": [
-        "Ti avvicini. Uomini con il volto coperto attaccano a bastonate dei soldati inglesi.",
-        "Sotto, una targhetta: «Irish Society sfida la gabbia inglese – J. Moonshine 1798».",
+        "Ti avvicini. Uomini con il volto coperto attaccano a bastonate i soldati inglesi di re Giorgio III.",
+        "Sotto, una targhetta: «Society of United Irishmen sfida la gabbia inglese – J. Moonshine 1798».",
         "È un dipinto inquietante. Il rosso tinge la tela in modo ruvido, e sembra sangue. Molti dei personaggi hanno vistose ferite e mutilazioni.",
-        "Uno solo, stranamente intonso, sembra guardarti intensamente, come a scrutarti.",
-        "Ha un sorriso smagliante sul volto. Ma gli occhi non sembrano seguire quel sorriso."
+        "Uno solo, stranamente intonso, sembra guardarti intensamente, come a scrutarti. Ha i capelli rossi.",
+        "Sul volto, un sorriso bianco e affascinante. Ma gli occhi non sembrano seguire quel sorriso."
       ],
-      "nextNode": "S05",
+      "nextNode": "S04C",
       "continueLabel": "Vai al Maisie Kelly"
+    },
+    {
+      "id": "S04C",
+      "title": "Nella nebbia",
+      "location": "strada_nebbia",
+      "theme": "fog",
+      "texts": [
+        "Fuori, Arklow è sepolta in una nebbia umida che ti si appiccica ai vestiti. La luce del mattino, lattiginosa, ti trafigge gli occhi.",
+        "Le strade si somigliano tutte. Ti perdi, giri a vuoto per più di un'ora, mentre fitte improvvise ti trapassano la tempia. Poi, finalmente, l'insegna di Bridge Street.",
+        "A terra, su un coccio di bottiglia rotta, noti il riflesso del tuo volto: pallido, emaciato, con una sottile linea di sangue raggrumato che ti cola dalla tempia.",
+        "Capisci che il mal di testa non è solo frutto di una birra di troppo.",
+        "E poi quella sensazione, netta, sulla nuca: qualcuno ti sta guardando."
+      ],
+      "dice": [
+        {
+          "range": [1, 3],
+          "text": "Ti volti di scatto e scruti la nebbia. Niente, solo il gocciolio delle grondaie. Eppure la sensazione non se ne va.",
+          "nextNode": "S05"
+        },
+        {
+          "range": [4, 6],
+          "text": "Ti volti di scatto. Per un istante, in fondo alla strada, una sagoma ferma, immobile. Sbatti le palpebre: non c'è più nessuno.",
+          "nextNode": "S05"
+        }
+      ],
+      "continueLabel": "Entra nel Maisie Kelly"
     },
     {
       "id": "S05",
@@ -252,14 +282,15 @@
         "addToInventory": {
           "id": "tessera_g",
           "name": "Tessera con l'iniziale G",
-          "description": "Tessera di cartone della biblioteca comunale. La foto sembra la tua; del nome resta solo una G.",
+          "description": "Tessera della biblioteca comunale, di plastica vecchia e consumata. C'è la tua foto, una G e un codice identificativo; il resto del nome è sparito.",
           "icon": "🪪"
         }
       },
       "texts": [
-        "Il bagno è uno schifo, e lo schifo è opera tua. Ti rimbocchi le maniche e pulisci, trattenendo il respiro.",
-        "Poggiata sulla tazza c'è una tessera di cartone della biblioteca comunale. La foto sembra la tua.",
-        "Del nome si legge solo l'iniziale: una G. Il resto l'ha grattato via l'umidità. La metti in tasca."
+        "Il bagno è uno schifo, e lo schifo è opera tua. Trovi uno straccio lurido e pulisci, trattenendo il respiro.",
+        "Poi provi a ripulirti la ferita alla tempia, ma di carta igienica non c'è traccia.",
+        "Poggiata sulla tazza c'è una tessera della biblioteca comunale, di plastica vecchia e consumata. La foto sembra la tua.",
+        "Del nome resta solo una G; il resto l'ha cancellato il tempo. Sotto, un codice identificativo ancora leggibile. La metti in tasca."
       ],
       "cards": [
         {
@@ -280,16 +311,16 @@
     },
     {
       "id": "S07B",
-      "title": "Tadhg McSeagull e la leggenda di Glen",
+      "title": "Tadhg McSeagull",
       "location": "pub",
       "theme": "legend",
       "onEnter": { "setFlags": "tadhg" },
       "texts": [
         "Nell'angolo siede il vecchio Tadhg McSeagull, lo svitato del villaggio. Ti fa cenno di sederti, e quando lo fai il chiasso del pub sembra allontanarsi.",
-        "«Hai mai sentito parlare di Glen Bootleg?» Pizzetto, capelli rossi, un sorriso sempre smagliante. Il diavolo, dicono alcuni. Un folletto, dicono altri.",
-        "«Si fece un nome nel '98, durante la rivolta», sussurra. «Alcuni capi della Society of United Irishmen andarono a cercarlo a un incrocio, di notte. Volevano la vittoria, e strinsero un patto.»",
-        "«La vittoria non venne. Persero lo stesso, e il sangue scorse a fiumi. Qui ad Arklow, a giugno, i ribelli caddero a centinaia.» Beve un sorso. «Glen dà sempre qualcosa di diverso da ciò che la gente vuole.»",
-        "«Ieri sera ti ho visto con un tizio che me lo ricordava. Affabile, brillante, faceva ridere tutti...» Ti fissa a lungo. «Strano che nessuno si ricordi di lui.»"
+        "«Ieri sera ti ho visto», dice senza preamboli. «Eri con un tizio. Capelli rossi, un pizzetto curato, un sorriso bianco che incantava tutti.»",
+        "«Affabile, brillante, faceva ridere tutto il pub. Eppure stamattina nessuno si ricorda di lui.» Ti fissa a lungo. «Strano, no?»",
+        "Abbassa la voce. «Da queste parti, una volta, si raccontavano storie su gente così. Gente che ti aspetta agli incroci, di notte, e ti offre quello che desideri. Basta una stretta di mano...»",
+        "Si interrompe di colpo. Guarda la porta, poi il fondo del bicchiere. «Lascia stare, sono storie da vecchi.» E beve, senza più guardarti."
       ],
       "cards": [
         {
@@ -389,7 +420,7 @@
       "onEnter": { "setFlags": "tadhg_bis" },
       "texts": [
         "Ti risiedi accanto al vecchio. Il chiasso del pub si allontana di nuovo, come risucchiato.",
-        "«Ti tormenta, eh?» ridacchia Tadhg. «Glen fa così. Ti entra in testa e non esce più.»",
+        "«Ti tormenta, eh?» ridacchia Tadhg. «Certe storie fanno così. Ti entrano in testa e non escono più.»",
         "«Sai cosa conta, nei patti? Le date. Il giorno in cui una cosa comincia: lì si firma, e lì si paga.»",
         "Si porta il bicchiere alle labbra e non aggiunge altro."
       ],
@@ -423,6 +454,20 @@
         "Restano solo gli SMS di Ellyn. Ora puoi leggere l'ultimo per intero.",
         "«Non credo di poterci essere, vai tu, Collin St 6. Denise ti saprà dare una mano, lei ha il libro che cerchi.»"
       ],
+      "nextNode": "S09A",
+      "continueLabel": "Esci dal pub"
+    },
+    {
+      "id": "S09A",
+      "title": "Verso Collin Street",
+      "location": "strada_collin",
+      "theme": "street",
+      "texts": [
+        "Esci dal Maisie Kelly. La nebbia si è sciolta in una pioggia sottile, insistente.",
+        "A ogni angolo ti aspetti di incrociare qualcuno della rissa di ieri sera. Qualcuno che, a differenza tua, si ricorda tutto.",
+        "Un'auto della polizia passa piano all'incrocio. Abbassi la testa e tiri dritto: senza documenti, con quella ferita alla tempia e una rissa alle spalle, sarebbe difficile spiegare.",
+        "Solo quando l'auto sparisce dietro l'angolo ti accorgi di aver trattenuto il fiato."
+      ],
       "nextNode": "S10",
       "continueLabel": "Vai in Collin Street 6"
     },
@@ -435,7 +480,7 @@
         "Collin Street 6. Suoni, ma non risponde nessuno.",
         "Controlli sotto lo zerbino, provi la maniglia. Da dentro un cane abbaia furioso e ti costringe a restare fuori.",
         "Poi le noti: tracce di sangue sulla porta. Denise non sembra semplicemente uscita.",
-        "Ti verrebbe da andare alla polizia, ma ti fermi. Non hai documenti, ieri sera hai fatto a pugni, e da queste parti certe cose con gli sbirri non sono viste di buon occhio."
+        "Ti verrebbe da chiamare la polizia. Poi ripensi a quell'auto all'incrocio, e lasci perdere."
       ],
       "dice": [
         {
@@ -473,7 +518,7 @@
           "textCard": "Vai alla Arklow Library",
           "effectCard": "7 Main Street",
           "cardPath": "./assets/cards/card_libraio.png",
-          "nextNode": "S12"
+          "nextNode": "S11E"
         }
       ]
     },
@@ -498,7 +543,7 @@
           "textCard": "Lascia perdere",
           "effectCard": "Vai alla Arklow Library",
           "cardPath": "./assets/cards/card_libraio.png",
-          "nextNode": "S12"
+          "nextNode": "S11E"
         }
       ]
     },
@@ -525,9 +570,9 @@
       "texts": [
         "Una scheggia ti morde il polso. Ritiri la mano di scatto: il sangue ti cola caldo tra le dita.",
         "Dentro, il cane si lancia contro la porta, abbaiando furioso.",
-        "Ti stringi la mano nella manica della giacca e ti allontani, prima che qualcuno si affacci a guardare."
+        "Ti allontani in fretta, prima che qualcuno si affacci a guardare."
       ],
-      "nextNode": "S12",
+      "nextNode": "S11E",
       "continueLabel": "Vai alla Arklow Library"
     },
     {
@@ -543,8 +588,25 @@
         "Prima di scappare, lo noti: sul tavolo della cucina ci sono dei libri. Uno spicca, sembra antico.",
         "Copertina bruna, di pelle stinta. Il titolo è in lettere dorate, ormai mezze corrose dal tempo: «Sefer ha-Zohar – La via attraverso i tarocchi»."
       ],
-      "nextNode": "S12",
+      "nextNode": "S11E",
       "continueLabel": "Scappa dal retro"
+    },
+    {
+      "id": "S11E",
+      "title": "Verso la biblioteca",
+      "location": "strada_biblioteca",
+      "theme": "street",
+      "texts": [
+        "Ti allontani da Collin Street a passo svelto, sotto la pioggia. Il sangue su quella porta non ti esce dalla testa.",
+        "Ogni passante sembra guardarti le mani, le scarpe, la faccia.",
+        {
+          "text": "La mano ferita la tieni in tasca, per nascondere il sangue. Tra le dita senti il bordo di plastica della tessera di Patrick Dunn, umido.",
+          "requiresFlag": "mano_ferita"
+        },
+        "Main Street, numero 7: la Arklow Library."
+      ],
+      "nextNode": "S12",
+      "continueLabel": "Entra nella biblioteca"
     },
     {
       "id": "S12",
@@ -553,56 +615,179 @@
       "theme": "library",
       "texts": [
         "La biblioteca odora di carta umida e cera per pavimenti. Denise non c'è.",
-        "Al banco trovi una ragazza, Tina. «Se ti serve un libro, mi serve una tessera.»",
-        "Frughi nelle tasche: la tessera di Patrick Dunn e quella con la tua foto e l'iniziale G."
+        "Al banco trovi una ragazza, Tina. «Se le serve un libro, mi serve una tessera.»",
+        "In tasca hai due tessere: la tua, con la foto e la G, e quella di Patrick Dunn. Meglio non mostrarle insieme.",
+        "In fondo alla sala c'è un totem elettronico per i prestiti. Tina, per ora, non perde d'occhio il banco."
       ],
       "cards": [
         {
-          "textCard": "Dai la tessera di Patrick Dunn",
-          "effectCard": "Vediamo cosa leggeva",
-          "cardPath": "./assets/cards/card_caput_mundi.png",
-          "requiresItem": "tessera_dunn",
-          "nextNode": "S13"
+          "textCard": "Dai la tua tessera",
+          "effectCard": "Quella con la foto e la G",
+          "cardPath": "./assets/cards/card_libraio.png",
+          "requiresItem": "tessera_g",
+          "nextNode": "S14"
         },
         {
-          "textCard": "Dai la tessera con la G",
-          "effectCard": "Quella con la tua foto",
+          "textCard": "Prova il totem",
+          "effectCard": "Con la tessera di Patrick Dunn",
+          "cardPath": "./assets/cards/card_inventore.png",
+          "requiresItem": "tessera_dunn",
+          "nextNode": "S12A"
+        },
+        {
+          "textCard": "Chiedi una ristampa",
+          "effectCard": "La tua tessera è troppo consumata",
+          "cardPath": "./assets/cards/card_caput_mundi.png",
+          "nextNode": "S15"
+        }
+      ]
+    },
+    {
+      "id": "S12A",
+      "title": "Il totem",
+      "location": "biblioteca",
+      "theme": "library",
+      "onEnter": { "setFlags": "totem_provato" },
+      "texts": [
+        "Ti avvicini al totem facendo finta di niente. Tina alza gli occhi dal banco, poi li riabbassa.",
+        "Devi aspettare il momento giusto: che si volti, che squilli il telefono, che qualcuno la chiami."
+      ],
+      "dice": [
+        { "range": [1, 2], "nextNode": "S12F" },
+        {
+          "range": [3, 6],
+          "text": "Il telefono del banco squilla e Tina si volta per rispondere. È il momento.",
+          "continueLabel": "Infila la tessera",
+          "nextNode": "S12B"
+        }
+      ]
+    },
+    {
+      "id": "S12B",
+      "title": "La tessera di Patrick Dunn",
+      "location": "biblioteca",
+      "theme": "library",
+      "texts": [
+        "Infili la tessera di Patrick Dunn nel lettore.",
+        {
+          "text": "Il totem emette un bip stizzito: TESSERA ILLEGGIBILE. Guardi meglio: la banda è sporca del tuo sangue, ormai rappreso.",
+          "requiresFlag": "mano_ferita"
+        },
+        {
+          "text": "Lo schermo si illumina: SCHEDA UTENTE – PATRICK DUNN.",
+          "hideIfFlag": "mano_ferita"
+        }
+      ],
+      "cards": [
+        {
+          "textCard": "Pulisci la tessera",
+          "effectCard": "Sbrigati, prima che Tina riattacchi",
+          "cardPath": "./assets/cards/card_inventore.png",
+          "requiresFlag": "mano_ferita",
+          "nextNode": "S12C"
+        },
+        {
+          "textCard": "Guarda i prestiti",
+          "effectCard": "Cosa leggeva Patrick Dunn?",
+          "cardPath": "./assets/cards/card_libraio.png",
+          "hideIfFlag": "mano_ferita",
+          "nextNode": "S13"
+        }
+      ]
+    },
+    {
+      "id": "S12C",
+      "title": "Il sangue sulla tessera",
+      "location": "biblioteca",
+      "theme": "library",
+      "texts": [
+        "Strofini la tessera sui pantaloni, ci sputi sopra, strofini ancora.",
+        "I secondi passano, lenti. Alle tue spalle, Tina parla ancora al telefono."
+      ],
+      "dice": [
+        { "range": [1, 2], "nextNode": "S12F" },
+        { "range": [3, 6], "nextNode": "S12D" }
+      ]
+    },
+    {
+      "id": "S12D",
+      "title": "Ancora un tentativo",
+      "location": "biblioteca",
+      "theme": "library",
+      "texts": [
+        "Riprovi. Il totem la rifiuta di nuovo: bip.",
+        "La voce di Tina si fa più breve, sta per chiudere la telefonata. Strofini con più forza."
+      ],
+      "dice": [
+        { "range": [1, 2], "nextNode": "S12F" },
+        { "range": [3, 6], "nextNode": "S13" }
+      ]
+    },
+    {
+      "id": "S12F",
+      "title": "Tina ti scopre",
+      "location": "biblioteca",
+      "theme": "library",
+      "onEnter": {
+        "setFlags": "totem_fallito",
+        "removeFromInventory": "tessera_dunn"
+      },
+      "texts": [
+        "«Scusi!» Tina ha lasciato il banco ed è già alle tue spalle. Ti ha visto armeggiare con il totem.",
+        "Sfila la tessera dal lettore e la legge. «Patrick Dunn. Non mi sembra lei.»",
+        {
+          "text": "La tiene con due dita, fissando la banda sporca di sangue. Poi guarda le tue mani.",
+          "requiresFlag": "mano_ferita"
+        },
+        "Improvvisi: l'hai trovata per strada, volevi solo capire di chi fosse per restituirla. Tina non ci crede, si vede.",
+        "«Ci penso io a restituirla al signor Dunn.» Se la infila nella tasca del cardigan. «E se la rivedo armeggiare con le tessere degli altri, chiamo la sicurezza.»"
+      ],
+      "cards": [
+        {
+          "textCard": "Dai la tua tessera",
+          "effectCard": "Quella con la foto e la G",
           "cardPath": "./assets/cards/card_libraio.png",
           "requiresItem": "tessera_g",
           "nextNode": "S14"
         },
         {
           "textCard": "Chiedi una ristampa",
-          "effectCard": "Per leggere il tuo nome",
-          "cardPath": "./assets/cards/card_inventore.png",
+          "effectCard": "La tua tessera è troppo consumata",
+          "cardPath": "./assets/cards/card_caput_mundi.png",
+          "hideIfFlag": "ristampa",
           "nextNode": "S15"
         }
       ]
     },
     {
       "id": "S13",
-      "title": "La meringata al limone",
+      "title": "I prestiti di Patrick Dunn",
       "location": "biblioteca",
       "theme": "library",
       "onEnter": { "setFlags": "meringata" },
       "texts": [
-        "A nome di Patrick Dunn risulta in prestito un libro di ricette. Tina lo recupera dal carrello dei resi.",
-        "Una pagina è piegata all'angolo: la meringata al limone.",
-        "Tina sorride, poi si rabbuia. «Il dolce preferito di Denise. Ne parla sempre.»",
-        "Dunn e Denise: un legame, forse. Potrà tornarti utile più avanti, ma non ti dice dov'è finita lei."
+        {
+          "text": "Al terzo tentativo il totem accetta la tessera.",
+          "requiresFlag": "mano_ferita"
+        },
+        "Sullo schermo, i prestiti di Patrick Dunn: uno solo, già restituito. «Forky's – Dolci di casa».",
+        "Forky's: la stessa serie delle riviste nella cassetta di Denise.",
+        "Il libro è sullo scaffale accanto al totem. Lo sfogli in fretta: una pagina è piegata all'angolo, sulla meringata al limone.",
+        "Dunn e Denise: un legame, forse. Potrà tornarti utile più avanti, ma non ti dice dov'è finita lei.",
+        "Rimetti a posto il libro e sfili la tessera un attimo prima che Tina riattacchi."
       ],
       "cards": [
         {
-          "textCard": "Dai la tessera con la G",
-          "effectCard": "Quella con la tua foto",
+          "textCard": "Dai la tua tessera",
+          "effectCard": "Quella con la foto e la G",
           "cardPath": "./assets/cards/card_libraio.png",
           "requiresItem": "tessera_g",
           "nextNode": "S14"
         },
         {
           "textCard": "Chiedi una ristampa",
-          "effectCard": "Per leggere il tuo nome",
-          "cardPath": "./assets/cards/card_inventore.png",
+          "effectCard": "La tua tessera è troppo consumata",
+          "cardPath": "./assets/cards/card_caput_mundi.png",
           "hideIfFlag": "ristampa",
           "nextNode": "S15"
         }
@@ -615,24 +800,24 @@
       "theme": "library",
       "onEnter": { "setFlags": "ristampa" },
       "texts": [
-        "Chiedi a Tina di ristampare la tessera, per leggere il tuo nome.",
+        "Chiedi a Tina di ristamparti la tessera: è così consumata che il nome non si legge più.",
         "Lei scuote la testa. «Può farlo solo Denise. E per adesso Denise non c'è.»"
       ],
       "cards": [
         {
-          "textCard": "Dai la tessera con la G",
-          "effectCard": "Quella con la tua foto",
+          "textCard": "Dai la tua tessera",
+          "effectCard": "Quella con la foto e la G",
           "cardPath": "./assets/cards/card_libraio.png",
           "requiresItem": "tessera_g",
           "nextNode": "S14"
         },
         {
-          "textCard": "Dai la tessera di Patrick Dunn",
-          "effectCard": "Vediamo cosa leggeva",
-          "cardPath": "./assets/cards/card_caput_mundi.png",
+          "textCard": "Prova il totem",
+          "effectCard": "Con la tessera di Patrick Dunn",
+          "cardPath": "./assets/cards/card_inventore.png",
           "requiresItem": "tessera_dunn",
-          "hideIfFlag": "meringata",
-          "nextNode": "S13"
+          "hideIfFlag": "totem_provato",
+          "nextNode": "S12A"
         }
       ]
     },
@@ -643,9 +828,16 @@
       "reveals": "chiesa",
       "theme": "mist",
       "texts": [
-        "Tina digita e aggrotta la fronte. A tuo nome risulta un libro esoterico sui patti stretti durante la Rivolta irlandese del 1798.",
-        "Le pagine rimandano alla St. Saviour's Church e alla tomba di un certo John Moonshine.",
-        "Sfogli, e ti trovi davanti un'illustrazione. Sotto, una didascalia: Glen. Il respiro ti si ferma.",
+        "Le porgi la tua tessera. Tina la gira tra le dita: plastica vecchia, consumata. Legge il codice stampato sotto la foto e lo digita.",
+        {
+          "text": "Lo fa senza staccarti gli occhi di dosso, come se aspettasse il tuo prossimo passo falso.",
+          "requiresFlag": "totem_fallito"
+        },
+        "Stai per chiederle come ti chiami, ma ti trattieni. Te la immagini già: «Ma la tessera non è sua? Per caso non ricorda il suo nome?» E poi una telefonata alla sicurezza.",
+        "Tina aggrotta la fronte. «C'è un prestito a suo nome. Un libro un po' particolare.»",
+        "È un volume esoterico sui patti stretti durante la Rivolta irlandese del 1798. Le pagine rimandano alla St. Saviour's Church e alla tomba di un certo John Moonshine.",
+        "Sfogli, e ti trovi davanti un'illustrazione: capelli rossi, pizzetto, un sorriso bianco e affascinante. Sotto, una didascalia: Glen Bootleg. Il respiro ti si ferma.",
+        "Il diavolo, secondo alcuni; un folletto, secondo altri. Nel '98 alcuni capi della Society of United Irishmen andarono a cercarlo a un incrocio, di notte: volevano la vittoria, e strinsero un patto. Persero lo stesso. Glen dà sempre qualcosa di diverso da ciò che la gente vuole.",
         "Quel viso, quel pizzetto, quello sguardo. Qualcosa in fondo alla tua memoria si contrae: era con te ieri sera, al pub. Ne sei certo, anche se non ricordi altro.",
         "Un brivido ti corre lungo la schiena. Cosa significa quel volto... e chi eri tu, accanto a lui?"
       ],

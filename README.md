@@ -25,7 +25,7 @@ Senti il tessuto ruvido stropicciarti la faccia. Un orologio a cucù segna le 9:
 
 Ti svegli ancora vestito in una stanza d'albergo di quart'ordine, senza un nome e senza un ricordo. Nelle tasche della giacca ci sono una scatoletta di fiammiferi di un pub, un ritaglio di giornale sulla squadra di calcio di Arklow e la tessera della biblioteca di uno sconosciuto. Sul cellulare, bloccato, solo l'anteprima di un messaggio di una certa Ellyn: _«Non credo di poterci essere, vai tu…»_
 
-Seguendo quello che hai in tasca ricostruirai la notte appena passata: una rissa da ubriaco, un compagno di bevute di cui nessuno ricorda la faccia, e la leggenda che un vecchio ti racconta sottovoce in fondo a un pub. Quella di **Glen Bootleg**, che stringe patti agli incroci e dà sempre qualcosa di diverso da ciò che la gente vuole.
+Seguendo quello che hai in tasca ricostruirai la notte appena passata: una rissa da ubriaco, un compagno di bevute che faceva ridere tutto il pub e di cui stamattina nessuno ricorda la faccia, e le vecchie storie che un vecchio ti sussurra in fondo al bancone, prima di zittirsi di colpo. Storie di patti stretti di notte, agli incroci.
 
 ### Chi incontrerai
 
@@ -34,8 +34,8 @@ Seguendo quello che hai in tasca ricostruirai la notte appena passata: una rissa
 | **Cillian** | Il proprietario dell'albergo. Ti guarda storto: alle quattro del mattino battevi i pugni sul suo uscio. |
 | **Liam** | Dietro il bancone del Maisie Kelly: abiti stinti, occhi puntuti, gote rubiconde. Ti squadra come un conto rimasto aperto. |
 | **Ellyn** | La cameriera del pub. Ti ha lasciato un messaggio, ma oggi è a riposo. |
-| **Tadhg McSeagull** | Lo svitato del villaggio. Ha una storia da raccontarti, se ti siedi accanto a lui. |
-| **Glen Bootleg** | Pizzetto, capelli rossi, un sorriso sempre smagliante. Il diavolo, dicono alcuni. Un folletto, dicono altri. |
+| **Tadhg McSeagull** | Lo svitato del villaggio. Ieri sera ti ha visto, e sa qualcosa che non vuole dire. |
+| **Lo sconosciuto** | Capelli rossi, un sorriso bianco che incantava tutti. Ieri sera era con te. Nessuno ricorda il suo nome. |
 
 ---
 

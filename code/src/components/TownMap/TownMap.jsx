@@ -19,6 +19,7 @@ import "./TownMap.css";
 
 const REVEAL_R = 120; // radius of the clear area around a visited place
 const HEARD_R = 60; // radius of the thinned mist around a place heard of
+const TRANSIT_R = 75; // radius of the clear area along a street walked
 const LABEL_DY = 30; // label below the marker
 
 export default function TownMap({ story, state, nodeId }) {
@@ -30,8 +31,12 @@ export default function TownMap({ story, state, nodeId }) {
   const [fresh, setFresh] = useState(() => new Set());
 
   const progress = useMemo(() => mapProgress(story, state, nodeId), [story, state, nodeId]);
+  // Transit places ("transit": true, the streets walked between two places)
+  // only clear the mist along the way and extend the route: no name, no
+  // entry in the list, no "news" dot.
+  const isTransit = (id) => !!map.locations.get(id)?.transit;
   const keys = [
-    ...progress.visited.map((id) => `v:${id}`),
+    ...progress.visited.filter((id) => !isTransit(id)).map((id) => `v:${id}`),
     ...progress.heard.map((id) => `h:${id}`),
   ];
   const hasNews = keys.some((k) => !seen.has(k));
@@ -59,7 +64,8 @@ export default function TownMap({ story, state, nodeId }) {
 
   const place = (id) => map.locations.get(id);
   const onMap = (id) => typeof place(id)?.x === "number";
-  const visited = progress.visited.filter(onMap).map(place);
+  const visited = progress.visited.filter(onMap).map(place); // route order, transit included
+  const places = visited.filter((l) => !l.transit); // named places only
   const heard = progress.heard.filter(onMap).map(place);
   const here = progress.current && onMap(progress.current) ? place(progress.current) : null;
 
@@ -141,7 +147,7 @@ export default function TownMap({ story, state, nodeId }) {
                       key={l.id}
                       cx={l.x}
                       cy={l.y}
-                      r={REVEAL_R}
+                      r={l.transit ? TRANSIT_R : REVEAL_R}
                       fill="url(#tm-clear)"
                       className={`town-map__hole${anim(`v:${l.id}`)}`}
                     />
@@ -180,7 +186,7 @@ export default function TownMap({ story, state, nodeId }) {
                 </g>
               ))}
 
-              {visited.map((l) => (
+              {places.map((l) => (
                 <g key={l.id} className={`town-map__place town-map__place--visited${anim(`v:${l.id}`)}`}>
                   <circle cx={l.x} cy={l.y} r="8" className="town-map__ink-dot" />
                   <text x={l.x} y={l.y + LABEL_DY} className="town-map__label">
@@ -204,7 +210,7 @@ export default function TownMap({ story, state, nodeId }) {
             <section>
               <h3 className="town-map__legend-title">Luoghi visitati</h3>
               <ul className="town-map__list">
-                {progress.visited.map((id) => (
+                {progress.visited.filter((id) => !isTransit(id)).map((id) => (
                   <li
                     key={id}
                     className={`town-map__item${id === progress.current ? " town-map__item--here" : ""}`}

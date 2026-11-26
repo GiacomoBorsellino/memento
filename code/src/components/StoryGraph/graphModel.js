@@ -6,7 +6,7 @@
 // engine.explore, the same play-through the validator runs.
 
 import dagre from "@dagrejs/dagre";
-import { explore, nodeKind, staticExits } from "../../engine.js";
+import { explore, isConditionalText, nodeKind, staticExits } from "../../engine.js";
 
 // The five node categories, in legend order.
 export const CATEGORIES = {
@@ -151,6 +151,7 @@ export function buildGraph(story, analysis, direction) {
         node,
         category: category(node, story),
         mechanic: nodeKind(node),
+        conditionalTexts: (node.texts ?? []).filter(isConditionalText).length,
         isStart: node.id === story.start,
         problems,
         direction,

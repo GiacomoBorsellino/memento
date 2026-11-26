@@ -87,6 +87,20 @@
   color: #0d0b09;
 }
 
+/* Node with conditional texts */
+.story-node__cond {
+  font-size: 10px;
+  padding: 0 4px;
+  border: 1px dashed #e0a35c;
+  border-radius: 3px;
+  color: #e0a35c;
+}
+
+.graph-panel__text--cond {
+  padding-left: 8px;
+  border-left: 2px dashed #e0a35c;
+}
+
 .story-node__icon {
   margin-left: auto;
   font-size: 14px;
@@ -225,6 +239,10 @@
   border-radius: 2px;
   background: var(--cat);
   flex-shrink: 0;
+}
+
+.graph-legend__cond::before {
+  display: none;
 }
 
 .graph-legend__dashed::before {

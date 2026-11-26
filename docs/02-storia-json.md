@@ -36,9 +36,23 @@ La storia è un unico file, `code/public/story.json`. Il motore lo legge all'avv
 | `id` | sì | Identificatore testuale unico (`"S01"`, `"S08A"`). I salvataggi puntano a questo |
 | `title` | no | Nome della scena: non compare nel gioco, ma nel grafo e nei messaggi del validatore |
 | `theme` | consigliato | Atmosfera: colori dello sfondo e musica (vedi [Temi](#temi)) |
-| `texts` | sì | Paragrafi mostrati uno alla volta; il primo ha il capolettera |
+| `texts` | sì | Paragrafi mostrati uno alla volta; il primo ha il capolettera. Ogni paragrafo è una stringa o un **testo condizionato** (vedi sotto) |
 | `onEnter` | no | Effetti applicati appena si entra nel nodo (vedi [Effetti](#effetti)) |
 | una meccanica | sì | Esattamente **una** tra `cards`, `dice`, `pin`, `nextNode`, `isEnd` |
+
+### Testi condizionati
+
+Un paragrafo può comparire solo in certe situazioni, con le stesse condizioni delle carte:
+
+```json
+"texts": [
+  "Ogni passante sembra guardarti le mani, le scarpe, la faccia.",
+  { "text": "La mano ferita la tieni in tasca, per nascondere il sangue.", "requiresFlag": "mano_ferita" },
+  "Main Street, numero 7: la Arklow Library."
+]
+```
+
+I paragrafi visibili si decidono **all'arrivo nel nodo**, con lo stato di quel momento: una scelta fatta nel nodo non fa comparire né sparire testi a metà scena. Nel grafo i nodi con testi condizionati hanno il segno 🔒¶, e nel pannello ogni testo condizionato mostra la sua condizione. Il validatore controlla che in nessuna situazione un nodo resti senza paragrafi.
 
 Se per errore un nodo ha più meccaniche, vale quest'ordine: `isEnd` → `cards` → `dice` → `pin` → `nextNode`. Il validatore lo segnala comunque come errore.
 
@@ -170,7 +184,7 @@ L'ordine è fisso: prima si tolgono gli oggetti, poi si aggiungono, poi si impos
 
 ## Condizioni
 
-Si mettono sulle **carte**: una carta che non le soddisfa non compare.
+Si mettono sulle **carte** (una carta che non le soddisfa non compare) e sui **testi condizionati**.
 
 | Campo | La carta compare solo se... |
 | ----- | --------------------------- |
@@ -210,6 +224,7 @@ Facoltativa: se la storia ha `map`, in partita compare il pulsante 🗺️ accan
 | `locations[].id` | Identificatore usato dai nodi |
 | `locations[].name`, `note` | Nome sulla mappa e nota nell'elenco sotto la mappa |
 | `locations[].x`, `y` | Posizione sulla mappa. Senza coordinate il luogo compare solo nell'elenco (per esempio un indirizzo che non si conosce ancora) |
+| `locations[].transit` | `true` per un tratto di strada tra due luoghi (gli intermezzi): dirada la nebbia, allunga il percorso e può essere il «sei qui», ma non ha nome sulla carta, non compare nell'elenco e non accende il puntino «novità» |
 
 Sui nodi:
 
@@ -231,9 +246,10 @@ Si assegna il luogo a ogni nodo; un nodo senza `location` lascia il segno «sei 
 | `pub` | verde scuro e ottone | giga in 6/8: bodhrán, pizzicato, violino | |
 | `legend` | buio color sangue | rintocchi gravi, bordone dissonante, lamento di violino | |
 | `street` | grigio-blu, mare d'Irlanda | pioggia, battito, ostinato basso | pioggia disegnata sullo sfondo |
+| `fog` | grigio freddo | come `street`, ma senza scroscio di pioggia | banchi di nebbia più densi (`haze`) |
 | `library` | ardesia | campane, violino lungo, scala ungherese | |
 | `mist` | viola freddo | bordone dissonante, campane lontane | |
 
 Restano disponibili i temi della vecchia demo (`forest`, `forge`, `throne`, `dusk`, `dawn`), associati al mood musicale più vicino.
 
-Per aggiungere un tema: una voce in `THEMES` (`themes.js`, con `sky`, `fog`, `mist` come colori RGB e facoltativamente `rain` da 0 a 1), un mood in `MOODS` e una riga in `THEME_TO_MOOD` (`music.js`). Il validatore rifiuta i temi che non esistono in `themes.js`.
+Per aggiungere un tema: una voce in `THEMES` (`themes.js`, con `sky`, `fog`, `mist` come colori RGB e facoltativamente `rain` e `haze` da 0 a 1), un mood in `MOODS` e una riga in `THEME_TO_MOOD` (`music.js`). Il validatore rifiuta i temi che non esistono in `themes.js`.

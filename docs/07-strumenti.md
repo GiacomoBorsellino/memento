@@ -32,7 +32,7 @@ Esempio di uscita:
 
 ```
 Storia: public\story.json
-  27 nodi · 621 stati di gioco esplorati · finali raggiungibili: S14
+  35 nodi · 1183 stati di gioco esplorati · finali raggiungibili: S14
 
 ✔ Nessun errore.
 ```
@@ -42,8 +42,8 @@ Cosa controlla (dettagli in [Il motore](03-motore.md#come-il-validatore-usa-expl
 | Tipo | Controlli |
 | ---- | --------- |
 | Errori statici | id duplicati o mancanti, `texts` vuoto, tema sconosciuto, più meccaniche in un nodo, nodo senza uscite, carta senza `textCard`, immagini mancanti, dadi che non coprono 1–6 o si sovrappongono, PIN non numerico, uscite verso nodi inesistenti, condizioni su oggetti che nessun nodo dà |
-| Errori di gioco | vicoli ciechi, trappole (situazioni da cui non si arriva a nessun finale), nessun finale raggiungibile |
-| Avvisi | nodo senza tema, `nextNode` ignorato perché il nodo ha un'altra meccanica, nodi irraggiungibili, esplorazione interrotta al limite |
+| Errori di gioco | vicoli ciechi, trappole (situazioni da cui non si arriva a nessun finale), nodi che in qualche situazione restano senza testo, nessun finale raggiungibile |
+| Avvisi | nodo senza tema o senza luogo, `nextNode` ignorato perché il nodo ha un'altra meccanica, flag usati nelle condizioni ma mai impostati, nodi irraggiungibili, esplorazione interrotta al limite |
 
 Per ogni errore di gioco stampa l'inventario, i flag e il percorso che ci porta. Esce con codice 1 se ci sono errori.
 
@@ -53,6 +53,7 @@ Con `npm run dev` aperto: **http://localhost:5173/grafo**.
 
 - **Nodi** colorati per categoria: inizio/fine (oro), carte (verde), dado (blu), solo testo (sabbia), interazione speciale (rosa: il PIN e le meccaniche future). Inizio e fine prevalgono sul colore, ma un'icona dice sempre la meccanica (🃏 🎲 🔢 ¶ ⚑).
 - **Frecce** con l'etichetta della scelta. **Tratteggiate** se la carta ha una condizione (🔒) o se è l'uscita dal PIN. Più frecce tra gli stessi due nodi diventano una sola con le etichette unite.
+- **Testi condizionati**: i nodi che ne hanno mostrano il segno 🔒¶; nel pannello ogni testo condizionato è segnato da un bordo tratteggiato e dalla sua condizione («🔒 solo se: serve il flag mano_ferita»).
 - **Problemi**: bordo rosso per nodi irraggiungibili, vicoli ciechi, uscite verso nodi inesistenti (che compaiono come nodi segnaposto rossi). Il conteggio è in alto a sinistra.
 - **Clic su un nodo**: si evidenziano le sue frecce e si apre un pannello con:
   - testi;

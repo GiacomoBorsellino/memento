@@ -18,6 +18,7 @@ import {
   findDiceRule,
   nodeKind,
   visibleCards,
+  visibleTexts,
 } from "../../engine.js";
 import "./GameScreen.css";
 
@@ -37,6 +38,12 @@ export default function GameScreen({
 }) {
   const [nodeId, setNodeId] = useState(initialNodeId ?? story.start);
   const [game, setGame] = useState(() => initialState ?? freshStart(story));
+  // Paragraphs of the current node, fixed on arrival: conditional texts are
+  // chosen with the state you enter with, so a choice made on the node
+  // (which may set a flag) can't make a paragraph appear or vanish mid-scene.
+  const [nodeTexts, setNodeTexts] = useState(() =>
+    visibleTexts(story.nodes.get(initialNodeId ?? story.start), initialState ?? freshStart(story)),
+  );
   const [shownTexts, setShownTexts] = useState([]);
   const [textCursor, setTextCursor] = useState(0);
   const [showChoices, setShowChoices] = useState(false);
@@ -119,6 +126,7 @@ export default function GameScreen({
         const next = enterNode(story, id, state ?? gameRef.current);
         resetNodeUI();
         setGame(next);
+        setNodeTexts(visibleTexts(story.nodes.get(id), next));
         setNodeId(id);
         saveGame("autosave", { nodeId: id, ...next }).catch(console.error);
       }, FADE_MS);
@@ -129,7 +137,7 @@ export default function GameScreen({
   // Sequential text reveal
   useEffect(() => {
     if (!node) return;
-    if (textCursor >= node.texts.length) {
+    if (textCursor >= nodeTexts.length) {
       // Optional legacy behaviour: pass-through node that advances by itself
       if (kind === "continue" && node.autoAdvance) {
         const t = setTimeout(() => goTo(node.nextNode), delay);
@@ -143,13 +151,13 @@ export default function GameScreen({
     }
     const t = setTimeout(
       () => {
-        setShownTexts((p) => [...p, node.texts[textCursor]]);
+        setShownTexts((p) => [...p, nodeTexts[textCursor]]);
         setTextCursor((p) => p + 1);
       },
       textCursor === 0 ? 700 : delay,
     );
     return () => clearTimeout(t);
-  }, [textCursor, node, kind, delay, goTo]);
+  }, [textCursor, node, nodeTexts, kind, delay, goTo]);
 
   // ── Choices ────────────────────────────────────────────────
   const handleCardSelect = (card) => {
@@ -180,6 +188,7 @@ export default function GameScreen({
     resetNodeUI();
     const fresh = freshStart(story);
     setGame(fresh);
+    setNodeTexts(visibleTexts(story.nodes.get(story.start), fresh));
     setNodeId(story.start);
     setKey((k) => k + 1);
     saveGame("autosave", { nodeId: story.start, ...fresh }).catch(console.error);

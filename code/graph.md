@@ -22,6 +22,17 @@
 >   - 1–5 → **S11C**: ti tagli (flag `mano_ferita`), il cane si lancia contro la porta, te ne vai.
 >   - 6 → **S11D**: entri nella cucina a soqquadro, arriva il cane, gli chiudi la porta della cucina in faccia; prima di scappare noti sul tavolo un libro antico, «Sefer ha-Zohar – La via attraverso i tarocchi» (flag `zohar`).
 > - **S14**: la tomba non è più di Montgomery ma di **John Moonshine** (lo stesso nome del pittore del dipinto nella hall).
+>
+> **Modifiche del 26/11/2026**:
+>
+> - **Ferita alla tempia**: in `S01` solo la fitta; il sangue lo scopri nell'intermezzo **S04C**, riflesso in un coccio di bottiglia. Nel bagno (`S07`) pulisci il vomito con uno straccio e provi a pulirti la ferita, ma non c'è carta igienica.
+> - **S04**: Cillian ripete le parole della moglie, sconvolta e disgustata: «Pietoso. Indecoroso. E soprattutto alterato.» Nessun accenno al sangue.
+> - **S04B**: il dipinto mostra i soldati di re Giorgio III; il personaggio intonso ha i capelli rossi e un sorriso bianco e affascinante.
+> - **Intermezzi** (con un luogo «per strada» sulla mappa): **S04C** hotel → pub, nebbia (tema `fog`), ti perdi per più di un'ora con fitte alla tempia, il coccio, la sensazione di essere osservato (dado: guardi nella nebbia); **S09A** pub → Collin Street, pioggia, paura della rissa e della polizia (un'auto all'incrocio; in `S10` resta solo un'eco); **S11E** casa di Denise → biblioteca, e se ti sei tagliato tieni la mano in tasca, sporcando la tessera di Dunn.
+> - **Tadhg** (`S07B`, `S08C`) non nomina più Glen: parla dello sconosciuto dai capelli rossi e accenna alle storie di patti agli incroci, poi si zittisce e beve. Il nome **Glen Bootleg** e la leggenda del 1798 arrivano solo nel libro di **S14**.
+> - **Tessera con la G**: plastica vecchia e consumata, foto, la G e un codice identificativo. In `S14` Tina legge il codice e dice «c'è un prestito a suo nome»; il protagonista non chiede il proprio nome per non insospettirla.
+> - **Tessera di Dunn e totem** (`S12A`–`S12F`, `S13`): non la mostri a Tina. Dado per distrarla (3–6: squilla il telefono); se ti sei tagliato la tessera è sporca di sangue e serve pulirla con **due** dadi riusciti di fila (3–6). Riuscita: i prestiti di Dunn, «Forky's – Dolci di casa» (la serie delle riviste di Denise) e la pagina della meringata (flag `meringata`). Fallimento (**S12F**): Tina ti ha visto armeggiare, sfila la tessera dal totem, non crede alla scusa («l'hai trovata per strada») e **se la tiene** per restituirla a Dunn, minacciando la sicurezza (flag `totem_fallito`, la tessera di Dunn esce dall'inventario: malus per il Capitolo 2); in `S14` ti guarda con sospetto. Un solo tentativo (flag `totem_provato`).
+> - Nomi definitivi: la tomba è di **John Moonshine**; il libro in cucina è «**Sefer ha-Zohar** – La via attraverso i tarocchi»; la targhetta del dipinto dice «**Society of United Irishmen** sfida la gabbia inglese – J. Moonshine 1798», come il libro di `S14`.
 
 ## Atto I — Il risveglio al Dorney's Lodge Hotel
 

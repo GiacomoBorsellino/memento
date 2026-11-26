@@ -16,7 +16,7 @@ Se `story.json` non si carica, al posto del gioco compare il messaggio d'errore.
 
 Il componente più ricco. Per ogni nodo:
 
-1. **Testi**: compaiono uno alla volta. Il primo dopo 700 ms, i successivi dopo 2,2 / 1,5 / 0,9 s (velocità Lento / Normale / Veloce). Il paragrafo più recente è chiaro, quelli precedenti si scuriscono; il primo ha un **capolettera** in carattere gotico.
+1. **Testi**: si scelgono all'arrivo nel nodo (i testi condizionati con lo stato di quel momento, in `nodeTexts`) e compaiono uno alla volta. Il primo dopo 700 ms, i successivi dopo 2,2 / 1,5 / 0,9 s (velocità Lento / Normale / Veloce). Il paragrafo più recente è chiaro, quelli precedenti si scuriscono; il primo ha un **capolettera** in carattere gotico.
 2. **Scelte**: 500 ms dopo l'ultimo testo, con un accordo, compare la meccanica del nodo: `CardFan`, `Dice`, `PinPad`, un pulsante «Continua» o la scritta di fine capitolo.
 3. **Transizione**: dissolvenza di 700 ms, poi il nodo nuovo (vedi [Architettura](01-architettura.md#una-partita-passo-per-passo)).
 
@@ -72,7 +72,7 @@ Un pulsante 🗺️ a sinistra dello zaino apre la mappa di Arklow a tutto scher
   - una **nebbia** scura (rumore `feTurbulence`) copre ciò che il protagonista non ricorda; una maschera la apre attorno ai luoghi visitati e la dirada attorno a quelli solo sentiti;
   - luoghi **visitati**: punto a inchiostro e nome;
   - luoghi **sentiti nominare**: cerchio a matita tratteggiato con «?»;
-  - **percorso**: linea rossa tratteggiata nell'ordine di scoperta;
+  - **percorso**: linea rossa tratteggiata nell'ordine di scoperta, che passa anche per i tratti di strada degli intermezzi (luoghi `transit`: diradano la nebbia lungo il cammino, ma non hanno nome né voce nell'elenco);
   - **sei qui**: anello rosso che pulsa.
 - **Animazione**: i luoghi scoperti dall'ultima apertura «si inchiostrano» (la nebbia si apre e il nome compare). Con «riduci movimento» le animazioni sono spente.
 - **Elenco** sotto la mappa: luoghi visitati e sentiti nominare, con le note (anche quelli senza coordinate).
@@ -94,7 +94,7 @@ Un `<canvas>` a tutto schermo, sempre montato, ridisegnato a ogni frame (`reques
 
 1. sfumatura verticale con i tre colori del tema (`sky`, `fog`, `mist`);
 2. vignettatura scura ai bordi;
-3. 60 «banchi di nebbia» (gradienti radiali) che salgono lentamente e respirano;
+3. 60 «banchi di nebbia» (gradienti radiali) che salgono lentamente e respirano; con `haze` (tema `fog`) sono fino a 3,5 volte più densi;
 4. una fascia di foschia in basso che pulsa;
 5. **pioggia**, solo per i temi con `rain` (oggi `street`): strisce oblique disegnate tutte in un unico percorso e un solo `stroke()`, quindi costano quasi come una linea sola. Su touch le gocce sono la metà.
 

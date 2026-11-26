@@ -53,8 +53,11 @@ Regole sugli oggetti (funzioni interne `addItem` / `removeItem`):
 
 | Funzione | Cosa fa |
 | -------- | ------- |
-| `isCardVisible(card, state)` | Verifica `requiresItem`, `hideIfItem`, `requiresFlag`, `hideIfFlag` |
+| `meetsConditions(obj, state)` | Verifica `requiresItem`, `hideIfItem`, `requiresFlag`, `hideIfFlag` su una carta o un testo (`isCardVisible` è lo stesso, col vecchio nome) |
+| `conditionsOf(obj)` | Le condizioni impostate, come `{ chiave: valore }` |
 | `visibleCards(node, state)` | Le carte del nodo che il giocatore vede in quello stato |
+| `visibleTexts(node, state)` | I paragrafi che il giocatore legge in quello stato, come stringhe (i testi condizionati filtrati) |
+| `textOf(t)`, `isConditionalText(t)` | Il testo di un paragrafo (stringa o oggetto) e se ha condizioni |
 | `findDiceRule(node, roll)` | La regola del dado il cui intervallo contiene il risultato |
 | `nodeKind(node)` | La meccanica del nodo: `"end"`, `"cards"`, `"dice"`, `"pin"`, `"continue"` o `"none"` (nessuna uscita: errore) |
 
@@ -88,7 +91,7 @@ Dettagli:
 - **Chiave della situazione**: `stateKey(id, stato)` produce una stringa come `S08|cellulare:1,fiammiferi:2|tadhg`. Oggetti e flag sono ordinati, così lo stesso insieme dà sempre la stessa chiave.
 - **Ricerca in ampiezza (BFS)**: si esplora prima tutto ciò che dista un passo, poi due, e così via. Di conseguenza, la prima volta che si incontra un nodo ci si è arrivati con il **percorso più breve**. Il grafo usa proprio quella situazione per «Gioca da qui».
 - La coda è un array letto con un indice (`head`) invece di `shift()`, che su array lunghi costa O(n) a ogni chiamata.
-- **Limite**: oltre `maxStates` situazioni l'esplorazione si ferma e segnala `truncated: true`. Il Capitolo 1 ha 27 nodi e 621 situazioni. Le situazioni crescono molto più in fretta dei nodi: aggiungendo 6 nodi e 3 flag facoltativi (`dipinto`, `mano_ferita`, `zohar`) si è passati da 136 a 621, perché ogni flag che si può avere o non avere moltiplica le combinazioni possibili nei nodi successivi. Il limite serve per storie future con molti flag e oggetti cumulabili.
+- **Limite**: oltre `maxStates` situazioni l'esplorazione si ferma e segnala `truncated: true`. Il Capitolo 1 ha 35 nodi e 1183 situazioni. Le situazioni crescono molto più in fretta dei nodi: aggiungendo 6 nodi e 3 flag facoltativi (`dipinto`, `mano_ferita`, `zohar`) si era passati da 136 a 621, perché ogni flag che si può avere o non avere moltiplica le combinazioni possibili nei nodi successivi; il totem della biblioteca, con i suoi esiti, le ha quasi raddoppiate. Il limite serve per storie future con molti flag e oggetti cumulabili.
 
 Restituisce:
 
@@ -104,10 +107,11 @@ Restituisce:
 
 `scripts/validate-story.js` fa due passate.
 
-1. **Controlli statici**, nodo per nodo: id, testi, tema esistente, una sola meccanica, carte con `textCard`, immagini esistenti in `public/`, dadi che coprono 1–6 senza sovrapposizioni, PIN numerico, uscite verso nodi esistenti, condizioni su oggetti che qualche nodo dà davvero.
+1. **Controlli statici**, nodo per nodo: id, testi (stringhe o testi condizionati ben formati), tema esistente, una sola meccanica, carte con `textCard`, immagini esistenti in `public/`, dadi che coprono 1–6 senza sovrapposizioni, PIN numerico, uscite verso nodi esistenti, luoghi della mappa esistenti. Le condizioni di carte e testi devono usare oggetti che qualche nodo dà davvero (errore) e flag che qualche nodo imposta (avviso; i flag dei luoghi `visitato:`/`sentito:` contano come impostati).
 2. **Esplorazione** con `explore`, poi:
    - **vicoli ciechi**: le `deadEnds`;
    - **trappole**: situazioni da cui non si raggiunge più nessun finale. Si trovano al contrario: si parte dai finali e si risale il grafo delle situazioni (`edges` invertito); quello che non si raggiunge risalendo è una trappola. Per ciascuna si riporta solo la prima situazione (quella il cui genitore poteva ancora finire), con il percorso per arrivarci;
+   - **nodi senza testo**: una situazione in cui i testi condizionati di un nodo sono tutti nascosti;
    - **nodi irraggiungibili**: nodi che nessuna situazione visita (avviso).
 
 Esce con codice 1 se ci sono errori, così può bloccare una pipeline di pubblicazione.

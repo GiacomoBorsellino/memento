@@ -15,7 +15,15 @@
 import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildStory, explore, nodeKind } from "../src/engine.js";
+import {
+  buildStory,
+  explore,
+  nodeKind,
+  isConditionalText,
+  visibleTexts,
+  VISITED,
+  HEARD,
+} from "../src/engine.js";
 import { THEMES } from "../src/components/Background/themes.js";
 
 const MAX_STATES = 50000;
@@ -61,6 +69,14 @@ for (const node of story.nodes.values()) {
 
   if (!Array.isArray(node.texts) || node.texts.length === 0) {
     errors.push(`${where} "texts" mancante o vuoto`);
+  } else {
+    node.texts.forEach((t, i) => {
+      const ok = typeof t === "string" || (typeof t === "object" && typeof t?.text === "string");
+      if (!ok) errors.push(`${where} testo ${i + 1}: serve una stringa o { "text": "...", condizioni }`);
+      else if (typeof t === "object" && !isConditionalText(t)) {
+        warnings.push(`${where} testo ${i + 1} è un oggetto senza condizioni: basta la stringa`);
+      }
+    });
   }
   if (!node.theme) warnings.push(`${where} nessun "theme"`);
   else if (!THEMES[node.theme]) errors.push(`${where} tema sconosciuto "${node.theme}"`);
@@ -117,13 +133,30 @@ for (const node of story.nodes.values()) {
   }
 }
 
-// Conditions on items nobody ever gives
+// Conditions (on cards and on texts) about items nobody gives or flags
+// nobody sets. Place flags (visitato:/sentito:) come from location/reveals.
+const flagsSet = new Set();
 for (const node of story.nodes.values()) {
-  for (const c of node.cards ?? []) {
-    for (const id of [c.requiresItem, c.hideIfItem]) {
+  const sources = [node.onEnter, ...(node.cards ?? []), ...(node.dice ?? [])];
+  for (const s of sources) toArray(s?.setFlags).forEach((f) => flagsSet.add(f));
+  if (node.location) flagsSet.add(VISITED + node.location);
+  toArray(node.reveals).forEach((id) => flagsSet.add(HEARD + id));
+}
+for (const node of story.nodes.values()) {
+  const conditioned = [
+    ...(node.cards ?? []).map((c) => [`la carta "${c.textCard}"`, c]),
+    ...(node.texts ?? [])
+      .map((t, i) => [`il testo ${i + 1}`, t])
+      .filter(([, t]) => isConditionalText(t)),
+  ];
+  for (const [what, obj] of conditioned) {
+    for (const id of [obj.requiresItem, obj.hideIfItem]) {
       if (id && !itemsAdded.has(id)) {
-        errors.push(`[${node.id}] la carta "${c.textCard}" usa l'oggetto "${id}", che nessun nodo dà`);
+        errors.push(`[${node.id}] ${what} usa l'oggetto "${id}", che nessun nodo dà`);
       }
+    }
+    for (const f of [obj.requiresFlag, obj.hideIfFlag]) {
+      if (f && !flagsSet.has(f)) warnings.push(`[${node.id}] ${what} usa il flag "${f}", che nessun nodo imposta`);
     }
   }
 }
@@ -205,6 +238,16 @@ if (!truncated) {
   // Report only the first state of each trap (its parent can still finish)
   for (const k of trapped.filter((k) => canFinish.has(states.get(k).parent))) {
     errors.push(`Trappola in ${states.get(k).id}: da qui non si arriva a nessun finale (${describe(k)})\n    percorso: ${pathTo(k)}`);
+  }
+}
+
+// Conditional texts: a node must never end up with no paragraph at all
+const silent = new Set();
+for (const [k, s] of states) {
+  if (silent.has(s.id)) continue;
+  if (visibleTexts(story.nodes.get(s.id), s.state).length === 0) {
+    silent.add(s.id);
+    errors.push(`[${s.id}] in questa situazione non ha nessun testo visibile (${describe(k)})\n    percorso: ${pathTo(k)}`);
   }
 }
 

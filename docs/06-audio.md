@@ -79,6 +79,7 @@ Ogni mood ha un tempo (`step`, secondi per croma), una progressione di accordi p
 | `pub` | giga: bodhrán, pizzicato «um-pa-pa», violino con abbellimenti; ogni 8 battute uno stop improvviso |
 | `legend` | rintocchi gravi di pianoforte, bordone dissonante, violino lento, tamburo lontano |
 | `street` | pioggia continua, battito, ostinato basso pizzicato |
+| `fog` | lo stesso di `street` senza la pioggia (definito come copia: `{ ...MOODS.street, start: undefined }`) |
 | `library` | scala ungherese, campane, note lunghe di violino |
 | `mist` | bordone dissonante, campane casuali |
 
